@@ -1,135 +1,70 @@
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 
-const PLAYER_COLORS = {
-  agent_a: '#ff6b6b',
-  agent_b: '#4ecdc4',
-  agent_c: '#ffe66d',
-  agent_d: '#95e1d3',
-  agent_e: '#a29bfe',
-};
-
-const DEFAULT_COLORS = [
-  '#ff6b6b',
-  '#4ecdc4',
-  '#ffe66d',
-  '#95e1d3',
-  '#a29bfe',
-  '#fab1a0',
-  '#74b9ff',
-  '#fd79a8',
-  '#00b894',
-  '#e17055',
-];
+const COLORS = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#95e1d3', '#a29bfe', '#fab1a0', '#74b9ff'];
 
 export default function ChipGraph({ data, selectedPlayers }) {
-  if (!data || data.length === 0) {
-    return (
-      <div className="chip-graph-empty">
-        <p>No tournament data to display</p>
-        <p className="hint">Upload tournament files to see the chip graph</p>
-      </div>
-    );
+  if (!data?.length) {
+    return <div className="chip-graph-empty">No data</div>;
   }
 
-  // Transform data for Recharts
-  // Each data point: { tournament: "T1 (filename)", player1: chips, player2: chips, ... }
+  // Build chart data sorted by timestamp
   const chartData = [];
-  let tournamentIndex = 0;
+  let idx = 0;
 
-  data.forEach((fileData) => {
-    fileData.tournaments.forEach((tournament) => {
-      tournamentIndex++;
-      const point = {
-        tournament: `T${tournamentIndex}`,
-        tournamentNum: tournament.tournament_num,
-        file: fileData.filename,
-      };
-
-      if (tournament.final_stacks) {
-        Object.entries(tournament.final_stacks).forEach(([player, chips]) => {
-          point[player] = chips;
+  // Data is already sorted by timestamp in App.jsx
+  data.forEach((file) => {
+    file.tournaments.forEach((t) => {
+      idx++;
+      const point = { name: `T${idx}`, file: file.filename, ts: file.timestamp };
+      if (t.final_stacks) {
+        Object.entries(t.final_stacks).forEach(([p, chips]) => {
+          point[p] = chips;
         });
       }
-
       chartData.push(point);
     });
   });
 
-  // Get all unique players from the data
-  const allPlayers = new Set();
-  chartData.forEach((point) => {
-    Object.keys(point).forEach((key) => {
-      if (key !== 'tournament' && key !== 'tournamentNum' && key !== 'file') {
-        allPlayers.add(key);
-      }
-    });
-  });
+  const allPlayers = [...new Set(chartData.flatMap((p) => 
+    Object.keys(p).filter((k) => !['name', 'file', 'ts'].includes(k))
+  ))];
 
-  // Filter to selected players
-  const playersToShow = selectedPlayers.length > 0
-    ? selectedPlayers.filter((p) => allPlayers.has(p))
-    : Array.from(allPlayers);
-
-  const getPlayerColor = (player, index) => {
-    return PLAYER_COLORS[player] || DEFAULT_COLORS[index % DEFAULT_COLORS.length];
-  };
+  const players = selectedPlayers.length ? selectedPlayers.filter((p) => allPlayers.includes(p)) : allPlayers;
 
   const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      const point = chartData.find((p) => p.tournament === label);
-      return (
-        <div className="custom-tooltip">
-          <p className="tooltip-label">{label}</p>
-          {point && <p className="tooltip-file">File: {point.file}</p>}
-          {payload.map((entry, index) => (
-            <p key={index} style={{ color: entry.color }}>
-              {entry.name}: {entry.value?.toLocaleString() ?? 0} chips
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
+    if (!active || !payload?.length) return null;
+    const pt = chartData.find((p) => p.name === label);
+    return (
+      <div className="custom-tooltip">
+        <div className="tooltip-label">{label}</div>
+        {pt && <div className="tooltip-file">{pt.file}</div>}
+        {payload.map((e, i) => (
+          <div key={i} style={{ color: e.color }}>{e.name}: {e.value?.toLocaleString()}</div>
+        ))}
+      </div>
+    );
   };
 
   return (
     <div className="chip-graph">
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart
-          data={chartData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-          <XAxis
-            dataKey="tournament"
-            stroke="#888"
-            tick={{ fill: '#ccc' }}
-          />
-          <YAxis
-            stroke="#888"
-            tick={{ fill: '#ccc' }}
-            tickFormatter={(value) => value.toLocaleString()}
-          />
+      <ResponsiveContainer width="100%" height={350}>
+        <LineChart data={chartData} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#30363d" />
+          <XAxis dataKey="name" stroke="#8b949e" tick={{ fill: '#8b949e', fontSize: 11 }} />
+          <YAxis stroke="#8b949e" tick={{ fill: '#8b949e', fontSize: 11 }} tickFormatter={(v) => v.toLocaleString()} />
           <Tooltip content={<CustomTooltip />} />
-          <Legend />
-          {playersToShow.map((player, index) => (
+          <Legend wrapperStyle={{ fontSize: 12 }} />
+          {players.map((p, i) => (
             <Line
-              key={player}
+              key={p}
               type="monotone"
-              dataKey={player}
-              stroke={getPlayerColor(player, index)}
+              dataKey={p}
+              stroke={COLORS[allPlayers.indexOf(p) % COLORS.length]}
               strokeWidth={2}
-              dot={{ fill: getPlayerColor(player, index), strokeWidth: 2, r: 4 }}
-              activeDot={{ r: 6 }}
+              dot={{ r: 3 }}
+              activeDot={{ r: 5 }}
               connectNulls
             />
           ))}
@@ -138,4 +73,3 @@ export default function ChipGraph({ data, selectedPlayers }) {
     </div>
   );
 }
-

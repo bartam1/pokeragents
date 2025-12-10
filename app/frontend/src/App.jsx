@@ -1,100 +1,117 @@
-import { useState, useMemo } from 'react';
-import FileUploader from './components/FileUploader';
-import PlayerSelector from './components/PlayerSelector';
+import { useState, useEffect, useMemo } from 'react';
 import ChipGraph from './components/ChipGraph';
 import './App.css';
 
 function App() {
   const [tournamentData, setTournamentData] = useState([]);
   const [selectedPlayers, setSelectedPlayers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleFilesLoaded = (data) => {
-    setTournamentData(data);
-    // Auto-select all players when new files are loaded
-    const allPlayers = new Set();
-    data.forEach((fileData) => {
-      fileData.tournaments.forEach((tournament) => {
-        if (tournament.final_stacks) {
-          Object.keys(tournament.final_stacks).forEach((player) => {
-            allPlayers.add(player);
-          });
+  // Load tournament data from static path on mount
+  useEffect(() => {
+    const loadTournaments = async () => {
+      try {
+        // Load manifest
+        const manifestRes = await fetch('/results/manifest.json');
+        const manifest = await manifestRes.json();
+
+        // Load all tournament files
+        const allData = [];
+        for (const filename of manifest.files) {
+          const res = await fetch(`/results/${filename}`);
+          const data = await res.json();
+          
+          if (data.tournament_details && Array.isArray(data.tournament_details)) {
+            allData.push({
+              filename,
+              timestamp: data.timestamp,
+              tournaments: data.tournament_details,
+            });
+          }
         }
-      });
-    });
-    setSelectedPlayers(Array.from(allPlayers));
-  };
 
-  // Extract all unique players from loaded data
+        // Sort by timestamp
+        allData.sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+        setTournamentData(allData);
+
+        // Auto-select all players
+        const players = new Set();
+        allData.forEach((file) => {
+          file.tournaments.forEach((t) => {
+            if (t.final_stacks) {
+              Object.keys(t.final_stacks).forEach((p) => players.add(p));
+            }
+          });
+        });
+        setSelectedPlayers(Array.from(players));
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTournaments();
+  }, []);
+
   const allPlayers = useMemo(() => {
     const players = new Set();
-    tournamentData.forEach((fileData) => {
-      fileData.tournaments.forEach((tournament) => {
-        if (tournament.final_stacks) {
-          Object.keys(tournament.final_stacks).forEach((player) => {
-            players.add(player);
-          });
+    tournamentData.forEach((file) => {
+      file.tournaments.forEach((t) => {
+        if (t.final_stacks) {
+          Object.keys(t.final_stacks).forEach((p) => players.add(p));
         }
       });
     });
     return Array.from(players).sort();
   }, [tournamentData]);
 
+  const totalTournaments = useMemo(() => 
+    tournamentData.reduce((sum, f) => sum + f.tournaments.length, 0),
+    [tournamentData]
+  );
+
+  const togglePlayer = (player) => {
+    setSelectedPlayers((prev) =>
+      prev.includes(player) ? prev.filter((p) => p !== player) : [...prev, player]
+    );
+  };
+
+  if (loading) {
+    return <div className="app loading">Loading tournaments...</div>;
+  }
+
+  if (error) {
+    return <div className="app error">Error: {error}</div>;
+  }
+
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>🃏 Poker Tournament Chip Tracker</h1>
-        <p className="subtitle">Visualize chip progression across tournaments</p>
+      <header>
+        <h1>🃏 Chip Tracker</h1>
+        <div className="stats">
+          <span>{tournamentData.length} files</span>
+          <span>{totalTournaments} tournaments</span>
+          <span>{allPlayers.length} players</span>
+        </div>
       </header>
 
-      <main className="app-main">
-        <section className="upload-section">
-          <FileUploader onFilesLoaded={handleFilesLoaded} />
-        </section>
+      <div className="players">
+        {allPlayers.map((player, i) => (
+          <label key={player} className={selectedPlayers.includes(player) ? 'active' : ''}>
+            <input
+              type="checkbox"
+              checked={selectedPlayers.includes(player)}
+              onChange={() => togglePlayer(player)}
+            />
+            <span className="dot" data-player={i} />
+            {player}
+          </label>
+        ))}
+      </div>
 
-        {tournamentData.length > 0 && (
-          <>
-            <section className="controls-section">
-              <PlayerSelector
-                players={allPlayers}
-                selectedPlayers={selectedPlayers}
-                onSelectionChange={setSelectedPlayers}
-              />
-            </section>
-
-            <section className="chart-section">
-              <h2>Chip Progression</h2>
-              <ChipGraph
-                data={tournamentData}
-                selectedPlayers={selectedPlayers}
-              />
-            </section>
-
-            <section className="stats-section">
-              <h2>Tournament Summary</h2>
-              <div className="stats-grid">
-                <div className="stat-card">
-                  <span className="stat-value">{tournamentData.length}</span>
-                  <span className="stat-label">Files Loaded</span>
-                </div>
-                <div className="stat-card">
-                  <span className="stat-value">
-                    {tournamentData.reduce((sum, f) => sum + f.tournaments.length, 0)}
-                  </span>
-                  <span className="stat-label">Total Tournaments</span>
-                </div>
-                <div className="stat-card">
-                  <span className="stat-value">{allPlayers.length}</span>
-                  <span className="stat-label">Unique Players</span>
-                </div>
-              </div>
-            </section>
-          </>
-        )}
-      </main>
-
-      <footer className="app-footer">
-        <p>Upload tournament JSON files to visualize chip changes</p>
-      </footer>
+      <ChipGraph data={tournamentData} selectedPlayers={selectedPlayers} />
     </div>
   );
 }
