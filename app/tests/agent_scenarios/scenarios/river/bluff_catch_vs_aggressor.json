@@ -1,0 +1,233 @@
+{
+  "id": "bluff_catch_vs_aggressor",
+  "name": "River Bluff Catch vs Known Aggressor",
+  "description": "Hero has top pair on a dry board facing a river bet from a known aggressive bluffer. The opponent has high river aggression and bluffs frequently. Hero should consider calling based on opponent tendencies.",
+
+  "structured_game_state": {
+    "hand_number": 47,
+    "button_seat": 2,
+    "small_blind": 15.0,
+    "big_blind": 30.0,
+    "street": "river",
+    "pot": 450.0,
+    "community_cards": ["Ks", "7d", "2c", "4h", "9s"],
+    "players": [
+      {
+        "seat": 0,
+        "name": "Hero",
+        "stack": 1200.0,
+        "is_active": true,
+        "is_all_in": false,
+        "current_bet": 0.0,
+        "hole_cards": ["Kh", "Jd"]
+      },
+      {
+        "seat": 1,
+        "name": "Aggro Villain",
+        "stack": 980.0,
+        "is_active": true,
+        "is_all_in": false,
+        "current_bet": 300.0,
+        "hole_cards": null
+      },
+      {
+        "seat": 2,
+        "name": "Agent B",
+        "stack": 0.0,
+        "is_active": false,
+        "is_all_in": false,
+        "current_bet": 0.0,
+        "hole_cards": null
+      },
+      {
+        "seat": 3,
+        "name": "Agent C",
+        "stack": 1450.0,
+        "is_active": false,
+        "is_all_in": false,
+        "current_bet": 0.0,
+        "hole_cards": null
+      }
+    ],
+    "hero_seat": 0,
+    "current_bet": 300.0,
+    "min_raise": 600.0,
+    "max_raise": 1200.0,
+    "legal_actions": ["fold", "call", "raise"],
+    "action_history": [
+      {
+        "player_index": 1,
+        "player_name": "Aggro Villain",
+        "action": "raise",
+        "amount": 90.0,
+        "street": "preflop",
+        "pot_before_action": 45.0,
+        "stacks_before": {
+          "Hero": 1500.0,
+          "Aggro Villain": 1480.0,
+          "Agent B": 200.0,
+          "Agent C": 1450.0
+        }
+      },
+      {
+        "player_index": 0,
+        "player_name": "Hero",
+        "action": "call",
+        "amount": 90.0,
+        "street": "preflop",
+        "pot_before_action": 135.0,
+        "stacks_before": {
+          "Hero": 1500.0,
+          "Aggro Villain": 1390.0,
+          "Agent B": 200.0,
+          "Agent C": 1450.0
+        }
+      },
+      {
+        "player_index": 1,
+        "player_name": "Aggro Villain",
+        "action": "bet",
+        "amount": 120.0,
+        "street": "flop",
+        "pot_before_action": 225.0,
+        "stacks_before": {
+          "Hero": 1410.0,
+          "Aggro Villain": 1390.0
+        }
+      },
+      {
+        "player_index": 0,
+        "player_name": "Hero",
+        "action": "call",
+        "amount": 120.0,
+        "street": "flop",
+        "pot_before_action": 345.0,
+        "stacks_before": {
+          "Hero": 1410.0,
+          "Aggro Villain": 1270.0
+        }
+      },
+      {
+        "player_index": 1,
+        "player_name": "Aggro Villain",
+        "action": "check",
+        "amount": null,
+        "street": "turn",
+        "pot_before_action": 465.0,
+        "stacks_before": {
+          "Hero": 1290.0,
+          "Aggro Villain": 1270.0
+        }
+      },
+      {
+        "player_index": 0,
+        "player_name": "Hero",
+        "action": "check",
+        "amount": null,
+        "street": "turn",
+        "pot_before_action": 465.0,
+        "stacks_before": {
+          "Hero": 1290.0,
+          "Aggro Villain": 1270.0
+        }
+      },
+      {
+        "player_index": 1,
+        "player_name": "Aggro Villain",
+        "action": "bet",
+        "amount": 300.0,
+        "street": "river",
+        "pot_before_action": 450.0,
+        "stacks_before": {
+          "Hero": 1200.0,
+          "Aggro Villain": 1280.0
+        }
+      }
+    ]
+  },
+
+  "knowledge_base": {
+    "profiles": {
+      "Aggro Villain": {
+        "player_id": "Aggro Villain",
+        "name": "Aggro Villain",
+        "statistics": {
+          "hands_played": 200,
+          "vpip": 38.0,
+          "pfr": 32.0,
+          "limp_frequency": 2.0,
+          "three_bet_pct": 14.0,
+          "fold_to_three_bet": 40.0,
+          "cbet_flop_pct": 85.0,
+          "cbet_turn_pct": 70.0,
+          "cbet_river_pct": 65.0,
+          "aggression_factor": 3.5,
+          "river_aggression": 4.2,
+          "wtsd": 32.0,
+          "wsd": 42.0,
+          "avg_bet_sizing": 0.0,
+          "avg_raise_sizing": 0.0
+        },
+        "tendencies": [
+          "Very aggressive player",
+          "Bluffs frequently on all streets",
+          "High river aggression - often bluffs missed draws",
+          "Triple barrels with air",
+          "Check-raise bluffs occasionally"
+        ]
+      },
+      "Agent B": {
+        "player_id": "Agent B",
+        "name": "Agent B",
+        "statistics": {
+          "hands_played": 180,
+          "vpip": 22.0,
+          "pfr": 18.0,
+          "limp_frequency": 3.0,
+          "three_bet_pct": 5.0,
+          "fold_to_three_bet": 60.0,
+          "cbet_flop_pct": 60.0,
+          "cbet_turn_pct": 45.0,
+          "cbet_river_pct": 35.0,
+          "aggression_factor": 1.2,
+          "river_aggression": 0.9,
+          "wtsd": 28.0,
+          "wsd": 50.0,
+          "avg_bet_sizing": 0.0,
+          "avg_raise_sizing": 0.0
+        },
+        "tendencies": ["Standard TAG player"]
+      },
+      "Agent C": {
+        "player_id": "Agent C",
+        "name": "Agent C",
+        "statistics": {
+          "hands_played": 180,
+          "vpip": 16.0,
+          "pfr": 14.0,
+          "limp_frequency": 1.0,
+          "three_bet_pct": 4.0,
+          "fold_to_three_bet": 75.0,
+          "cbet_flop_pct": 72.0,
+          "cbet_turn_pct": 58.0,
+          "cbet_river_pct": 42.0,
+          "aggression_factor": 1.4,
+          "river_aggression": 1.1,
+          "wtsd": 20.0,
+          "wsd": 58.0,
+          "avg_bet_sizing": 0.0,
+          "avg_raise_sizing": 0.0
+        },
+        "tendencies": ["Tight nit", "Only bets for value on river"]
+      }
+    }
+  },
+
+  "expected": {
+    "valid_actions": ["call", "raise"],
+    "invalid_actions": [],
+    "min_confidence": 0.5,
+    "notes": "Hero has top pair with decent kicker on a dry board. Villain has very high river aggression (4.2) over 200 hands - this is a clear bluff-heavy tendency. The board is dry (K72-4-9 rainbow), limiting villain's value hands. Given villain's tendencies, a call or even a raise could be justified. Folding is not necessarily wrong but would miss value against this specific opponent."
+  }
+}
+
