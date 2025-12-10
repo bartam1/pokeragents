@@ -62,10 +62,11 @@ def recalculate_baseline_stats(
     
     for player_id, profile in knowledge_base.profiles.items():
         stats = profile.statistics
+        ev_info = f", EV-adj: {stats.ev_adjusted_total:+.0f}" if stats.showdown_count > 0 else ""
         logger.info(
             f"  {player_id}: {stats.hands_played} hands, "
             f"VPIP {stats.vpip:.1f}%, PFR {stats.pfr:.1f}%, "
-            f"AF {stats.aggression_factor:.2f}"
+            f"AF {stats.aggression_factor:.2f}{ev_info}"
         )
     
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
@@ -86,38 +87,49 @@ def _replay_tournament(tournament: TournamentRecord, tracker: StatisticsTracker)
     Returns:
         Number of hands replayed
     """
-    if not tournament.actions:
+    if not tournament.hands:
         return 0
     
-    current_hand_number = None
-    hands_replayed = 0
-    big_blind = tournament.big_blind
     players = tournament.players
+    hands_replayed = 0
     
-    for minimal_action in tournament.actions:
-        if current_hand_number != minimal_action.hand_number:
-            if current_hand_number is not None:
-                _end_hand(tracker, players, current_hand_number)
-                hands_replayed += 1
+    for hand in tournament.hands:
+        tracker.start_hand(players)
+        
+        for minimal_action in hand.actions:
+            action = minimal_action.to_action()
+            stub_state = minimal_action.to_stub_game_state(hand.big_blind)
             
-            current_hand_number = minimal_action.hand_number
-            tracker.start_hand(players)
+            tracker.observe_action(
+                player_id=minimal_action.actor,
+                player_name=minimal_action.actor,
+                action=action,
+                game_state=stub_state,  # type: ignore - duck typing works here
+            )
         
-        action = minimal_action.to_action()
-        stub_state = minimal_action.to_stub_game_state(big_blind)
+        _end_hand(tracker, players, hand.hand_number)
         
-        tracker.observe_action(
-            player_id=minimal_action.actor,
-            player_name=minimal_action.actor,
-            action=action,
-            game_state=stub_state,  # type: ignore - duck typing works here
-        )
-    
-    if current_hand_number is not None:
-        _end_hand(tracker, players, current_hand_number)
+        # Process EV records for this hand
+        for ev_record in hand.ev_records:
+            _update_ev_stats(tracker.knowledge_base, ev_record)
+        
         hands_replayed += 1
     
     return hands_replayed
+
+
+def _update_ev_stats(knowledge_base: KnowledgeBase, ev_record: Any) -> None:
+    """
+    Update player statistics with EV data from a showdown.
+    
+    Args:
+        knowledge_base: The knowledge base to update
+        ev_record: The EV record from a showdown
+    """
+    profile = knowledge_base.get_or_create_profile(ev_record.player, ev_record.player)
+    stats = profile.statistics
+    stats.ev_adjusted_total += ev_record.ev_adjusted
+    stats.showdown_count += 1
 
 
 def _end_hand(tracker: StatisticsTracker, player_ids: list[str], hand_number: int) -> None:

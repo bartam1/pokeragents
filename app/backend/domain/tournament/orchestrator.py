@@ -128,7 +128,7 @@ class TournamentOrchestrator:
         
         # Generate a unique tournament ID and start recording
         self._tournament_id = str(uuid.uuid4())[:8]
-        self._recorder.start_tournament(self._tournament_id, self._config.big_blind)
+        self._recorder.start_tournament(self._tournament_id)
 
         player_names = [pid for pid, _ in agent_configs]
 
@@ -346,6 +346,13 @@ class TournamentOrchestrator:
             result = self._env.complete_hand()
             for agent in self._agents.values():
                 agent.end_hand_tracking(result, self._env.player_names)
+
+            # Record finishing stacks for the hand
+            finishing_stacks = {
+                name: self._env.get_stack(i)
+                for i, name in enumerate(self._env.player_names)
+            }
+            self._recorder.record_hand_result(finishing_stacks)
 
             # Track profit/loss for GTO deviation analysis
             for i, name in enumerate(self._env.player_names):
