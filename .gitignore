@@ -1,0 +1,15 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment files
+.env
+
+# UV lock file
+uv.lock
+
+# IDE configuration
+.cursorrules
+.cursor/
+.vscode/
+
