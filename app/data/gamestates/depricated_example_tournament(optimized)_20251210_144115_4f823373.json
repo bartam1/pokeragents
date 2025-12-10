@@ -1,0 +1,276 @@
+{
+  "tournament_id": "4f823373",
+  "timestamp": "20251210_144115",
+  "format_version": 2,
+  "players": [
+    "agent_a",
+    "agent_b",
+    "agent_c",
+    "agent_d",
+    "agent_e"
+  ],
+  "big_blind": 20.0,
+  "actions": [
+    {
+      "hand_number": 1,
+      "street": "preflop",
+      "actor": "agent_c",
+      "action_type": "fold",
+      "amount": null,
+      "pot": 30.0,
+      "current_bet": 20.0,
+      "preflop_raise_count": 0
+    },
+    {
+      "hand_number": 1,
+      "street": "preflop",
+      "actor": "agent_d",
+      "action_type": "raise",
+      "amount": 60.0,
+      "pot": 30.0,
+      "current_bet": 20.0,
+      "preflop_raise_count": 0
+    },
+    {
+      "hand_number": 1,
+      "street": "preflop",
+      "actor": "agent_e",
+      "action_type": "fold",
+      "amount": null,
+      "pot": 90.0,
+      "current_bet": 60.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 1,
+      "street": "preflop",
+      "actor": "agent_a",
+      "action_type": "call",
+      "amount": 60.0,
+      "pot": 90.0,
+      "current_bet": 60.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 1,
+      "street": "preflop",
+      "actor": "agent_b",
+      "action_type": "call",
+      "amount": 60.0,
+      "pot": 140.0,
+      "current_bet": 60.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 1,
+      "street": "flop",
+      "actor": "agent_a",
+      "action_type": "check",
+      "amount": null,
+      "pot": 180.0,
+      "current_bet": 0.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 1,
+      "street": "flop",
+      "actor": "agent_b",
+      "action_type": "check",
+      "amount": null,
+      "pot": 180.0,
+      "current_bet": 0.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 1,
+      "street": "flop",
+      "actor": "agent_d",
+      "action_type": "check",
+      "amount": null,
+      "pot": 180.0,
+      "current_bet": 0.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 1,
+      "street": "turn",
+      "actor": "agent_a",
+      "action_type": "check",
+      "amount": null,
+      "pot": 180.0,
+      "current_bet": 0.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 1,
+      "street": "turn",
+      "actor": "agent_b",
+      "action_type": "check",
+      "amount": null,
+      "pot": 180.0,
+      "current_bet": 0.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 1,
+      "street": "turn",
+      "actor": "agent_d",
+      "action_type": "check",
+      "amount": null,
+      "pot": 180.0,
+      "current_bet": 0.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 1,
+      "street": "river",
+      "actor": "agent_a",
+      "action_type": "check",
+      "amount": null,
+      "pot": 180.0,
+      "current_bet": 0.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 1,
+      "street": "river",
+      "actor": "agent_b",
+      "action_type": "check",
+      "amount": null,
+      "pot": 180.0,
+      "current_bet": 0.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 1,
+      "street": "river",
+      "actor": "agent_d",
+      "action_type": "check",
+      "amount": null,
+      "pot": 180.0,
+      "current_bet": 0.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 2,
+      "street": "preflop",
+      "actor": "agent_c",
+      "action_type": "fold",
+      "amount": null,
+      "pot": 30.0,
+      "current_bet": 20.0,
+      "preflop_raise_count": 0
+    },
+    {
+      "hand_number": 2,
+      "street": "preflop",
+      "actor": "agent_d",
+      "action_type": "raise",
+      "amount": 60.0,
+      "pot": 30.0,
+      "current_bet": 20.0,
+      "preflop_raise_count": 0
+    },
+    {
+      "hand_number": 2,
+      "street": "preflop",
+      "actor": "agent_e",
+      "action_type": "fold",
+      "amount": null,
+      "pot": 90.0,
+      "current_bet": 60.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 2,
+      "street": "preflop",
+      "actor": "agent_a",
+      "action_type": "call",
+      "amount": 60.0,
+      "pot": 90.0,
+      "current_bet": 60.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 2,
+      "street": "preflop",
+      "actor": "agent_b",
+      "action_type": "call",
+      "amount": 60.0,
+      "pot": 140.0,
+      "current_bet": 60.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 2,
+      "street": "flop",
+      "actor": "agent_a",
+      "action_type": "bet",
+      "amount": 135.0,
+      "pot": 180.0,
+      "current_bet": 0.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 2,
+      "street": "flop",
+      "actor": "agent_b",
+      "action_type": "fold",
+      "amount": null,
+      "pot": 315.0,
+      "current_bet": 135.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 2,
+      "street": "flop",
+      "actor": "agent_d",
+      "action_type": "call",
+      "amount": 135.0,
+      "pot": 315.0,
+      "current_bet": 135.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 2,
+      "street": "turn",
+      "actor": "agent_a",
+      "action_type": "bet",
+      "amount": 400.0,
+      "pot": 450.0,
+      "current_bet": 0.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 2,
+      "street": "turn",
+      "actor": "agent_d",
+      "action_type": "call",
+      "amount": 400.0,
+      "pot": 850.0,
+      "current_bet": 400.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 2,
+      "street": "river",
+      "actor": "agent_a",
+      "action_type": "bet",
+      "amount": 1025.0,
+      "pot": 1250.0,
+      "current_bet": 0.0,
+      "preflop_raise_count": 1
+    },
+    {
+      "hand_number": 2,
+      "street": "river",
+      "actor": "agent_d",
+      "action_type": "call",
+      "amount": 1025.0,
+      "pot": 2275.0,
+      "current_bet": 1025.0,
+      "preflop_raise_count": 1
+    }
+  ],
+  "ev_records": []
+}
