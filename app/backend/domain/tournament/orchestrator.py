@@ -308,8 +308,17 @@ class TournamentOrchestrator:
                 # Convert structured decision to executable Action
                 action = decision.to_action(game_state)
                 
+                # Determine if following GTO based on deviation text
+                is_following_gto = decision.gto_deviation.lower().startswith("following gto")
+                
                 # Record the state and action for statistics recalculation
-                self._recorder.record_action(game_state, actor_name, action)
+                self._recorder.record_action(
+                    game_state,
+                    actor_name,
+                    action,
+                    is_following_gto=is_following_gto,
+                    gto_deviation=decision.gto_deviation if not is_following_gto else None,
+                )
 
                 # Execute the action
                 self._env.execute_action(actor_index, action)

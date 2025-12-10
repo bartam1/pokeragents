@@ -27,9 +27,12 @@ class MinimalAction:
     pot: float
     current_bet: float
     preflop_raise_count: int
+    stacks: dict[str, float] = field(default_factory=dict)
+    decision_type: str = "gto"  # "gto" or "deviate"
+    deviation_reason: str | None = None  # Only set if decision_type is "deviate"
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        result = {
             "hand_number": self.hand_number,
             "street": self.street,
             "actor": self.actor,
@@ -38,7 +41,12 @@ class MinimalAction:
             "pot": self.pot,
             "current_bet": self.current_bet,
             "preflop_raise_count": self.preflop_raise_count,
+            "stacks": self.stacks,
+            "decision": self.decision_type,
         }
+        if self.deviation_reason:
+            result["deviation_reason"] = self.deviation_reason
+        return result
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "MinimalAction":
@@ -51,6 +59,9 @@ class MinimalAction:
             pot=data["pot"],
             current_bet=data["current_bet"],
             preflop_raise_count=data["preflop_raise_count"],
+            stacks=data.get("stacks", {}),
+            decision_type=data.get("decision", "gto"),
+            deviation_reason=data.get("deviation_reason"),
         )
 
     @classmethod
@@ -67,6 +78,8 @@ class MinimalAction:
             and a.get("action") in ("raise", "bet", "all_in")
         )
         
+        stacks = {p.name: p.stack for p in state.players}
+        
         return cls(
             hand_number=state.hand_number,
             street=state.street.value,
@@ -76,6 +89,7 @@ class MinimalAction:
             pot=state.pot,
             current_bet=state.current_bet,
             preflop_raise_count=preflop_raise_count,
+            stacks=stacks,
         )
 
     def to_action(self) -> Action:
@@ -247,8 +261,23 @@ class GameStateRecorder:
         )
         self._players_recorded = False
 
-    def record_action(self, state: StructuredGameState, actor: str, action: Action) -> None:
-        """Record an action with minimal data needed for statistics."""
+    def record_action(
+        self,
+        state: StructuredGameState,
+        actor: str,
+        action: Action,
+        is_following_gto: bool = True,
+        gto_deviation: str | None = None,
+    ) -> None:
+        """Record an action with minimal data needed for statistics.
+        
+        Args:
+            state: Current game state
+            actor: Player making the action
+            action: The action taken
+            is_following_gto: Whether the decision followed GTO (default True)
+            gto_deviation: The GTO deviation reasoning (if deviating)
+        """
         if self._current_tournament is None:
             raise ValueError("No tournament started. Call start_tournament first.")
         
@@ -258,6 +287,14 @@ class GameStateRecorder:
             self._players_recorded = True
         
         minimal_action = MinimalAction.from_full_state(state, actor, action)
+        
+        if is_following_gto:
+            minimal_action.decision_type = "gto"
+            minimal_action.deviation_reason = None
+        else:
+            minimal_action.decision_type = "deviate"
+            minimal_action.deviation_reason = gto_deviation
+        
         self._current_tournament.actions.append(minimal_action)
 
     def record_ev(self, ev_records: list[EVRecord]) -> None:
