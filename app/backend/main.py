@@ -109,13 +109,13 @@ async def run_experiment(
             # Aggregate EV data
             for player_id, ev_data in result.ev_by_player.items():
                 if player_id not in results["ev_by_player"]:
-                results["ev_by_player"][player_id] = {
-                    "ev_chips": 0.0,
-                    "actual_chips": 0.0,
-                    "variance": 0.0,
-                    "ev_adjusted": 0.0,
-                    "showdown_count": 0,
-                }
+                    results["ev_by_player"][player_id] = {
+                        "ev_chips": 0.0,
+                        "actual_chips": 0.0,
+                        "variance": 0.0,
+                        "ev_adjusted": 0.0,
+                        "showdown_count": 0,
+                    }
                 results["ev_by_player"][player_id]["ev_chips"] += ev_data["ev_chips"]
                 results["ev_by_player"][player_id]["actual_chips"] += ev_data["actual_chips"]
                 results["ev_by_player"][player_id]["variance"] += ev_data["variance"]
