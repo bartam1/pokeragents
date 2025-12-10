@@ -184,7 +184,9 @@ class PokerAgent:
         # Build the prompt describing the game state
         prompt = self._build_state_prompt(game_state)
 
+        # Debug logging - print full prompt for testing
         logger.debug(f"Agent {self.player_id} analyzing hand #{game_state.hand_number}")
+        logger.debug(f"Agent {self.player_id} PROMPT:\n{'='*60}\n{prompt}\n{'='*60}")
 
         # Run the agent - result.final_output is ActionDecision (structured)
         result = await Runner.run(self._agent, prompt)
@@ -308,12 +310,22 @@ class PokerAgent:
                     lines.append("")
                     lines.append(f"*** RIVER *** [{flop_turn_str}][{river_card}]")
 
-            # Format action - NOTE: environment.py uses "action" key, not "action_type"
+            # Format action with pot and stack context
             action_type = action.get("action", action.get("action_type", "?"))
             amount = action.get("amount")
             player_name = action.get("player_name", "?")
+            pot = action.get("pot_before_action")
+            stacks = action.get("stacks_before", {})
 
-            if amount:
+            # Build stacks string (abbreviated names)
+            stacks_str = " ".join(
+                f"{name.replace('Agent ', '')}={int(stack)}"
+                for name, stack in stacks.items()
+            ) if stacks else ""
+
+            if amount and pot:
+                lines.append(f"  {player_name} {action_type} {amount:.0f} [before: pot={pot:.0f}, stacks: {stacks_str}]")
+            elif amount:
                 lines.append(f"  {player_name} {action_type} {amount:.0f}")
             else:
                 lines.append(f"  {player_name} {action_type}")

@@ -96,6 +96,11 @@ class EnsemblePokerAgent:
         opponent_stats = self._build_opponent_stats(game_state)
         hand_history = self._build_hand_history(game_state.action_history)
         
+        # Debug logging - print all prompts for testing
+        logger.debug(f"Agent {self.player_id} STATE PROMPT:\n{'='*60}\n{state_prompt}\n{'='*60}")
+        logger.debug(f"Agent {self.player_id} OPPONENT STATS:\n{'='*60}\n{opponent_stats}\n{'='*60}")
+        logger.debug(f"Agent {self.player_id} HAND HISTORY:\n{'='*60}\n{hand_history}\n{'='*60}")
+        
         logger.info(f"🎭 {self.player_id} (Ensemble) analyzing situation...")
         
         # Run GTO and Exploit analysis in PARALLEL
@@ -274,8 +279,18 @@ class EnsemblePokerAgent:
             player = action.get("player_name", "?")
             action_type = action.get("action", action.get("action_type", "?"))
             amount = action.get("amount", 0)
+            pot = action.get("pot_before_action")
+            stacks = action.get("stacks_before", {})
             
-            if amount and amount > 0:
+            # Build stacks string (abbreviated names)
+            stacks_str = " ".join(
+                f"{name.replace('Agent ', '')}={int(stack)}"
+                for name, stack in stacks.items()
+            ) if stacks else ""
+            
+            if amount and amount > 0 and pot:
+                lines.append(f"  {player}: {action_type} {amount:.0f} [before: pot={pot:.0f}, stacks: {stacks_str}]")
+            elif amount and amount > 0:
                 lines.append(f"  {player}: {action_type} {amount:.0f}")
             else:
                 lines.append(f"  {player}: {action_type}")
