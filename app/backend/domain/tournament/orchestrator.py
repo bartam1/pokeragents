@@ -603,7 +603,7 @@ class TournamentOrchestrator:
                     logger.info(
                         f"  {player_id}: EV {ev_data['ev_chips']:+.0f} | "
                         f"Actual {ev_data['actual_chips']:+.0f} | "
-                        f"Luck {ev_data['luck_factor']:+.0f} "
+                        f"Variance {ev_data['variance']:+.0f} "
                         f"({ev_data['showdown_count']} showdowns)"
                     )
 
