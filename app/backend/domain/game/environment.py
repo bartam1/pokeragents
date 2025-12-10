@@ -270,6 +270,13 @@ class PokerEnvironment:
         state = self._state
         result = {"player": player_index, "action": action.type.value}
 
+        # Capture pot and stacks BEFORE executing the action
+        pot_before_action = float(state.total_pot_amount)
+        stacks_before = {
+            self.player_names[i]: float(state.stacks[i])
+            for i in range(self.num_players)
+        }
+
         try:
             if action.type == ActionType.FOLD:
                 state.fold()
@@ -310,13 +317,15 @@ class PokerEnvironment:
             result["error"] = str(e)
             raise
 
-        # Record in action history
+        # Record in action history with enhanced context
         self._action_history.append({
             "player_index": player_index,
             "player_name": self.player_names[player_index],
             "action": action.type.value,
             "amount": result.get("amount"),
             "street": self._get_current_street().value,
+            "pot_before_action": pot_before_action,
+            "stacks_before": stacks_before,
         })
 
         return result
