@@ -3,11 +3,14 @@ Statistics Recalculator - Recalculates baseline statistics from saved game state
 
 This module loads all saved tournament game states and replays them through
 the StatisticsTracker to compute fresh baseline statistics.
+
+Supports both old (v1) and new minimal (v2) tournament formats.
 """
 from pathlib import Path
+from typing import Any
 
-from backend.domain.game.models import HandResult, Street
-from backend.domain.game.recorder import GameStateRecorder, TournamentRecord
+from backend.domain.game.models import Action, ActionType, HandResult, Street
+from backend.domain.game.recorder import GameStateRecorder, TournamentRecord, MinimalAction
 from backend.domain.player.models import KnowledgeBase
 from backend.domain.player.tracker import StatisticsTracker
 from backend.logging_config import get_logger
@@ -23,7 +26,7 @@ def recalculate_baseline_stats(
     Recalculate baseline statistics from all saved tournament game states.
     
     This function:
-    1. Loads all saved tournament JSON files
+    1. Loads all saved tournament JSON files (v1 or v2 format)
     2. Replays all recorded actions through a fresh StatisticsTracker
     3. Saves the resulting statistics as calibrated_stats.json
     
@@ -51,13 +54,12 @@ def recalculate_baseline_stats(
     for tournament in tournaments:
         hands_in_tournament = _replay_tournament(tournament, tracker)
         total_hands += hands_in_tournament
-        total_actions += len(tournament.recorded_actions)
+        total_actions += len(tournament.actions)
     
     logger.info(
         f"📊 Recalculated stats from {total_actions} actions across {total_hands} hands"
     )
     
-    # Log summary of recalculated stats
     for player_id, profile in knowledge_base.profiles.items():
         stats = profile.statistics
         logger.info(
@@ -66,7 +68,6 @@ def recalculate_baseline_stats(
             f"AF {stats.aggression_factor:.2f}"
         )
     
-    # Save the recalculated stats
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     knowledge_base.save_to_file(output_path)
     logger.info(f"📊 Saved recalculated stats to {output_path}")
@@ -85,41 +86,35 @@ def _replay_tournament(tournament: TournamentRecord, tracker: StatisticsTracker)
     Returns:
         Number of hands replayed
     """
-    if not tournament.recorded_actions:
+    if not tournament.actions:
         return 0
     
     current_hand_number = None
-    player_ids_in_hand: set[str] = set()
     hands_replayed = 0
+    big_blind = tournament.big_blind
+    players = tournament.players
     
-    for recorded_action in tournament.recorded_actions:
-        state = recorded_action.state
-        actor = recorded_action.actor
-        action = recorded_action.action
-        
-        # Detect hand boundary
-        if current_hand_number != state.hand_number:
-            # End previous hand if there was one
-            if current_hand_number is not None and player_ids_in_hand:
-                _end_hand(tracker, list(player_ids_in_hand), current_hand_number)
+    for minimal_action in tournament.actions:
+        if current_hand_number != minimal_action.hand_number:
+            if current_hand_number is not None:
+                _end_hand(tracker, players, current_hand_number)
                 hands_replayed += 1
             
-            # Start new hand
-            current_hand_number = state.hand_number
-            player_ids_in_hand = {p.name for p in state.players}
-            tracker.start_hand(list(player_ids_in_hand))
+            current_hand_number = minimal_action.hand_number
+            tracker.start_hand(players)
         
-        # Record the action
+        action = minimal_action.to_action()
+        stub_state = minimal_action.to_stub_game_state(big_blind)
+        
         tracker.observe_action(
-            player_id=actor,
-            player_name=actor,
+            player_id=minimal_action.actor,
+            player_name=minimal_action.actor,
             action=action,
-            game_state=state,
+            game_state=stub_state,  # type: ignore - duck typing works here
         )
     
-    # End the last hand
-    if current_hand_number is not None and player_ids_in_hand:
-        _end_hand(tracker, list(player_ids_in_hand), current_hand_number)
+    if current_hand_number is not None:
+        _end_hand(tracker, players, current_hand_number)
         hands_replayed += 1
     
     return hands_replayed
@@ -141,4 +136,3 @@ def _end_hand(tracker: StatisticsTracker, player_ids: list[str], hand_number: in
         actions_by_street={street: [] for street in Street},
     )
     tracker.end_hand(player_ids, minimal_result)
-

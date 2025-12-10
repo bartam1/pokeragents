@@ -3,17 +3,17 @@ name: Optimize Tournament Storage
 overview: Reduce tournament JSON file size by storing only the minimal data needed for statistics recalculation, eliminating redundant nested data.
 todos:
   - id: create-minimal-models
-    content: Create MinimalRecordedAction model with only stats-relevant fields
-    status: pending
+    content: Create MinimalAction model with only stats-relevant fields
+    status: completed
   - id: update-recorder
     content: Update GameStateRecorder to use minimal format
-    status: pending
+    status: completed
   - id: update-recalculator
     content: Update recalculator to work with minimal format
-    status: pending
+    status: completed
   - id: add-backward-compat
     content: Add backward compatibility for loading old format files
-    status: pending
+    status: completed
 ---
 
 # Optimize Tournament Storage

@@ -117,7 +117,7 @@ class TournamentOrchestrator:
         
         # Generate a unique tournament ID and start recording
         self._tournament_id = str(uuid.uuid4())[:8]
-        self._recorder.start_tournament(self._tournament_id)
+        self._recorder.start_tournament(self._tournament_id, self._config.big_blind)
 
         player_names = [pid for pid, _ in agent_configs]
 
