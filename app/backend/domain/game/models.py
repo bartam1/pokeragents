@@ -221,3 +221,64 @@ class HandResult:
     showdown: bool  # True if went to showdown
     shown_hands: dict[int, list[Card]]  # Seat -> cards shown
     actions_by_street: dict[Street, list[dict[str, Any]]]
+
+
+@dataclass
+class EVRecord:
+    """
+    EV (Expected Value) calculation for a showdown hand.
+
+    Used to measure decision quality independent of card runout luck.
+    EV chips show what "should have happened" given the equity at all-in.
+
+    Example:
+        - You have AA vs 72o, all-in preflop (85% equity)
+        - You lose the hand (bad beat)
+        - Actual chips: -100 (lost)
+        - EV chips: +70 (you were 85% to win 200 pot, invested 100)
+    """
+
+    hand_number: int
+    player_id: str
+
+    # Equity at showdown/all-in point
+    equity: float  # 0.0 to 1.0
+
+    # Pot and investment
+    pot_size: float  # Total pot at showdown
+    amount_invested: float  # What this player put in
+
+    # Calculated values
+    ev_chips: float  # (equity × pot) - invested
+    actual_chips: float  # What actually happened (+pot if won, -invested if lost)
+
+    @property
+    def variance(self) -> float:
+        """
+        Difference between actual and expected result (the luck component).
+        Positive = ran above EV (lucky), Negative = ran below EV (unlucky)
+        """
+        return self.actual_chips - self.ev_chips
+
+    @property
+    def ev_adjusted(self) -> float:
+        """
+        EV-adjusted result for this showdown (luck removed).
+        For a single showdown, this equals ev_chips.
+        At tournament level: ev_adjusted_total = actual_total - sum(variance)
+        """
+        return self.ev_chips
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert to dictionary for JSON serialization."""
+        return {
+            "hand_number": self.hand_number,
+            "player_id": self.player_id,
+            "equity": round(self.equity, 4),
+            "pot_size": self.pot_size,
+            "amount_invested": self.amount_invested,
+            "ev_chips": round(self.ev_chips, 2),
+            "actual_chips": round(self.actual_chips, 2),
+            "variance": round(self.variance, 2),
+            "ev_adjusted": round(self.ev_adjusted, 2),
+        }

@@ -4,7 +4,7 @@ Statistics Tracker - Observes gameplay and updates player profiles.
 This is how Agent E learns opponent tendencies during play.
 """
 from backend.domain.game.models import Action, ActionType, HandResult, Street, StructuredGameState
-from backend.domain.player.models import KnowledgeBase, PlayerProfile
+from backend.domain.player.models import KnowledgeBase
 from backend.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -172,8 +172,7 @@ class StatisticsTracker:
         preflop_raises = [
             a
             for a in game_state.action_history
-            if a.get("street") == "preflop"
-            and a.get("action") in ("raise", "bet", "all_in")
+            if a.get("street") == "preflop" and a.get("action") in ("raise", "bet", "all_in")
         ]
         num_raises = len(preflop_raises)
 
@@ -279,12 +278,10 @@ class StatisticsTracker:
         """
         # Compute showdown participation from shown_hands (keyed by seat index)
         went_to_showdown = {
-            player_ids[seat]: seat in hand_result.shown_hands
-            for seat in range(len(player_ids))
+            player_ids[seat]: seat in hand_result.shown_hands for seat in range(len(player_ids))
         }
         won_at_showdown = {
-            player_ids[seat]: seat in hand_result.shown_hands
-            and seat in hand_result.winners
+            player_ids[seat]: seat in hand_result.shown_hands and seat in hand_result.winners
             for seat in range(len(player_ids))
         }
 
@@ -307,5 +304,3 @@ class StatisticsTracker:
 
         # Clear hand state
         self._hand_state.clear()
-
-

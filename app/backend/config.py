@@ -73,12 +73,13 @@ class Settings(BaseSettings):
         Configure the OpenAI client based on settings.
         Call this at startup before creating agents.
         """
-        from openai import AsyncOpenAI
         from agents import set_default_openai_client
+        from openai import AsyncOpenAI
 
         if self.is_azure:
             # Azure OpenAI
             from openai import AsyncAzureOpenAI
+
             client = AsyncAzureOpenAI(
                 azure_endpoint=self.openai_base_url,
                 api_key=self.openai_api_key,

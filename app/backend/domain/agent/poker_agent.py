@@ -10,16 +10,16 @@ The agent's behavior is shaped by:
 - Strategy configuration (personality/style)
 - Knowledge base (opponent stats - pre-loaded for Agent D, learned for Agent E)
 """
-from agents import Agent, Runner, ModelSettings
+from agents import Agent, ModelSettings, Runner
 
 from backend.config import Settings
-from backend.domain.game.models import Action, ActionType, HandResult, StructuredGameState
 from backend.domain.agent.models import ActionDecision
-from backend.domain.player.models import KnowledgeBase
-from backend.domain.player.tracker import StatisticsTracker
 from backend.domain.agent.strategies.base import StrategyConfig
 from backend.domain.agent.tools.basic_tools import POKER_TOOLS
-from backend.domain.agent.utils import log_tools_used, extract_tools_used, deviation_tracker
+from backend.domain.agent.utils import deviation_tracker, extract_tools_used
+from backend.domain.game.models import Action, HandResult, StructuredGameState
+from backend.domain.player.models import KnowledgeBase
+from backend.domain.player.tracker import StatisticsTracker
 from backend.logging_config import get_logger, log_agent_decision
 
 logger = get_logger(__name__)
@@ -194,23 +194,33 @@ class PokerAgent:
 
         # Extract tools used during this decision
         tools_used = extract_tools_used(result)
-        
+
         # Resolve to Action object
         action = decision.to_action(game_state)
         hole_cards = game_state.get_hole_cards_str()
-        board = " ".join(str(c) for c in game_state.community_cards) if game_state.community_cards else ""
-        
+        board = (
+            " ".join(str(c) for c in game_state.community_cards)
+            if game_state.community_cards
+            else ""
+        )
+
         # Determine if following GTO based on deviation text
         is_following_gto = decision.gto_deviation.lower().startswith("following gto")
 
         # Console logging (human readable)
         logger.info(f"  [{self.player_id}] Cards: {hole_cards}")
-        logger.info(f"    GTO: {decision.gto_analysis[:100]}{'...' if len(decision.gto_analysis) > 100 else ''}")
-        logger.info(f"    Exploit: {decision.exploit_analysis[:100]}{'...' if len(decision.exploit_analysis) > 100 else ''}")
-        logger.info(f"    📐 GTO Deviation: {decision.gto_deviation[:100]}{'...' if len(decision.gto_deviation) > 100 else ''}")
+        logger.info(
+            f"    GTO: {decision.gto_analysis[:100]}{'...' if len(decision.gto_analysis) > 100 else ''}"
+        )
+        logger.info(
+            f"    Exploit: {decision.exploit_analysis[:100]}{'...' if len(decision.exploit_analysis) > 100 else ''}"
+        )
+        logger.info(
+            f"    📐 GTO Deviation: {decision.gto_deviation[:100]}{'...' if len(decision.gto_deviation) > 100 else ''}"
+        )
         if tools_used:
             logger.info(f"    🔧 Tools: {', '.join(tools_used)}")
-        
+
         # Structured logging for JSON export
         log_agent_decision(
             logger=logger,
@@ -230,7 +240,7 @@ class PokerAgent:
             board=board,
             street=game_state.street.value,
         )
-        
+
         # Track GTO deviation for analysis
         deviation_tracker.record_decision(
             agent_id=self.player_id,
@@ -295,7 +305,9 @@ class PokerAgent:
                     lines.append("")
                     lines.append("*** PREFLOP ***")
                 elif action_street == "flop":
-                    board_cards = state.community_cards[:3] if len(state.community_cards) >= 3 else []
+                    board_cards = (
+                        state.community_cards[:3] if len(state.community_cards) >= 3 else []
+                    )
                     board_str = " ".join(str(c) for c in board_cards)
                     lines.append("")
                     lines.append(f"*** FLOP *** [{board_str}]")
@@ -306,7 +318,9 @@ class PokerAgent:
                     lines.append(f"*** TURN *** [{flop_str}][{turn_card}]")
                 elif action_street == "river":
                     flop_turn_str = " ".join(str(c) for c in state.community_cards[:4])
-                    river_card = state.community_cards[4] if len(state.community_cards) >= 5 else "?"
+                    river_card = (
+                        state.community_cards[4] if len(state.community_cards) >= 5 else "?"
+                    )
                     lines.append("")
                     lines.append(f"*** RIVER *** [{flop_turn_str}][{river_card}]")
 
@@ -318,13 +332,18 @@ class PokerAgent:
             stacks = action.get("stacks_before", {})
 
             # Build stacks string (abbreviated names)
-            stacks_str = " ".join(
-                f"{name.replace('Agent ', '')}={int(stack)}"
-                for name, stack in stacks.items()
-            ) if stacks else ""
+            stacks_str = (
+                " ".join(
+                    f"{name.replace('Agent ', '')}={int(stack)}" for name, stack in stacks.items()
+                )
+                if stacks
+                else ""
+            )
 
             if amount and pot:
-                lines.append(f"  {player_name} {action_type} {amount:.0f} [before: pot={pot:.0f}, stacks: {stacks_str}]")
+                lines.append(
+                    f"  {player_name} {action_type} {amount:.0f} [before: pot={pot:.0f}, stacks: {stacks_str}]"
+                )
             elif amount:
                 lines.append(f"  {player_name} {action_type} {amount:.0f}")
             else:
@@ -363,21 +382,24 @@ class PokerAgent:
 
         # Opponent reads (same format as Agent E)
         from backend.domain.player.models import MIN_RELIABLE_SAMPLE_SIZE
+
         lines.append("")
         lines.append("=== OPPONENT STATISTICS ===")
-        lines.append(f"(Minimum {MIN_RELIABLE_SAMPLE_SIZE} hands required for reliable exploitation)")
-        
+        lines.append(
+            f"(Minimum {MIN_RELIABLE_SAMPLE_SIZE} hands required for reliable exploitation)"
+        )
+
         for opp in state.opponents:
             profile = self.knowledge_base.get_profile(opp.name)
             if profile and profile.statistics.hands_played > 0:
                 stats = profile.statistics
                 lines.append(f"\n{opp.name} (Stack: {opp.stack:.0f}):")
-                
+
                 if stats.hands_played < 20:
                     # Don't show misleading stats with tiny samples
                     lines.append(f"  Hands: {stats.hands_played}")
-                    lines.append(f"  ⚠️ INSUFFICIENT DATA - Stats not meaningful")
-                    lines.append(f"  DO NOT exploit - Play GTO")
+                    lines.append("  ⚠️ INSUFFICIENT DATA - Stats not meaningful")
+                    lines.append("  DO NOT exploit - Play GTO")
                 else:
                     lines.append(f"  {stats.reliability_note}")
                     lines.append(f"  VPIP: {stats.vpip:.1f}%")

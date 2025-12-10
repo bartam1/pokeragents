@@ -5,7 +5,3 @@ __all__ = [
     "TournamentOrchestrator",
     "TournamentResult",
 ]
-
-
-
-

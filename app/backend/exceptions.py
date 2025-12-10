@@ -28,7 +28,3 @@ class TournamentError(PokerError):
     """Error related to tournament operations."""
 
     pass
-
-
-
-
