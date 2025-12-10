@@ -2,11 +2,11 @@
 Pytest configuration and shared fixtures for agent scenario tests.
 """
 import os
+
 import pytest
 
 from backend.config import Settings
 from backend.logging_config import setup_logging
-
 
 # Configure pytest-asyncio
 pytest_plugins = ["pytest_asyncio"]
@@ -23,7 +23,7 @@ def pytest_configure(config):
 def settings() -> Settings:
     """
     Load settings from environment.
-    
+
     Requires OPENAI_API_KEY to be set (either in .env or environment).
     Skips tests if API key is not available.
     """
@@ -42,4 +42,3 @@ def settings() -> Settings:
 def scenarios_dir() -> str:
     """Get the path to the scenarios directory."""
     return os.path.join(os.path.dirname(__file__), "agent_scenarios", "scenarios")
-

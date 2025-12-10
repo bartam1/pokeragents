@@ -96,5 +96,3 @@ Example (Exploiting with confidence):
   "confidence": 0.85
 }}
 """
-
-

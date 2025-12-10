@@ -179,7 +179,7 @@ AGENT_E_ENSEMBLE = StrategyConfig(
         "Has same pre-loaded historical knowledge as Agent D",
         "Uses multi-agent ensemble: GTO Analyst + Exploit Analyst + Decision Maker",
         "GTO Analyst provides game-theory optimal baseline",
-        "Exploit Analyst identifies opponent-specific adjustments", 
+        "Exploit Analyst identifies opponent-specific adjustments",
         "Decision Maker weighs both analyses for final action",
     ],
     has_shared_knowledge=True,  # KEY: Same knowledge as Agent D (INFORMED)
@@ -200,6 +200,3 @@ ALL_STRATEGIES = {
 def get_strategy(player_id: str) -> StrategyConfig:
     """Get the strategy for a player ID."""
     return ALL_STRATEGIES.get(player_id, AGENT_E_ENSEMBLE)
-
-
-

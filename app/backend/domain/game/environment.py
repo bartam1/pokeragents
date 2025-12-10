@@ -96,12 +96,12 @@ class PokerEnvironment:
     def set_blinds(self, small_blind: int, big_blind: int) -> None:
         """
         Update blind levels (for tournament blind increases).
-        
+
         This recreates the game definition with new blinds.
         """
         self.small_blind = small_blind
         self.big_blind = big_blind
-        
+
         # Recreate game template with new blinds
         self._game = NoLimitTexasHoldem(
             automations=AI_AUTOMATIONS,
@@ -110,7 +110,7 @@ class PokerEnvironment:
             raw_blinds_or_straddles=(small_blind, big_blind),
             min_bet=big_blind,
         )
-        
+
         logger.info(f"Blinds updated to {small_blind}/{big_blind}")
 
     def start_hand(self, stacks: list[float] | None = None) -> StructuredGameState:
@@ -191,29 +191,26 @@ class PokerEnvironment:
             # Get hole cards (only visible for hero)
             hole_cards = None
             if i == hero_seat and state.hole_cards[i]:
-                hole_cards = [
-                    Card(rank=str(c.rank), suit=str(c.suit))
-                    for c in state.hole_cards[i]
-                ]
+                hole_cards = [Card(rank=str(c.rank), suit=str(c.suit)) for c in state.hole_cards[i]]
 
-            players.append(PlayerState(
-                seat=i,
-                name=self.player_names[i],
-                stack=float(state.stacks[i]),
-                is_active=state.statuses[i],
-                is_all_in=state.statuses[i] and state.stacks[i] == 0,
-                current_bet=float(state.bets[i]),
-                hole_cards=hole_cards,
-            ))
+            players.append(
+                PlayerState(
+                    seat=i,
+                    name=self.player_names[i],
+                    stack=float(state.stacks[i]),
+                    is_active=state.statuses[i],
+                    is_all_in=state.statuses[i] and state.stacks[i] == 0,
+                    current_bet=float(state.bets[i]),
+                    hole_cards=hole_cards,
+                )
+            )
 
         # Get community cards
         community_cards = []
         if state.board_cards:
             for board in state.board_cards:
                 for card in board:
-                    community_cards.append(
-                        Card(rank=str(card.rank), suit=str(card.suit))
-                    )
+                    community_cards.append(Card(rank=str(card.rank), suit=str(card.suit)))
 
         # Calculate pot
         pot = float(state.total_pot_amount)
@@ -273,8 +270,7 @@ class PokerEnvironment:
         # Capture pot and stacks BEFORE executing the action
         pot_before_action = float(state.total_pot_amount)
         stacks_before = {
-            self.player_names[i]: float(state.stacks[i])
-            for i in range(self.num_players)
+            self.player_names[i]: float(state.stacks[i]) for i in range(self.num_players)
         }
 
         try:
@@ -297,7 +293,7 @@ class PokerEnvironment:
 
                 # Clamp to legal range (handle None values)
                 min_amount = state.min_completion_betting_or_raising_to_amount or 0
-                max_amount = state.max_completion_betting_or_raising_to_amount or float('inf')
+                max_amount = state.max_completion_betting_or_raising_to_amount or float("inf")
 
                 if amount < min_amount:
                     amount = min_amount
@@ -318,15 +314,17 @@ class PokerEnvironment:
             raise
 
         # Record in action history with enhanced context
-        self._action_history.append({
-            "player_index": player_index,
-            "player_name": self.player_names[player_index],
-            "action": action.type.value,
-            "amount": result.get("amount"),
-            "street": self._get_current_street().value,
-            "pot_before_action": pot_before_action,
-            "stacks_before": stacks_before,
-        })
+        self._action_history.append(
+            {
+                "player_index": player_index,
+                "player_name": self.player_names[player_index],
+                "action": action.type.value,
+                "amount": result.get("amount"),
+                "street": self._get_current_street().value,
+                "pot_before_action": pot_before_action,
+                "stacks_before": stacks_before,
+            }
+        )
 
         return result
 
@@ -353,15 +351,14 @@ class PokerEnvironment:
         winners = [i for i, p in enumerate(state.payoffs) if p > 0]
 
         # Get shown hands from HoleCardsShowingOrMucking operations
-        # Note: We can't use state.hole_cards directly because PokerKit's 
+        # Note: We can't use state.hole_cards directly because PokerKit's
         # HandKilling automation clears them after showdown
         shown_hands = {}
         for op in state.operations:
-            if type(op).__name__ == 'HoleCardsShowingOrMucking':
+            if type(op).__name__ == "HoleCardsShowingOrMucking":
                 if op.hole_cards:  # Cards were shown (not mucked)
                     shown_hands[op.player_index] = [
-                        Card(rank=str(c.rank), suit=str(c.suit))
-                        for c in op.hole_cards
+                        Card(rank=str(c.rank), suit=str(c.suit)) for c in op.hole_cards
                     ]
 
         # Build actions by street
@@ -372,7 +369,7 @@ class PokerEnvironment:
 
         # Calculate pot from payoffs (total_pot_amount is 0 after distribution)
         pot_size = sum(max(0, p) for p in state.payoffs)
-        
+
         result = HandResult(
             hand_number=self._hand_number,
             winners=winners,
@@ -450,4 +447,3 @@ class PokerEnvironment:
                 actions.append(ActionType.ALL_IN)
 
         return actions
-

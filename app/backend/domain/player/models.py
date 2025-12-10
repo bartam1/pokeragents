@@ -5,9 +5,8 @@ These models track poker statistics for each player, enabling
 the Exploit Scout agent to identify tendencies and leaks.
 """
 import json
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-
 
 # Minimum hands required for statistics to be considered reliable for exploitation
 MIN_RELIABLE_SAMPLE_SIZE = 50
@@ -81,9 +80,7 @@ class PlayerStatistics:
             self.limp_frequency = (self._limp_hands / self.hands_played) * 100
 
         if self._three_bet_opportunities > 0:
-            self.three_bet_pct = (
-                self._three_bet_count / self._three_bet_opportunities
-            ) * 100
+            self.three_bet_pct = (self._three_bet_count / self._three_bet_opportunities) * 100
 
         if self._fold_to_3bet_opportunities > 0:
             self.fold_to_three_bet = (
@@ -91,19 +88,13 @@ class PlayerStatistics:
             ) * 100
 
         if self._cbet_flop_opportunities > 0:
-            self.cbet_flop_pct = (
-                self._cbet_flop_count / self._cbet_flop_opportunities
-            ) * 100
+            self.cbet_flop_pct = (self._cbet_flop_count / self._cbet_flop_opportunities) * 100
 
         if self._cbet_turn_opportunities > 0:
-            self.cbet_turn_pct = (
-                self._cbet_turn_count / self._cbet_turn_opportunities
-            ) * 100
+            self.cbet_turn_pct = (self._cbet_turn_count / self._cbet_turn_opportunities) * 100
 
         if self._cbet_river_opportunities > 0:
-            self.cbet_river_pct = (
-                self._cbet_river_count / self._cbet_river_opportunities
-            ) * 100
+            self.cbet_river_pct = (self._cbet_river_count / self._cbet_river_opportunities) * 100
 
         # Aggression Factor = (Bets + Raises) / Calls
         # If no calls but has bets/raises, cap at 10.0 (very aggressive)
@@ -124,9 +115,7 @@ class PlayerStatistics:
             self.avg_bet_sizing = self._bet_sizing_total / self._bet_sizing_count
 
         if self._raise_sizing_count > 0:
-            self.avg_raise_sizing = (
-                self._raise_sizing_total / self._raise_sizing_count
-            )
+            self.avg_raise_sizing = self._raise_sizing_total / self._raise_sizing_count
 
         # River Aggression - same logic as overall aggression
         if self._river_calls > 0:
@@ -168,7 +157,7 @@ class PlayerStatistics:
     def is_reliable(self) -> bool:
         """
         Check if statistics are based on enough hands to be reliable.
-        
+
         Poker statistics require at least 50 hands to be meaningful.
         Below this threshold, variance is too high for exploitation.
         """
@@ -194,9 +183,9 @@ class PlayerStatistics:
 ⚠️ INSUFFICIENT DATA - Statistics not meaningful yet.
 DO NOT make reads or exploits based on this player.
 Play GTO (Game Theory Optimal) against them."""
-        
+
         reliability = self.reliability_note
-        
+
         return f"""
 Hands: {self.hands_played} - {reliability}
 VPIP/PFR: {self.vpip:.1f}% / {self.pfr:.1f}%
@@ -286,7 +275,7 @@ class KnowledgeBase:
         """Save knowledge base to JSON file."""
         path = Path(filepath)
         path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         data = {
             "profiles": {
                 player_id: {
@@ -298,7 +287,7 @@ class KnowledgeBase:
                 for player_id, profile in self.profiles.items()
             }
         }
-        
+
         with open(path, "w") as f:
             json.dump(data, f, indent=2)
 
@@ -308,10 +297,10 @@ class KnowledgeBase:
         path = Path(filepath)
         if not path.exists():
             return cls()
-        
+
         with open(path, "r") as f:
             data = json.load(f)
-        
+
         kb = cls()
         for player_id, profile_data in data.get("profiles", {}).items():
             stats = PlayerStatistics(**profile_data["statistics"])
@@ -322,7 +311,7 @@ class KnowledgeBase:
                 tendencies=profile_data.get("tendencies", []),
             )
             kb.profiles[player_id] = profile
-        
+
         return kb
 
     def merge_with(self, other: "KnowledgeBase") -> None:
