@@ -140,13 +140,13 @@ async def run_experiment(
             # Aggregate EV data
             for player_id, ev_data in result.ev_by_player.items():
                 if player_id not in results["ev_by_player"]:
-                results["ev_by_player"][player_id] = {
-                    "ev_chips": 0.0,
-                    "actual_chips": 0.0,
-                    "variance": 0.0,
-                    "ev_adjusted": 0.0,
-                    "showdown_count": 0,
-                }
+                    results["ev_by_player"][player_id] = {
+                        "ev_chips": 0.0,
+                        "actual_chips": 0.0,
+                        "variance": 0.0,
+                        "ev_adjusted": 0.0,
+                        "showdown_count": 0,
+                    }
                 results["ev_by_player"][player_id]["ev_chips"] += ev_data["ev_chips"]
                 results["ev_by_player"][player_id]["actual_chips"] += ev_data["actual_chips"]
                 results["ev_by_player"][player_id]["variance"] += ev_data["variance"]
@@ -544,14 +544,6 @@ def main():
         print("   Agent D will start fresh and learn real opponent behaviors.\n")
     else:
         print(f"\n🎲 Starting Poker POC Experiment with {args.tournaments} tournaments...\n")
-
-    results = asyncio.run(
-        run_experiment(
-            num_tournaments=args.tournaments,
-            settings=settings,
-            calibration_mode=args.calibrate,
-        )
-    )
         
         # Recalculate baseline statistics from saved game states
         calibrated_path = f"{settings.knowledge_persistence_dir}/calibrated_stats.json"
@@ -569,11 +561,6 @@ def main():
             calibration_mode=args.calibrate,
         ))
 
-    # Print results
-    print_results(results)
-
-    if args.calibrate:
-        print("\n🔧 Calibration complete! Run without --calibrate to use learned stats.")
         # Print results
         print_results(results)
         

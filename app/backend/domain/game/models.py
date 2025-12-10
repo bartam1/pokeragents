@@ -282,3 +282,16 @@ class EVRecord:
             "variance": round(self.variance, 2),
             "ev_adjusted": round(self.ev_adjusted, 2),
         }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "EVRecord":
+        """Create EVRecord from dictionary."""
+        return cls(
+            hand_number=data["hand_number"],
+            player_id=data["player_id"],
+            equity=data["equity"],
+            pot_size=data["pot_size"],
+            amount_invested=data["amount_invested"],
+            ev_chips=data["ev_chips"],
+            actual_chips=data["actual_chips"],
+        )

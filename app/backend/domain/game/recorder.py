@@ -13,7 +13,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from backend.domain.game.models import Action, ActionType, StructuredGameState, Street
+from backend.domain.game.models import Action, ActionType, EVRecord, StructuredGameState, Street
 
 
 @dataclass
@@ -118,12 +118,13 @@ class StubGameState:
 
 @dataclass
 class TournamentRecord:
-    """Complete record of a tournament's actions for statistics."""
+    """Complete record of a tournament's actions for statistics and EV tracking."""
     tournament_id: str
     timestamp: str
     players: list[str] = field(default_factory=list)
     big_blind: float = 20.0
     actions: list[MinimalAction] = field(default_factory=list)
+    ev_records: list[EVRecord] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -133,6 +134,7 @@ class TournamentRecord:
             "players": self.players,
             "big_blind": self.big_blind,
             "actions": [a.to_dict() for a in self.actions],
+            "ev_records": [ev.to_dict() for ev in self.ev_records],
         }
 
     @classmethod
@@ -154,6 +156,7 @@ class TournamentRecord:
             players=data.get("players", []),
             big_blind=data.get("big_blind", 20.0),
             actions=[MinimalAction.from_dict(a) for a in data.get("actions", [])],
+            ev_records=[EVRecord.from_dict(ev) for ev in data.get("ev_records", [])],
         )
 
     @classmethod
@@ -256,6 +259,13 @@ class GameStateRecorder:
         
         minimal_action = MinimalAction.from_full_state(state, actor, action)
         self._current_tournament.actions.append(minimal_action)
+
+    def record_ev(self, ev_records: list[EVRecord]) -> None:
+        """Record EV data from showdown hands."""
+        if self._current_tournament is None:
+            raise ValueError("No tournament started. Call start_tournament first.")
+        
+        self._current_tournament.ev_records.extend(ev_records)
 
     def save_tournament(self, incomplete: bool = False) -> str | None:
         """Save the current tournament record to a JSON file.

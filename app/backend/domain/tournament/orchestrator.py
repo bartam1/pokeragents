@@ -348,6 +348,7 @@ class TournamentOrchestrator:
             if result.showdown and len(result.shown_hands) >= 2:
                 ev_records = self._calculate_showdown_ev(hand_number, result, stacks_before)
                 self._ev_records.extend(ev_records)
+                self._recorder.record_ev(ev_records)
 
             # Show stacks after hand
             stacks_str = " | ".join(
