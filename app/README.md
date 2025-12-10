@@ -178,6 +178,56 @@ uv run python -m backend.main --calibrate -n 10
 
 Results are saved to `data/knowledge/calibrated_stats.json` and **accumulate** across runs. These become the pre-loaded knowledge for Agent D in normal mode.
 
+## Testing
+
+Run scenario-based tests to validate agent decision quality with real LLM calls.
+
+```bash
+# Install dev dependencies (includes pytest-asyncio)
+uv sync --dev
+
+# Run all agent scenario tests
+uv run pytest tests/agent_scenarios/ -v -s
+
+# Run with debug logging (see full prompts)
+LOG_LEVEL=DEBUG uv run pytest tests/agent_scenarios/ -v -s
+
+# Run specific agent tests
+uv run pytest tests/agent_scenarios/test_agent_d.py -v -s   # Agent D (simple)
+uv run pytest tests/agent_scenarios/test_agent_e.py -v -s   # Agent E (ensemble)
+uv run pytest tests/agent_scenarios/test_agent_a.py -v -s   # Agent A (bluffer, no knowledge)
+
+# Run single scenario test
+uv run pytest tests/agent_scenarios/test_agent_d.py::TestAgentDSingleScenario::test_preflop_aa -v -s
+
+# Run comparison tests (Agent D vs Agent E on same scenarios)
+uv run pytest tests/agent_scenarios/test_agent_e.py::TestAgentEComparison -v -s
+```
+
+### Test Output
+
+Each test prints full decision reasoning:
+- **GTO Analysis**: Pure mathematical reasoning
+- **Exploit Analysis**: Opponent-specific adjustments
+- **GTO Deviation**: Why following or deviating from GTO
+- **Action**: Final decision with confidence
+
+### Adding New Scenarios
+
+Create JSON files in `tests/agent_scenarios/scenarios/`:
+
+```
+tests/agent_scenarios/scenarios/
+├── preflop/
+│   └── premium_aa_utg.json
+├── flop/
+├── turn/
+└── river/
+    └── bluff_catch_vs_aggressor.json
+```
+
+See existing scenarios for the JSON schema (mirrors `StructuredGameState`).
+
 ## Project Structure
 
 ```
@@ -202,6 +252,17 @@ poc-pokerbot/
 │       │   └── tools/          # @function_tool tools
 │       └── tournament/
 │           └── orchestrator.py # Tournament runner, outcome tracking
+├── tests/
+│   ├── conftest.py             # Shared pytest fixtures
+│   └── agent_scenarios/        # Scenario-based agent tests
+│       ├── loader.py           # JSON to GameState converter
+│       ├── utils.py            # Shared test utilities
+│       ├── test_agent_a.py     # Agent A tests (bluffer)
+│       ├── test_agent_d.py     # Agent D tests (simple)
+│       ├── test_agent_e.py     # Agent E tests (ensemble)
+│       └── scenarios/          # JSON test scenarios
+│           ├── preflop/
+│           └── river/
 ├── data/
 │   ├── knowledge/              # Persistent knowledge storage
 │   │   └── calibrated_stats.json  # Shared by D & E
