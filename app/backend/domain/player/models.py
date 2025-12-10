@@ -42,6 +42,10 @@ class PlayerStatistics:
     wtsd: float = 0.0  # Went To ShowDown % (when saw flop)
     wsd: float = 0.0  # Won at ShowDown %
 
+    # EV-adjusted metrics
+    ev_adjusted_total: float = 0.0  # Sum of EV adjustments from showdowns
+    showdown_count: int = 0  # Number of showdowns for this player
+
     # Sizing patterns
     avg_bet_sizing: float = 0.0  # As % of pot
     avg_raise_sizing: float = 0.0
