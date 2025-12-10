@@ -74,33 +74,81 @@ Create `app/tests/agent_scenarios/loader.py` with:
 - `load_scenarios_from_dir(directory)` - Load all scenarios recursively
 - `save_game_state_as_scenario()` - Capture real game states for regression testing
 
-**JSON Schema for scenarios:**
+**JSON Schema - Mirrors StructuredGameState:**
+
+The JSON structure directly matches the `StructuredGameState` dataclass from [`app/backend/domain/game/models.py`](app/backend/domain/game/models.py):
 
 ```json
 {
   "id": "scenario_id",
-  "name": "Human readable name",
+  "name": "Human readable name", 
   "description": "What this tests",
-  "street": "preflop|flop|turn|river",
-  "game_state": {
+  
+  "structured_game_state": {
     "hand_number": 1,
-    "pot": 100,
-    "current_bet": 20,
+    "button_seat": 3,
+    "small_blind": 10.0,
+    "big_blind": 20.0,
+    "street": "preflop",
+    "pot": 30.0,
+    "community_cards": ["Ah", "7c", "2d"],
+    "players": [
+      {
+        "seat": 0,
+        "name": "Agent A",
+        "stack": 1490.0,
+        "is_active": true,
+        "is_all_in": false,
+        "current_bet": 10.0,
+        "hole_cards": null
+      },
+      {
+        "seat": 2,
+        "name": "Hero",
+        "stack": 1500.0,
+        "is_active": true,
+        "is_all_in": false,
+        "current_bet": 0.0,
+        "hole_cards": ["As", "Ah"]
+      }
+    ],
     "hero_seat": 2,
-    "hero_cards": ["As", "Ah"],
-    "community_cards": [],
-    "players": [...],
+    "current_bet": 20.0,
+    "min_raise": 40.0,
+    "max_raise": 1500.0,
     "legal_actions": ["fold", "call", "raise"],
-    "action_history": [...]
+    "action_history": [
+      {"player_name": "Agent A", "action": "raise", "amount": 60, "street": "preflop"}
+    ]
   },
-  "opponent_knowledge": {
-    "Agent A": {
-      "hands_played": 150,
-      "vpip": 42.0,
-      "pfr": 35.0,
-      "tendencies": ["Bluffs frequently"]
+  
+  "knowledge_base": {
+    "profiles": {
+      "Agent A": {
+        "player_id": "Agent A",
+        "name": "Agent A",
+        "statistics": {
+          "hands_played": 150,
+          "vpip": 42.0,
+          "pfr": 35.0,
+          "limp_frequency": 3.0,
+          "three_bet_pct": 15.0,
+          "fold_to_three_bet": 35.0,
+          "cbet_flop_pct": 80.0,
+          "cbet_turn_pct": 65.0,
+          "cbet_river_pct": 55.0,
+          "aggression_factor": 3.2,
+          "river_aggression": 2.8,
+          "wtsd": 25.0,
+          "wsd": 45.0,
+          "avg_bet_sizing": 0.0,
+          "avg_raise_sizing": 0.0
+        },
+        "tendencies": ["Bluffs frequently", "Triple barrels often"]
+      }
     }
   },
+  
   "expected": {
     "valid_actions": ["raise", "all_in"],
     "invalid_actions": ["fold"],
@@ -109,6 +157,8 @@ Create `app/tests/agent_scenarios/loader.py` with:
   }
 }
 ```
+
+The loader will deserialize this directly into a `StructuredGameState` object with minimal transformation (just converting card strings to `Card` objects and action strings to `ActionType` enums).
 
 ### 3. Create Test Files
 
