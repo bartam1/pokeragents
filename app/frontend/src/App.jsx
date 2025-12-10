@@ -12,21 +12,25 @@ function App() {
   useEffect(() => {
     const loadTournaments = async () => {
       try {
-        // Load manifest
         const manifestRes = await fetch('/results/manifest.json');
         const manifest = await manifestRes.json();
 
-        // Load all tournament files
         const allData = [];
         for (const filename of manifest.files) {
           const res = await fetch(`/results/${filename}`);
           const data = await res.json();
           
-          if (data.tournament_details && Array.isArray(data.tournament_details)) {
+          // Handle new format (format_version 3) with hand_summaries
+          if (data.hand_summaries && Array.isArray(data.hand_summaries)) {
+            // Get initial stacks from first hand
+            const initialStacks = data.hands?.[0]?.starting_stacks || {};
             allData.push({
               filename,
               timestamp: data.timestamp,
-              tournaments: data.tournament_details,
+              tournamentId: data.tournament_id,
+              players: data.players || Object.keys(initialStacks),
+              handSummaries: data.hand_summaries,
+              initialStacks,
             });
           }
         }
@@ -38,11 +42,7 @@ function App() {
         // Auto-select all players
         const players = new Set();
         allData.forEach((file) => {
-          file.tournaments.forEach((t) => {
-            if (t.final_stacks) {
-              Object.keys(t.final_stacks).forEach((p) => players.add(p));
-            }
-          });
+          file.players.forEach((p) => players.add(p));
         });
         setSelectedPlayers(Array.from(players));
       } catch (err) {
@@ -58,17 +58,13 @@ function App() {
   const allPlayers = useMemo(() => {
     const players = new Set();
     tournamentData.forEach((file) => {
-      file.tournaments.forEach((t) => {
-        if (t.final_stacks) {
-          Object.keys(t.final_stacks).forEach((p) => players.add(p));
-        }
-      });
+      file.players.forEach((p) => players.add(p));
     });
     return Array.from(players).sort();
   }, [tournamentData]);
 
-  const totalTournaments = useMemo(() => 
-    tournamentData.reduce((sum, f) => sum + f.tournaments.length, 0),
+  const totalHands = useMemo(() => 
+    tournamentData.reduce((sum, f) => sum + f.handSummaries.length, 0),
     [tournamentData]
   );
 
@@ -92,7 +88,7 @@ function App() {
         <h1>🃏 Chip Tracker</h1>
         <div className="stats">
           <span>{tournamentData.length} files</span>
-          <span>{totalTournaments} tournaments</span>
+          <span>{totalHands} hands</span>
           <span>{allPlayers.length} players</span>
         </div>
       </header>
