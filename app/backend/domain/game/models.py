@@ -43,6 +43,13 @@ class Card:
             raise ValueError(f"Invalid card string: {s}")
         return cls(rank=s[0], suit=s[1])
 
+    def to_dict(self) -> dict[str, str]:
+        return {"rank": self.rank, "suit": self.suit}
+
+    @classmethod
+    def from_dict(cls, data: dict[str, str]) -> "Card":
+        return cls(rank=data["rank"], suit=data["suit"])
+
 
 @dataclass
 class Action:
@@ -56,6 +63,13 @@ class Action:
             return f"{self.type.value} {self.amount}"
         return self.type.value
 
+    def to_dict(self) -> dict[str, Any]:
+        return {"type": self.type.value, "amount": self.amount}
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "Action":
+        return cls(type=ActionType(data["type"]), amount=data.get("amount"))
+
 
 @dataclass
 class PlayerState:
@@ -68,6 +82,32 @@ class PlayerState:
     is_all_in: bool
     current_bet: float
     hole_cards: list[Card] | None  # None if hidden
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "seat": self.seat,
+            "name": self.name,
+            "stack": self.stack,
+            "is_active": self.is_active,
+            "is_all_in": self.is_all_in,
+            "current_bet": self.current_bet,
+            "hole_cards": [c.to_dict() for c in self.hole_cards] if self.hole_cards else None,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "PlayerState":
+        hole_cards = None
+        if data.get("hole_cards"):
+            hole_cards = [Card.from_dict(c) for c in data["hole_cards"]]
+        return cls(
+            seat=data["seat"],
+            name=data["name"],
+            stack=data["stack"],
+            is_active=data["is_active"],
+            is_all_in=data["is_all_in"],
+            current_bet=data["current_bet"],
+            hole_cards=hole_cards,
+        )
 
 
 @dataclass
@@ -102,6 +142,43 @@ class StructuredGameState:
 
     # Hand context (for analysis)
     action_history: list[dict[str, Any]] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "hand_number": self.hand_number,
+            "button_seat": self.button_seat,
+            "small_blind": self.small_blind,
+            "big_blind": self.big_blind,
+            "street": self.street.value,
+            "pot": self.pot,
+            "community_cards": [c.to_dict() for c in self.community_cards],
+            "players": [p.to_dict() for p in self.players],
+            "hero_seat": self.hero_seat,
+            "current_bet": self.current_bet,
+            "min_raise": self.min_raise,
+            "max_raise": self.max_raise,
+            "legal_actions": [a.value for a in self.legal_actions],
+            "action_history": self.action_history,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "StructuredGameState":
+        return cls(
+            hand_number=data["hand_number"],
+            button_seat=data["button_seat"],
+            small_blind=data["small_blind"],
+            big_blind=data["big_blind"],
+            street=Street(data["street"]),
+            pot=data["pot"],
+            community_cards=[Card.from_dict(c) for c in data["community_cards"]],
+            players=[PlayerState.from_dict(p) for p in data["players"]],
+            hero_seat=data["hero_seat"],
+            current_bet=data["current_bet"],
+            min_raise=data["min_raise"],
+            max_raise=data["max_raise"],
+            legal_actions=[ActionType(a) for a in data["legal_actions"]],
+            action_history=data.get("action_history", []),
+        )
 
     @property
     def hero(self) -> PlayerState:

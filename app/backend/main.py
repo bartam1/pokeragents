@@ -21,6 +21,7 @@ from backend.domain.tournament.orchestrator import (
     TournamentResult,
 )
 from backend.domain.agent.utils import deviation_tracker
+from backend.domain.player.recalculator import recalculate_baseline_stats
 from backend.logging_config import setup_logging, get_logger, log_collector
 
 logger = get_logger(__name__)
@@ -357,6 +358,15 @@ def main():
         print("   Agent D will start fresh and learn real opponent behaviors.\n")
     else:
         print(f"\n🎲 Starting Poker POC Experiment with {args.tournaments} tournaments...\n")
+        
+        # Recalculate baseline statistics from saved game states
+        calibrated_path = f"{settings.knowledge_persistence_dir}/calibrated_stats.json"
+        baseline_kb = recalculate_baseline_stats(
+            gamestates_dir=settings.gamestates_dir,
+            output_path=calibrated_path,
+        )
+        if baseline_kb.profiles:
+            print(f"📊 Recalculated baseline stats from {baseline_kb.get_total_hands_observed()} total hands\n")
 
     results = asyncio.run(run_experiment(
         num_tournaments=args.tournaments,

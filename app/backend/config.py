@@ -49,6 +49,9 @@ class Settings(BaseSettings):
 
     # Knowledge persistence
     knowledge_persistence_dir: str = "data/knowledge"
+    
+    # Game state persistence (for statistics recalculation)
+    gamestates_dir: str = "data/gamestates"
 
     @property
     def model_name(self) -> str:

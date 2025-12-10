@@ -8,12 +8,14 @@ This is the main coordinator that:
 4. Tracks results for the POC experiment
 """
 import os
+import uuid
 from dataclasses import dataclass, field
 from typing import Any, Union
 
 from backend.config import Settings
 from backend.domain.game.environment import PokerEnvironment
 from backend.domain.game.models import Action, ActionType
+from backend.domain.game.recorder import GameStateRecorder
 from backend.domain.player.models import KnowledgeBase, create_shared_knowledge_base
 from backend.domain.agent.poker_agent import PokerAgent
 from backend.domain.agent.ensemble_agent import EnsemblePokerAgent
@@ -90,6 +92,8 @@ class TournamentOrchestrator:
         self._config: TournamentConfig | None = None
         self._eliminations: list[tuple[str, int]] = []
         self._calibration_mode: bool = False
+        self._recorder = GameStateRecorder(settings.gamestates_dir)
+        self._tournament_id: str = ""
 
     def setup_tournament(
         self,
@@ -110,6 +114,10 @@ class TournamentOrchestrator:
         agent_configs = agent_configs or DEFAULT_AGENTS
         self._eliminations = []
         self._calibration_mode = calibration_mode
+        
+        # Generate a unique tournament ID and start recording
+        self._tournament_id = str(uuid.uuid4())[:8]
+        self._recorder.start_tournament(self._tournament_id)
 
         player_names = [pid for pid, _ in agent_configs]
 
@@ -244,6 +252,11 @@ class TournamentOrchestrator:
 
         # Save Agent D's accumulated knowledge
         self._save_agent_knowledge()
+        
+        # Save recorded game states for future statistics recalculation
+        saved_path = self._recorder.save_tournament()
+        if saved_path:
+            logger.info(f"📝 Saved game states to {saved_path}")
 
         # Build final results
         return self._build_results(hand_count)
@@ -289,6 +302,9 @@ class TournamentOrchestrator:
                 
                 # Convert structured decision to executable Action
                 action = decision.to_action(game_state)
+                
+                # Record the state and action for statistics recalculation
+                self._recorder.record_action(game_state, actor_name, action)
 
                 # Execute the action
                 self._env.execute_action(actor_index, action)
