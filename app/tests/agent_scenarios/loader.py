@@ -26,7 +26,7 @@ from backend.domain.player.models import (
 @dataclass
 class ExpectedBehavior:
     """Expected behavior for scenario validation."""
-    
+
     valid_actions: list[str] = field(default_factory=list)
     invalid_actions: list[str] = field(default_factory=list)
     min_confidence: float = 0.0
@@ -36,7 +36,7 @@ class ExpectedBehavior:
 @dataclass
 class Scenario:
     """A complete test scenario with game state and expected behavior."""
-    
+
     id: str
     name: str
     description: str
@@ -98,7 +98,7 @@ def _parse_game_state(data: dict[str, Any]) -> StructuredGameState:
 def _parse_statistics(data: dict[str, Any]) -> PlayerStatistics:
     """Parse PlayerStatistics from JSON data."""
     stats = PlayerStatistics()
-    
+
     # Set all the public fields
     stats.hands_played = data.get("hands_played", 0)
     stats.vpip = data.get("vpip", 0.0)
@@ -115,14 +115,14 @@ def _parse_statistics(data: dict[str, Any]) -> PlayerStatistics:
     stats.wsd = data.get("wsd", 0.0)
     stats.avg_bet_sizing = data.get("avg_bet_sizing", 0.0)
     stats.avg_raise_sizing = data.get("avg_raise_sizing", 0.0)
-    
+
     return stats
 
 
 def _parse_knowledge_base(data: dict[str, Any]) -> KnowledgeBase:
     """Parse KnowledgeBase from JSON data."""
     kb = KnowledgeBase()
-    
+
     profiles_data = data.get("profiles", {})
     for player_id, profile_data in profiles_data.items():
         stats = _parse_statistics(profile_data.get("statistics", {}))
@@ -133,7 +133,7 @@ def _parse_knowledge_base(data: dict[str, Any]) -> KnowledgeBase:
             tendencies=profile_data.get("tendencies", []),
         )
         kb.profiles[player_id] = profile
-    
+
     return kb
 
 
@@ -150,22 +150,22 @@ def _parse_expected(data: dict[str, Any]) -> ExpectedBehavior:
 def load_scenario(filepath: str | Path) -> Scenario:
     """
     Load a scenario from a JSON file.
-    
+
     Args:
         filepath: Path to the JSON scenario file
-        
+
     Returns:
         Scenario object with game state, knowledge base, and expected behavior
     """
     path = Path(filepath)
-    
+
     with open(path, "r") as f:
         data = json.load(f)
-    
+
     game_state = _parse_game_state(data["structured_game_state"])
     knowledge_base = _parse_knowledge_base(data.get("knowledge_base", {}))
     expected = _parse_expected(data.get("expected", {}))
-    
+
     return Scenario(
         id=data.get("id", path.stem),
         name=data.get("name", path.stem),
@@ -179,44 +179,43 @@ def load_scenario(filepath: str | Path) -> Scenario:
 def load_scenarios_from_dir(directory: str | Path) -> list[Scenario]:
     """
     Load all scenarios from a directory recursively.
-    
+
     Args:
         directory: Path to directory containing JSON scenario files
-        
+
     Returns:
         List of Scenario objects
     """
     path = Path(directory)
     scenarios = []
-    
+
     for json_file in path.rglob("*.json"):
         try:
             scenario = load_scenario(json_file)
             scenarios.append(scenario)
         except Exception as e:
             print(f"Warning: Failed to load {json_file}: {e}")
-    
+
     return scenarios
 
 
 def get_scenario_ids(directory: str | Path) -> list[tuple[str, Path]]:
     """
     Get list of scenario IDs and paths for pytest parametrization.
-    
+
     Args:
         directory: Path to directory containing JSON scenario files
-        
+
     Returns:
         List of (scenario_id, filepath) tuples
     """
     path = Path(directory)
     result = []
-    
+
     for json_file in sorted(path.rglob("*.json")):
         # Use relative path from scenarios dir as ID
         rel_path = json_file.relative_to(path)
         scenario_id = str(rel_path.with_suffix("")).replace("/", "_")
         result.append((scenario_id, json_file))
-    
-    return result
 
+    return result

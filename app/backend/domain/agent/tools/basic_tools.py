@@ -7,10 +7,10 @@ from typing import Callable
 
 from agents import function_tool
 from pokerkit import (
-    calculate_hand_strength,
     Card,
     Deck,
     StandardHighHand,
+    calculate_hand_strength,
     parse_range,
 )
 
@@ -36,7 +36,7 @@ def calculate_pot_odds(pot_size: float, amount_to_call: float) -> str:
         return "No bet to call - check is free."
 
     required_equity = amount_to_call / (pot_size + amount_to_call) * 100
-    
+
     return f"Pot odds: Need {required_equity:.1f}% equity to call (pot {pot_size}, to call {amount_to_call})"
 
 
@@ -89,7 +89,7 @@ def calculate_equity(
 ) -> str:
     """
     Calculate your hand's equity vs random opponent hands.
-    
+
     Compare this equity to pot odds to decide if calling is profitable.
 
     Args:
@@ -102,21 +102,24 @@ def calculate_equity(
     """
     try:
         hole = parse_range(hole_cards)
-        board_cards = Card.parse(board) if board else Card.parse('')
-        
+        board_cards = Card.parse(board) if board else Card.parse("")
+
         strength = calculate_hand_strength(
             num_opponents + 1,
             hole,
             board_cards,
-            2, 5, Deck.STANDARD, (StandardHighHand,),
+            2,
+            5,
+            Deck.STANDARD,
+            (StandardHighHand,),
             sample_count=500,
         )
-        
+
         equity = strength * 100
         street = "preflop" if not board else f"on {board}"
-        
+
         return f"Equity: {equity:.1f}% ({hole_cards} {street} vs {num_opponents} opponent(s))"
-        
+
     except Exception as e:
         logger.error(f"Equity calculation failed: {e}")
         return f"Could not calculate equity for {hole_cards}. Format: 'AsKh', board: 'Js7s2c'"
@@ -124,8 +127,8 @@ def calculate_equity(
 
 # Basic tools available to all agents
 POKER_TOOLS = [
-    calculate_pot_odds, 
-    get_position_info, 
+    calculate_pot_odds,
+    get_position_info,
     calculate_equity,
 ]
 
@@ -157,7 +160,7 @@ def create_knowledge_tools(knowledge_base: KnowledgeBase) -> list[Callable]:
             Opponent statistics or message if unknown
         """
         from backend.domain.player.models import MIN_RELIABLE_SAMPLE_SIZE
-        
+
         profile = knowledge_base.get_profile(player_name)
 
         if not profile or profile.statistics.hands_played == 0:
@@ -165,7 +168,7 @@ def create_knowledge_tools(knowledge_base: KnowledgeBase) -> list[Callable]:
 
         stats = profile.statistics
         confidence = profile.confidence
-        
+
         # Add reliability warning
         if not stats.is_reliable:
             warning = f"""
@@ -188,14 +191,14 @@ Tendencies: {', '.join(profile.tendencies) if profile.tendencies else 'None iden
     def list_known_opponents() -> str:
         """
         List all opponents we have data on.
-        
+
         Note: At least 50 hands required for reliable exploitation.
 
         Returns:
             List of known opponents with sample sizes and reliability
         """
         from backend.domain.player.models import MIN_RELIABLE_SAMPLE_SIZE
-        
+
         players = knowledge_base.list_players()
 
         if not players:
@@ -213,6 +216,3 @@ Tendencies: {', '.join(profile.tendencies) if profile.tendencies else 'None iden
         return "\n".join(lines)
 
     return [get_opponent_stats, list_known_opponents]
-
-
-

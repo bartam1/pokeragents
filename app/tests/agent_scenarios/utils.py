@@ -6,10 +6,9 @@ and scenario handling to avoid code duplication across test files.
 """
 from pathlib import Path
 
-from backend.domain.game.models import Action, StructuredGameState
 from backend.domain.agent.models import ActionDecision
+from backend.domain.game.models import Action
 from tests.agent_scenarios.loader import Scenario, get_scenario_ids
-
 
 # Scenarios directory path
 SCENARIOS_DIR = Path(__file__).parent / "scenarios"
@@ -48,11 +47,11 @@ def print_decision(
     print(f"{'='*70}")
     print(f"Action: {action.type.value} {action.amount if action.amount else ''}")
     print(f"Confidence: {decision.confidence:.2f}")
-    print(f"\n📊 GTO Analysis:")
+    print("\n📊 GTO Analysis:")
     print(f"   {decision.gto_analysis}")
-    print(f"\n🔍 Exploit Analysis:")
+    print("\n🔍 Exploit Analysis:")
     print(f"   {decision.exploit_analysis}")
-    print(f"\n📐 GTO Deviation:")
+    print("\n📐 GTO Deviation:")
     print(f"   {decision.gto_deviation}")
     print(f"{'='*70}")
 
@@ -81,25 +80,27 @@ def validate_decision(
 ) -> None:
     """Validate decision against expected behavior and print results."""
     action_str = action.type.value
-    
+
     if scenario.expected.valid_actions:
-        assert action_str in scenario.expected.valid_actions, (
-            f"Action '{action_str}' not in valid actions: {scenario.expected.valid_actions}"
-        )
+        assert (
+            action_str in scenario.expected.valid_actions
+        ), f"Action '{action_str}' not in valid actions: {scenario.expected.valid_actions}"
         print(f"✅ Action '{action_str}' is valid (expected: {scenario.expected.valid_actions})")
-    
+
     if scenario.expected.invalid_actions:
-        assert action_str not in scenario.expected.invalid_actions, (
-            f"Action '{action_str}' is in invalid actions: {scenario.expected.invalid_actions}"
+        assert (
+            action_str not in scenario.expected.invalid_actions
+        ), f"Action '{action_str}' is in invalid actions: {scenario.expected.invalid_actions}"
+        print(
+            f"✅ Action '{action_str}' is not invalid (forbidden: {scenario.expected.invalid_actions})"
         )
-        print(f"✅ Action '{action_str}' is not invalid (forbidden: {scenario.expected.invalid_actions})")
-    
+
     if scenario.expected.min_confidence > 0:
-        assert decision.confidence >= scenario.expected.min_confidence, (
-            f"Confidence {decision.confidence:.2f} below minimum {scenario.expected.min_confidence}"
-        )
+        assert (
+            decision.confidence >= scenario.expected.min_confidence
+        ), f"Confidence {decision.confidence:.2f} below minimum {scenario.expected.min_confidence}"
         print(f"✅ Confidence {decision.confidence:.2f} >= {scenario.expected.min_confidence}")
-    
+
     if scenario.expected.notes:
         print(f"📝 Notes: {scenario.expected.notes}")
 
@@ -109,4 +110,3 @@ def print_test_header(test_name: str, agent_name: str) -> None:
     print(f"\n{'='*70}")
     print(f"🎯 {test_name} - {agent_name} Decision")
     print(f"{'='*70}")
-

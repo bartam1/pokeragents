@@ -9,9 +9,9 @@ This module provides specialized agents that each focus on one aspect of poker a
 Uses structured output (output_type) with Pydantic models for reliable parsing.
 """
 from dataclasses import dataclass
-from pydantic import BaseModel
 
-from agents import Agent, Runner, ModelSettings
+from agents import Agent, ModelSettings, Runner
+from pydantic import BaseModel
 
 from backend.config import Settings
 from backend.domain.agent.models import ActionDecision
@@ -29,6 +29,7 @@ logger = get_logger(__name__)
 
 class GTOAnalysisModel(BaseModel):
     """Pydantic model for structured GTO analysis output."""
+
     hand_strength: str
     position_assessment: str
     recommended_action: str
@@ -39,6 +40,7 @@ class GTOAnalysisModel(BaseModel):
 
 class ExploitAnalysisModel(BaseModel):
     """Pydantic model for structured Exploit analysis output."""
+
     opponent_type: str
     key_tendencies: list[str]
     exploitable_leaks: list[str]
@@ -55,6 +57,7 @@ class ExploitAnalysisModel(BaseModel):
 @dataclass
 class GTOAnalysis:
     """Structured output from the GTO Analyst."""
+
     hand_strength: str  # "premium", "strong", "medium", "weak", "trash"
     position_assessment: str  # "early", "middle", "late", "blinds"
     recommended_action: str  # "fold", "check", "call", "bet", "raise", "all_in"
@@ -66,6 +69,7 @@ class GTOAnalysis:
 @dataclass
 class ExploitAnalysis:
     """Structured output from the Exploit Analyst."""
+
     opponent_type: str  # "LAG", "TAG", "loose-passive", "tight-passive", "unknown"
     key_tendencies: list[str]
     exploitable_leaks: list[str]
@@ -202,20 +206,20 @@ Example:
 class GTOAnalyst:
     """
     Specialist agent for Game Theory Optimal analysis.
-    
+
     Focuses purely on mathematical and theoretical poker strategy
     without considering opponent-specific exploitation.
-    
+
     Has access to tools: calculate_equity, calculate_pot_odds, get_position_info
     """
 
     def __init__(self, settings: Settings):
         self._settings = settings
-        
+
         model_settings_kwargs = {"temperature": settings.temperature}
         if settings.reasoning_effort:
             model_settings_kwargs["reasoning"] = {"effort": settings.reasoning_effort}
-        
+
         self._agent = Agent(
             name="GTOAnalyst",
             instructions=GTO_ANALYST_PROMPT,
@@ -229,11 +233,11 @@ class GTOAnalyst:
     async def analyze(self, game_state_prompt: str, hand_history: str) -> GTOAnalysis:
         """
         Perform GTO analysis on the current game state.
-        
+
         Args:
             game_state_prompt: Formatted game state description
             hand_history: Actions taken so far in this hand
-            
+
         Returns:
             GTOAnalysis with structured recommendations
         """
@@ -246,14 +250,14 @@ class GTOAnalyst:
 {hand_history}
 
 Provide your GTO analysis."""
-        
+
         result = await Runner.run(self._agent, prompt)
-        
+
         # Log tools used during GTO analysis
         log_tools_used("GTOAnalyst", result)
-        
+
         output = result.final_output
-        
+
         return GTOAnalysis(
             hand_strength=output.hand_strength,
             position_assessment=output.position_assessment,
@@ -267,18 +271,18 @@ Provide your GTO analysis."""
 class ExploitAnalyst:
     """
     Specialist agent for opponent exploitation analysis.
-    
+
     Analyzes opponent statistics and tendencies to recommend
     deviations from GTO play.
     """
 
     def __init__(self, settings: Settings):
         self._settings = settings
-        
+
         model_settings_kwargs = {"temperature": settings.temperature}
         if settings.reasoning_effort:
             model_settings_kwargs["reasoning"] = {"effort": settings.reasoning_effort}
-        
+
         self._agent = Agent(
             name="ExploitAnalyst",
             instructions=EXPLOIT_ANALYST_PROMPT,
@@ -295,12 +299,12 @@ class ExploitAnalyst:
     ) -> ExploitAnalysis:
         """
         Perform exploitation analysis based on opponent statistics.
-        
+
         Args:
             game_state_prompt: Formatted game state description
             opponent_stats: Statistics for opponents in the hand
             hand_history: Actions taken so far in this hand
-            
+
         Returns:
             ExploitAnalysis with exploitation recommendations
         """
@@ -316,14 +320,14 @@ class ExploitAnalyst:
 {hand_history}
 
 Provide your exploitation analysis."""
-        
+
         result = await Runner.run(self._agent, prompt)
-        
+
         # Log tools used during Exploit analysis
         log_tools_used("ExploitAnalyst", result)
-        
+
         output = result.final_output
-        
+
         return ExploitAnalysis(
             opponent_type=output.opponent_type,
             key_tendencies=output.key_tendencies,
@@ -337,18 +341,18 @@ Provide your exploitation analysis."""
 class DecisionMaker:
     """
     Final decision maker that combines GTO and Exploit analyses.
-    
+
     Weighs both specialist analyses based on confidence levels
     and situational factors to produce the final action.
     """
 
     def __init__(self, settings: Settings):
         self._settings = settings
-        
+
         model_settings_kwargs = {"temperature": settings.temperature}
         if settings.reasoning_effort:
             model_settings_kwargs["reasoning"] = {"effort": settings.reasoning_effort}
-        
+
         self._agent = Agent(
             name="DecisionMaker",
             instructions=DECISION_MAKER_PROMPT,
@@ -367,14 +371,14 @@ class DecisionMaker:
     ) -> ActionDecision:
         """
         Make final decision combining both specialist analyses.
-        
+
         Args:
             game_state_prompt: Formatted game state description
             hand_history: Actions that happened earlier in this hand (preflop, flop, etc.)
             gto_analysis: Analysis from GTO specialist
             exploit_analysis: Analysis from Exploit specialist
             valid_actions: List of valid action strings
-            
+
         Returns:
             ActionDecision with structured decision output
         """
@@ -404,10 +408,10 @@ class DecisionMaker:
 {', '.join(valid_actions)}
 
 Consider the hand history when making your decision. Provide your final decision."""
-        
+
         result = await Runner.run(self._agent, prompt)
-        
+
         # Log tools used during decision making
         log_tools_used("DecisionMaker", result)
-        
+
         return result.final_output  # ActionDecision
