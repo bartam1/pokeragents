@@ -3,10 +3,7 @@ name: React Chip Graph Frontend
 overview: Create a React frontend inside /app/frontend that displays chip change graphs per player, with a Python backend API that reads tournament JSON files from a configurable folder path.
 todos:
   - id: frontend-setup
-    content: Initialize Vite + React + TypeScript + Tailwind project in app/frontend/
-    status: pending
-  - id: types
-    content: Define TypeScript types for tournament data structure
+    content: Initialize Vite + React (JavaScript) project in app/frontend/
     status: pending
   - id: file-uploader
     content: Build FileUploader component with drag-drop and file input
@@ -18,7 +15,7 @@ todos:
     content: Build PlayerSelector component with checkboxes
     status: pending
   - id: integration
-    content: Wire up components in App.tsx and test with sample data
+    content: Wire up components in App.jsx and add dark theme styling
     status: pending
 ---
 
@@ -66,7 +63,7 @@ User workflow:
 
 ### React Frontend (Client-Side Only)
 
-Create [app/frontend/](app/frontend/) with Vite + React + TypeScript:
+Create [app/frontend/](app/frontend/) with Vite + React (JavaScript):
 
 **Components**:
 
@@ -77,7 +74,7 @@ Create [app/frontend/](app/frontend/) with Vite + React + TypeScript:
 **Libraries**:
 
 - Recharts for the line graph
-- Tailwind CSS for modern dark-themed styling
+- CSS modules or inline styles for styling (dark theme)
 
 **No backend required** - all processing happens in the browser.
 
@@ -87,12 +84,12 @@ Create [app/frontend/](app/frontend/) with Vite + React + TypeScript:
 
 |------|---------|
 
-| `app/frontend/src/App.tsx` | Main app with file upload and state management |
+| `app/frontend/src/App.jsx` | Main app with file upload and state management |
 
-| `app/frontend/src/components/FileUploader.tsx` | Drag-drop file upload component |
+| `app/frontend/src/components/FileUploader.jsx` | Drag-drop file upload component |
 
-| `app/frontend/src/components/PlayerSelector.tsx` | Player selection checkboxes |
+| `app/frontend/src/components/PlayerSelector.jsx` | Player selection checkboxes |
 
-| `app/frontend/src/components/ChipGraph.tsx` | Recharts line chart component |
+| `app/frontend/src/components/ChipGraph.jsx` | Recharts line chart component |
 
-| `app/frontend/src/types.ts` | TypeScript types for tournament data |
+| `app/frontend/src/App.css` | Dark theme styles |
