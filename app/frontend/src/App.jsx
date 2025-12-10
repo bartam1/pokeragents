@@ -5,10 +5,10 @@ import './App.css';
 function App() {
   const [tournamentData, setTournamentData] = useState([]);
   const [selectedPlayers, setSelectedPlayers] = useState([]);
+  const [useEV, setUseEV] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Load tournament data from static path on mount
   useEffect(() => {
     const loadTournaments = async () => {
       try {
@@ -20,9 +20,7 @@ function App() {
           const res = await fetch(`/results/${filename}`);
           const data = await res.json();
           
-          // Handle new format (format_version 3) with hand_summaries
           if (data.hand_summaries && Array.isArray(data.hand_summaries)) {
-            // Get initial stacks from first hand
             const initialStacks = data.hands?.[0]?.starting_stacks || {};
             allData.push({
               filename,
@@ -35,11 +33,9 @@ function App() {
           }
         }
 
-        // Sort by timestamp
         allData.sort((a, b) => a.timestamp.localeCompare(b.timestamp));
         setTournamentData(allData);
 
-        // Auto-select all players
         const players = new Set();
         allData.forEach((file) => {
           file.players.forEach((p) => players.add(p));
@@ -93,21 +89,31 @@ function App() {
         </div>
       </header>
 
-      <div className="players">
-        {allPlayers.map((player, i) => (
-          <label key={player} className={selectedPlayers.includes(player) ? 'active' : ''}>
-            <input
-              type="checkbox"
-              checked={selectedPlayers.includes(player)}
-              onChange={() => togglePlayer(player)}
-            />
-            <span className="dot" data-player={i} />
-            {player}
-          </label>
-        ))}
+      <div className="controls">
+        <div className="players">
+          {allPlayers.map((player, i) => (
+            <label key={player} className={selectedPlayers.includes(player) ? 'active' : ''}>
+              <input
+                type="checkbox"
+                checked={selectedPlayers.includes(player)}
+                onChange={() => togglePlayer(player)}
+              />
+              <span className="dot" data-player={i} />
+              {player}
+            </label>
+          ))}
+        </div>
+        <label className={`ev-toggle ${useEV ? 'active' : ''}`}>
+          <input
+            type="checkbox"
+            checked={useEV}
+            onChange={(e) => setUseEV(e.target.checked)}
+          />
+          Use EV-adjusted chips
+        </label>
       </div>
 
-      <ChipGraph data={tournamentData} selectedPlayers={selectedPlayers} />
+      <ChipGraph data={tournamentData} selectedPlayers={selectedPlayers} useEV={useEV} />
     </div>
   );
 }
