@@ -9,10 +9,16 @@ This is the main coordinator that:
 5. Calculates EV chips for showdown hands to measure decision quality
 """
 import os
+import uuid
 from dataclasses import dataclass, field
 from typing import Union
 
 from backend.config import Settings
+from backend.domain.game.environment import PokerEnvironment
+from backend.domain.game.models import Action, ActionType
+from backend.domain.game.recorder import GameStateRecorder
+from backend.domain.player.models import KnowledgeBase, create_shared_knowledge_base
+from backend.domain.agent.poker_agent import PokerAgent
 from backend.domain.agent.ensemble_agent import EnsemblePokerAgent
 from backend.domain.agent.poker_agent import PokerAgent
 from backend.domain.agent.strategies.base import (
@@ -97,7 +103,8 @@ class TournamentOrchestrator:
         self._config: TournamentConfig | None = None
         self._eliminations: list[tuple[str, int]] = []
         self._calibration_mode: bool = False
-        self._ev_records: list[EVRecord] = []  # EV tracking for showdown hands
+        self._recorder = GameStateRecorder(settings.gamestates_dir)
+        self._tournament_id: str = ""
 
     def setup_tournament(
         self,
@@ -118,7 +125,10 @@ class TournamentOrchestrator:
         agent_configs = agent_configs or DEFAULT_AGENTS
         self._eliminations = []
         self._calibration_mode = calibration_mode
-        self._ev_records = []  # Reset EV records for new tournament
+        
+        # Generate a unique tournament ID and start recording
+        self._tournament_id = str(uuid.uuid4())[:8]
+        self._recorder.start_tournament(self._tournament_id, self._config.big_blind)
 
         player_names = [pid for pid, _ in agent_configs]
 
@@ -248,6 +258,11 @@ class TournamentOrchestrator:
 
         # Save Agent D's accumulated knowledge
         self._save_agent_knowledge()
+        
+        # Save recorded game states for future statistics recalculation
+        saved_path = self._recorder.save_tournament()
+        if saved_path:
+            logger.info(f"📝 Saved game states to {saved_path}")
 
         # Build final results
         return self._build_results(hand_count)
@@ -292,6 +307,18 @@ class TournamentOrchestrator:
 
                 # Convert structured decision to executable Action
                 action = decision.to_action(game_state)
+                
+                # Determine if following GTO based on deviation text
+                is_following_gto = decision.gto_deviation.lower().startswith("following gto")
+                
+                # Record the state and action for statistics recalculation
+                self._recorder.record_action(
+                    game_state,
+                    actor_name,
+                    action,
+                    is_following_gto=is_following_gto,
+                    gto_deviation=decision.gto_deviation if not is_following_gto else None,
+                )
 
                 # Execute the action
                 self._env.execute_action(actor_index, action)
@@ -330,6 +357,7 @@ class TournamentOrchestrator:
             if result.showdown and len(result.shown_hands) >= 2:
                 ev_records = self._calculate_showdown_ev(hand_number, result, stacks_before)
                 self._ev_records.extend(ev_records)
+                self._recorder.record_ev(ev_records)
 
             # Show stacks after hand
             stacks_str = " | ".join(
@@ -501,7 +529,16 @@ class TournamentOrchestrator:
                 f"EV: {ev_chips:+.0f} | Actual: {actual_chips:+.0f} | Variance: {variance:+.0f}"
             )
 
-        return ev_records
+    def save_incomplete(self) -> str | None:
+        """Save current tournament state as incomplete when interrupted.
+        
+        Returns:
+            Path to the saved file, or None if no tournament to save.
+        """
+        saved_path = self._recorder.save_tournament(incomplete=True)
+        if saved_path:
+            logger.info(f"⚠️ Saved incomplete tournament to {saved_path}")
+        return saved_path
 
     def _get_active_player_count(self) -> int:
         """Get number of players still in the tournament."""
