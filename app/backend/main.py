@@ -10,6 +10,7 @@ Usage:
 import argparse
 import asyncio
 import json
+import os
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
@@ -337,8 +338,8 @@ def main():
 
     args = parser.parse_args()
 
-    # Setup logging
-    log_level = "DEBUG" if args.verbose else "INFO"
+    # Setup logging - check env var first, then verbose flag
+    log_level = os.environ.get("LOG_LEVEL", "DEBUG" if args.verbose else "INFO")
     setup_logging(log_level)
 
     # Load settings
