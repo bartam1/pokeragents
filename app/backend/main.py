@@ -10,6 +10,7 @@ Usage:
 import argparse
 import asyncio
 import json
+import signal
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
@@ -26,6 +27,26 @@ from backend.logging_config import setup_logging, get_logger, log_collector
 
 logger = get_logger(__name__)
 
+# Global state for graceful shutdown
+_shutdown_requested = False
+_current_orchestrator: TournamentOrchestrator | None = None
+
+
+def _handle_sigint(signum, frame):
+    """Handle SIGINT (Ctrl+C) for graceful shutdown."""
+    global _shutdown_requested
+    if _shutdown_requested:
+        print("\n⚠️ Force quit - exiting immediately")
+        raise SystemExit(1)
+    
+    _shutdown_requested = True
+    print("\n⚠️ Shutdown requested - saving current tournament state...")
+    
+    if _current_orchestrator is not None:
+        _current_orchestrator.save_incomplete()
+    
+    raise KeyboardInterrupt
+
 
 async def run_single_tournament(
     settings: Settings,
@@ -33,9 +54,16 @@ async def run_single_tournament(
     calibration_mode: bool = False,
 ) -> TournamentResult:
     """Run a single tournament and return results."""
+    global _current_orchestrator
+    
     orchestrator = TournamentOrchestrator(settings)
+    _current_orchestrator = orchestrator
+    
     orchestrator.setup_tournament(config=config, calibration_mode=calibration_mode)
-    return await orchestrator.run_tournament()
+    try:
+        return await orchestrator.run_tournament()
+    finally:
+        _current_orchestrator = None
 
 
 async def run_experiment(
@@ -316,6 +344,11 @@ def print_results(results: dict) -> None:
 
 def main():
     """Main entry point."""
+    global _shutdown_requested
+    
+    # Register signal handler for graceful shutdown
+    signal.signal(signal.SIGINT, _handle_sigint)
+    
     parser = argparse.ArgumentParser(
         description="Poker POC - AI Agents with Shared Knowledge Experiment"
     )
@@ -368,21 +401,27 @@ def main():
         if baseline_kb.profiles:
             print(f"📊 Recalculated baseline stats from {baseline_kb.get_total_hands_observed()} total hands\n")
 
-    results = asyncio.run(run_experiment(
-        num_tournaments=args.tournaments,
-        settings=settings,
-        calibration_mode=args.calibrate,
-    ))
+    try:
+        results = asyncio.run(run_experiment(
+            num_tournaments=args.tournaments,
+            settings=settings,
+            calibration_mode=args.calibrate,
+        ))
 
-    # Print results
-    print_results(results)
-    
-    if args.calibrate:
-        print("\n🔧 Calibration complete! Run without --calibrate to use learned stats.")
+        # Print results
+        print_results(results)
+        
+        if args.calibrate:
+            print("\n🔧 Calibration complete! Run without --calibrate to use learned stats.")
 
-    # Save results to file
-    results_file = save_experiment_results(results)
-    print(f"\n📊 Results saved to: {results_file}")
+        # Save results to file
+        results_file = save_experiment_results(results)
+        print(f"\n📊 Results saved to: {results_file}")
+        
+    except KeyboardInterrupt:
+        print("\n⚠️ Experiment interrupted. Partial results may have been saved.")
+        if _shutdown_requested:
+            print("   Incomplete tournament data saved with 'incomplete_' prefix.")
 
 
 if __name__ == "__main__":

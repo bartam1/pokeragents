@@ -82,8 +82,11 @@ class GameStateRecorder:
             RecordedAction(state=state, actor=actor, action=action)
         )
 
-    def save_tournament(self) -> str | None:
+    def save_tournament(self, incomplete: bool = False) -> str | None:
         """Save the current tournament record to a JSON file.
+        
+        Args:
+            incomplete: If True, prefix filename with "incomplete_" for interrupted tournaments.
         
         Returns:
             Path to the saved file, or None if no tournament to save.
@@ -93,8 +96,9 @@ class GameStateRecorder:
 
         self._gamestates_dir.mkdir(parents=True, exist_ok=True)
 
+        prefix = "incomplete_" if incomplete else ""
         filename = (
-            f"tournament_{self._current_tournament.timestamp}"
+            f"{prefix}tournament_{self._current_tournament.timestamp}"
             f"_{self._current_tournament.tournament_id}.json"
         )
         filepath = self._gamestates_dir / filename

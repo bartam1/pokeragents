@@ -417,6 +417,17 @@ class TournamentOrchestrator:
                 f"      C-bet: {stats.cbet_flop_pct:.1f}%, AF: {stats.aggression_factor:.2f}"
             )
 
+    def save_incomplete(self) -> str | None:
+        """Save current tournament state as incomplete when interrupted.
+        
+        Returns:
+            Path to the saved file, or None if no tournament to save.
+        """
+        saved_path = self._recorder.save_tournament(incomplete=True)
+        if saved_path:
+            logger.info(f"⚠️ Saved incomplete tournament to {saved_path}")
+        return saved_path
+
     def _get_active_player_count(self) -> int:
         """Get number of players still in the tournament."""
         if not self._env:
