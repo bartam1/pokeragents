@@ -9,6 +9,7 @@ dependencies = [
     "openai>=1.0.0",
     "pokerkit>=0.5.0",
     "pydantic-settings>=2.0.0",
+    "pytest>=9.0.2",
     "python-dotenv>=1.0.0",
 ]
 
@@ -29,6 +30,11 @@ select = ["E", "F", "I", "W"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["backend/tests"]
+
+[dependency-groups]
+dev = [
+    "pytest-asyncio>=1.3.0",
+]
 
 
 
