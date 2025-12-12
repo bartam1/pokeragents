@@ -1,0 +1,1974 @@
+{
+  "tournament_id": "58c6d16b",
+  "timestamp": "20251211_141044",
+  "format_version": 3,
+  "players": [
+    "agent_a",
+    "agent_b",
+    "agent_c",
+    "agent_d",
+    "agent_e"
+  ],
+  "hands": [
+    {
+      "hand_number": 1,
+      "small_blind": 10.0,
+      "big_blind": 20.0,
+      "starting_stacks": {
+        "agent_a": 1490.0,
+        "agent_b": 1480.0,
+        "agent_c": 1500.0,
+        "agent_d": 1500.0,
+        "agent_e": 1500.0
+      },
+      "finishing_stacks": {
+        "agent_a": 1225.0,
+        "agent_b": 1775.0,
+        "agent_c": 1500.0,
+        "agent_d": 1500.0,
+        "agent_e": 1500.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1490.0,
+            "agent_b": 1480.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1490.0,
+            "agent_b": 1480.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1490.0,
+            "agent_b": 1480.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_a",
+          "action_type": "call",
+          "amount": 20.0,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1490.0,
+            "agent_b": 1480.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 40.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1480.0,
+            "agent_b": 1480.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_a",
+          "action_type": "bet",
+          "amount": 30.0,
+          "pot": 40.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1480.0,
+            "agent_b": 1480.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 30.0,
+          "pot": 70.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1450.0,
+            "agent_b": 1480.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_a",
+          "action_type": "bet",
+          "amount": 75.0,
+          "pot": 100.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1450.0,
+            "agent_b": 1450.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 75.0,
+          "pot": 175.0,
+          "current_bet": 75.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1375.0,
+            "agent_b": 1450.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_a",
+          "action_type": "bet",
+          "amount": 150.0,
+          "pot": 250.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1375.0,
+            "agent_b": 1375.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 150.0,
+          "pot": 400.0,
+          "current_bet": 150.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1225.0,
+            "agent_b": 1375.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        }
+      ]
+    },
+    {
+      "hand_number": 2,
+      "small_blind": 10.0,
+      "big_blind": 20.0,
+      "starting_stacks": {
+        "agent_a": 1215.0,
+        "agent_b": 1755.0,
+        "agent_c": 1500.0,
+        "agent_d": 1500.0,
+        "agent_e": 1500.0
+      },
+      "finishing_stacks": {
+        "agent_a": 1245.0,
+        "agent_b": 1755.0,
+        "agent_c": 1500.0,
+        "agent_d": 1500.0,
+        "agent_e": 1500.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1215.0,
+            "agent_b": 1755.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1215.0,
+            "agent_b": 1755.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1215.0,
+            "agent_b": 1755.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_a",
+          "action_type": "raise",
+          "amount": 60.0,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1215.0,
+            "agent_b": 1755.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 80.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1165.0,
+            "agent_b": 1755.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        }
+      ]
+    },
+    {
+      "hand_number": 3,
+      "small_blind": 10.0,
+      "big_blind": 20.0,
+      "starting_stacks": {
+        "agent_a": 1235.0,
+        "agent_b": 1735.0,
+        "agent_c": 1500.0,
+        "agent_d": 1500.0,
+        "agent_e": 1500.0
+      },
+      "finishing_stacks": {
+        "agent_a": 1185.0,
+        "agent_b": 1425.0,
+        "agent_c": 1890.0,
+        "agent_d": 1500.0,
+        "agent_e": 1500.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "raise",
+          "amount": 60.0,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1235.0,
+            "agent_b": 1735.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1235.0,
+            "agent_b": 1735.0,
+            "agent_c": 1440.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1235.0,
+            "agent_b": 1735.0,
+            "agent_c": 1440.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_a",
+          "action_type": "call",
+          "amount": 60.0,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1235.0,
+            "agent_b": 1735.0,
+            "agent_c": 1440.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 60.0,
+          "pot": 140.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1185.0,
+            "agent_b": 1735.0,
+            "agent_c": 1440.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_a",
+          "action_type": "check",
+          "amount": null,
+          "pot": 180.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1185.0,
+            "agent_b": 1695.0,
+            "agent_c": 1440.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 180.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1185.0,
+            "agent_b": 1695.0,
+            "agent_c": 1440.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 180.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1185.0,
+            "agent_b": 1695.0,
+            "agent_c": 1440.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_a",
+          "action_type": "check",
+          "amount": null,
+          "pot": 180.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1185.0,
+            "agent_b": 1695.0,
+            "agent_c": 1440.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 180.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1185.0,
+            "agent_b": 1695.0,
+            "agent_c": 1440.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_c",
+          "action_type": "bet",
+          "amount": 90.0,
+          "pot": 180.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1185.0,
+            "agent_b": 1695.0,
+            "agent_c": 1440.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_a",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 270.0,
+          "current_bet": 90.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1185.0,
+            "agent_b": 1695.0,
+            "agent_c": 1350.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 90.0,
+          "pot": 270.0,
+          "current_bet": 90.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1185.0,
+            "agent_b": 1695.0,
+            "agent_c": 1350.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 360.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1185.0,
+            "agent_b": 1605.0,
+            "agent_c": 1350.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_c",
+          "action_type": "bet",
+          "amount": 180.0,
+          "pot": 360.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1185.0,
+            "agent_b": 1605.0,
+            "agent_c": 1350.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 180.0,
+          "pot": 540.0,
+          "current_bet": 180.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1185.0,
+            "agent_b": 1605.0,
+            "agent_c": 1170.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        }
+      ]
+    },
+    {
+      "hand_number": 4,
+      "small_blind": 10.0,
+      "big_blind": 20.0,
+      "starting_stacks": {
+        "agent_a": 1175.0,
+        "agent_b": 1405.0,
+        "agent_c": 1890.0,
+        "agent_d": 1500.0,
+        "agent_e": 1500.0
+      },
+      "finishing_stacks": {
+        "agent_a": 1175.0,
+        "agent_b": 1365.0,
+        "agent_c": 1090.0,
+        "agent_d": 2370.0,
+        "agent_e": 1500.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "raise",
+          "amount": 60.0,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1175.0,
+            "agent_b": 1405.0,
+            "agent_c": 1890.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "call",
+          "amount": 60.0,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1175.0,
+            "agent_b": 1405.0,
+            "agent_c": 1830.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 150.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1175.0,
+            "agent_b": 1405.0,
+            "agent_c": 1830.0,
+            "agent_d": 1440.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_a",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 150.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1175.0,
+            "agent_b": 1405.0,
+            "agent_c": 1830.0,
+            "agent_d": 1440.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 60.0,
+          "pot": 150.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1175.0,
+            "agent_b": 1405.0,
+            "agent_c": 1830.0,
+            "agent_d": 1440.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 190.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1175.0,
+            "agent_b": 1365.0,
+            "agent_c": 1830.0,
+            "agent_d": 1440.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_c",
+          "action_type": "bet",
+          "amount": 140.0,
+          "pot": 190.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1175.0,
+            "agent_b": 1365.0,
+            "agent_c": 1830.0,
+            "agent_d": 1440.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_d",
+          "action_type": "call",
+          "amount": 140.0,
+          "pot": 330.0,
+          "current_bet": 140.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1175.0,
+            "agent_b": 1365.0,
+            "agent_c": 1690.0,
+            "agent_d": 1440.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 470.0,
+          "current_bet": 140.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1175.0,
+            "agent_b": 1365.0,
+            "agent_c": 1690.0,
+            "agent_d": 1300.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_c",
+          "action_type": "bet",
+          "amount": 300.0,
+          "pot": 470.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1175.0,
+            "agent_b": 1365.0,
+            "agent_c": 1690.0,
+            "agent_d": 1300.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_d",
+          "action_type": "call",
+          "amount": 300.0,
+          "pot": 770.0,
+          "current_bet": 300.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1175.0,
+            "agent_b": 1365.0,
+            "agent_c": 1390.0,
+            "agent_d": 1300.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 1070.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1175.0,
+            "agent_b": 1365.0,
+            "agent_c": 1390.0,
+            "agent_d": 1000.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_d",
+          "action_type": "bet",
+          "amount": 300.0,
+          "pot": 1070.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1175.0,
+            "agent_b": 1365.0,
+            "agent_c": 1390.0,
+            "agent_d": 1000.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_c",
+          "action_type": "call",
+          "amount": 300.0,
+          "pot": 1370.0,
+          "current_bet": 300.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1175.0,
+            "agent_b": 1365.0,
+            "agent_c": 1390.0,
+            "agent_d": 700.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        }
+      ]
+    },
+    {
+      "hand_number": 5,
+      "small_blind": 10.0,
+      "big_blind": 20.0,
+      "starting_stacks": {
+        "agent_a": 1165.0,
+        "agent_b": 1345.0,
+        "agent_c": 1090.0,
+        "agent_d": 2370.0,
+        "agent_e": 1500.0
+      },
+      "finishing_stacks": {
+        "agent_a": 1165.0,
+        "agent_b": 1375.0,
+        "agent_c": 1090.0,
+        "agent_d": 2370.0,
+        "agent_e": 1500.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1165.0,
+            "agent_b": 1345.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1165.0,
+            "agent_b": 1345.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1165.0,
+            "agent_b": 1345.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_a",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1165.0,
+            "agent_b": 1345.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        }
+      ]
+    },
+    {
+      "hand_number": 6,
+      "small_blind": 10.0,
+      "big_blind": 20.0,
+      "starting_stacks": {
+        "agent_a": 1155.0,
+        "agent_b": 1355.0,
+        "agent_c": 1090.0,
+        "agent_d": 2370.0,
+        "agent_e": 1500.0
+      },
+      "finishing_stacks": {
+        "agent_a": 565.0,
+        "agent_b": 1975.0,
+        "agent_c": 1090.0,
+        "agent_d": 2370.0,
+        "agent_e": 1500.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1155.0,
+            "agent_b": 1355.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1155.0,
+            "agent_b": 1355.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1155.0,
+            "agent_b": 1355.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_a",
+          "action_type": "raise",
+          "amount": 40.0,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1155.0,
+            "agent_b": 1355.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "raise",
+          "amount": 120.0,
+          "pot": 60.0,
+          "current_bet": 40.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1125.0,
+            "agent_b": 1355.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_a",
+          "action_type": "call",
+          "amount": 120.0,
+          "pot": 160.0,
+          "current_bet": 120.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 1125.0,
+            "agent_b": 1255.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_a",
+          "action_type": "check",
+          "amount": null,
+          "pot": 240.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 1045.0,
+            "agent_b": 1255.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 240.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 1045.0,
+            "agent_b": 1255.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_a",
+          "action_type": "bet",
+          "amount": 180.0,
+          "pot": 240.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 1045.0,
+            "agent_b": 1255.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 180.0,
+          "pot": 420.0,
+          "current_bet": 180.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 865.0,
+            "agent_b": 1255.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_a",
+          "action_type": "bet",
+          "amount": 300.0,
+          "pot": 600.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 865.0,
+            "agent_b": 1075.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 300.0,
+          "pot": 900.0,
+          "current_bet": 300.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 565.0,
+            "agent_b": 1075.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        }
+      ]
+    },
+    {
+      "hand_number": 7,
+      "small_blind": 10.0,
+      "big_blind": 20.0,
+      "starting_stacks": {
+        "agent_a": 555.0,
+        "agent_b": 1955.0,
+        "agent_c": 1090.0,
+        "agent_d": 2370.0,
+        "agent_e": 1500.0
+      },
+      "finishing_stacks": {
+        "agent_a": 555.0,
+        "agent_b": 1985.0,
+        "agent_c": 1090.0,
+        "agent_d": 2370.0,
+        "agent_e": 1500.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 555.0,
+            "agent_b": 1955.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 555.0,
+            "agent_b": 1955.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 555.0,
+            "agent_b": 1955.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_a",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 555.0,
+            "agent_b": 1955.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        }
+      ]
+    },
+    {
+      "hand_number": 8,
+      "small_blind": 10.0,
+      "big_blind": 20.0,
+      "starting_stacks": {
+        "agent_a": 545.0,
+        "agent_b": 1965.0,
+        "agent_c": 1090.0,
+        "agent_d": 2370.0,
+        "agent_e": 1500.0
+      },
+      "finishing_stacks": {
+        "agent_a": 545.0,
+        "agent_b": 1995.0,
+        "agent_c": 1090.0,
+        "agent_d": 2370.0,
+        "agent_e": 1500.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 545.0,
+            "agent_b": 1965.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 545.0,
+            "agent_b": 1965.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 545.0,
+            "agent_b": 1965.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_a",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 545.0,
+            "agent_b": 1965.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        }
+      ]
+    },
+    {
+      "hand_number": 9,
+      "small_blind": 10.0,
+      "big_blind": 20.0,
+      "starting_stacks": {
+        "agent_a": 535.0,
+        "agent_b": 1975.0,
+        "agent_c": 1090.0,
+        "agent_d": 2370.0,
+        "agent_e": 1500.0
+      },
+      "finishing_stacks": {
+        "agent_a": 535.0,
+        "agent_b": 495.0,
+        "agent_c": 3280.0,
+        "agent_d": 2370.0,
+        "agent_e": 820.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "raise",
+          "amount": 60.0,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 535.0,
+            "agent_b": 1975.0,
+            "agent_c": 1090.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 535.0,
+            "agent_b": 1975.0,
+            "agent_c": 1030.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "raise",
+          "amount": 180.0,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 535.0,
+            "agent_b": 1975.0,
+            "agent_c": 1030.0,
+            "agent_d": 2370.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_a",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 270.0,
+          "current_bet": 180.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 535.0,
+            "agent_b": 1975.0,
+            "agent_c": 1030.0,
+            "agent_d": 2370.0,
+            "agent_e": 1320.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "raise",
+          "amount": 480.0,
+          "pot": 270.0,
+          "current_bet": 180.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 535.0,
+            "agent_b": 1975.0,
+            "agent_c": 1030.0,
+            "agent_d": 2370.0,
+            "agent_e": 1320.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "call",
+          "amount": 480.0,
+          "pot": 730.0,
+          "current_bet": 480.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 535.0,
+            "agent_b": 1515.0,
+            "agent_c": 1030.0,
+            "agent_d": 2370.0,
+            "agent_e": 1320.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "call",
+          "amount": 480.0,
+          "pot": 1150.0,
+          "current_bet": 480.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 535.0,
+            "agent_b": 1515.0,
+            "agent_c": 610.0,
+            "agent_d": 2370.0,
+            "agent_e": 1320.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "bet",
+          "amount": 750.0,
+          "pot": 1450.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 535.0,
+            "agent_b": 1515.0,
+            "agent_c": 610.0,
+            "agent_d": 2370.0,
+            "agent_e": 1020.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_c",
+          "action_type": "call",
+          "amount": 750.0,
+          "pot": 2200.0,
+          "current_bet": 750.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 535.0,
+            "agent_b": 765.0,
+            "agent_c": 610.0,
+            "agent_d": 2370.0,
+            "agent_e": 1020.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_e",
+          "action_type": "call",
+          "amount": 750.0,
+          "pot": 2810.0,
+          "current_bet": 750.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 535.0,
+            "agent_b": 765.0,
+            "agent_c": 0.0,
+            "agent_d": 2370.0,
+            "agent_e": 1020.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "all_in",
+          "amount": 765.0,
+          "pot": 3560.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 535.0,
+            "agent_b": 765.0,
+            "agent_c": 0.0,
+            "agent_d": 2370.0,
+            "agent_e": 270.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_e",
+          "action_type": "call",
+          "amount": 765.0,
+          "pot": 4325.0,
+          "current_bet": 765.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 535.0,
+            "agent_b": 0.0,
+            "agent_c": 0.0,
+            "agent_d": 2370.0,
+            "agent_e": 270.0
+          },
+          "decision": "gto"
+        }
+      ]
+    },
+    {
+      "hand_number": 10,
+      "small_blind": 10.0,
+      "big_blind": 20.0,
+      "starting_stacks": {
+        "agent_a": 525.0,
+        "agent_b": 475.0,
+        "agent_c": 3280.0,
+        "agent_d": 2370.0,
+        "agent_e": 820.0
+      },
+      "finishing_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 475.0,
+        "agent_c": 3280.0,
+        "agent_d": 2925.0,
+        "agent_e": 820.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 525.0,
+            "agent_b": 475.0,
+            "agent_c": 3280.0,
+            "agent_d": 2370.0,
+            "agent_e": 820.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "raise",
+          "amount": 60.0,
+          "pot": 30.0,
+          "current_bet": 20.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 525.0,
+            "agent_b": 475.0,
+            "agent_c": 3280.0,
+            "agent_d": 2370.0,
+            "agent_e": 820.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 525.0,
+            "agent_b": 475.0,
+            "agent_c": 3280.0,
+            "agent_d": 2310.0,
+            "agent_e": 820.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_a",
+          "action_type": "raise",
+          "amount": 150.0,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 525.0,
+            "agent_b": 475.0,
+            "agent_c": 3280.0,
+            "agent_d": 2310.0,
+            "agent_e": 820.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 230.0,
+          "current_bet": 150.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 385.0,
+            "agent_b": 475.0,
+            "agent_c": 3280.0,
+            "agent_d": 2310.0,
+            "agent_e": 820.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "call",
+          "amount": 150.0,
+          "pot": 230.0,
+          "current_bet": 150.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 385.0,
+            "agent_b": 475.0,
+            "agent_c": 3280.0,
+            "agent_d": 2310.0,
+            "agent_e": 820.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_a",
+          "action_type": "bet",
+          "amount": 240.0,
+          "pot": 320.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 385.0,
+            "agent_b": 475.0,
+            "agent_c": 3280.0,
+            "agent_d": 2220.0,
+            "agent_e": 820.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_d",
+          "action_type": "call",
+          "amount": 240.0,
+          "pot": 560.0,
+          "current_bet": 240.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 145.0,
+            "agent_b": 475.0,
+            "agent_c": 3280.0,
+            "agent_d": 2220.0,
+            "agent_e": 820.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_a",
+          "action_type": "check",
+          "amount": null,
+          "pot": 800.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 145.0,
+            "agent_b": 475.0,
+            "agent_c": 3280.0,
+            "agent_d": 1980.0,
+            "agent_e": 820.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_d",
+          "action_type": "check",
+          "amount": null,
+          "pot": 800.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 145.0,
+            "agent_b": 475.0,
+            "agent_c": 3280.0,
+            "agent_d": 1980.0,
+            "agent_e": 820.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_a",
+          "action_type": "all_in",
+          "amount": 145.0,
+          "pot": 800.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 145.0,
+            "agent_b": 475.0,
+            "agent_c": 3280.0,
+            "agent_d": 1980.0,
+            "agent_e": 820.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_d",
+          "action_type": "call",
+          "amount": 145.0,
+          "pot": 945.0,
+          "current_bet": 145.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 475.0,
+            "agent_c": 3280.0,
+            "agent_d": 1980.0,
+            "agent_e": 820.0
+          },
+          "decision": "gto"
+        }
+      ]
+    }
+  ],
+  "hand_summaries": [
+    {
+      "hand_number": 1,
+      "winners": [
+        "agent_b"
+      ],
+      "chips_won": {
+        "agent_a": -265.0,
+        "agent_b": 295.0,
+        "agent_c": 0.0,
+        "agent_d": 0.0,
+        "agent_e": 0.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    },
+    {
+      "hand_number": 2,
+      "winners": [
+        "agent_a"
+      ],
+      "chips_won": {
+        "agent_a": 30.0,
+        "agent_b": 0.0,
+        "agent_c": 0.0,
+        "agent_d": 0.0,
+        "agent_e": 0.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    },
+    {
+      "hand_number": 3,
+      "winners": [
+        "agent_c"
+      ],
+      "chips_won": {
+        "agent_a": -50.0,
+        "agent_b": -310.0,
+        "agent_c": 390.0,
+        "agent_d": 0.0,
+        "agent_e": 0.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    },
+    {
+      "hand_number": 4,
+      "winners": [
+        "agent_d"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": -40.0,
+        "agent_c": -800.0,
+        "agent_d": 870.0,
+        "agent_e": 0.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    },
+    {
+      "hand_number": 5,
+      "winners": [
+        "agent_b"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": 30.0,
+        "agent_c": 0.0,
+        "agent_d": 0.0,
+        "agent_e": 0.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    },
+    {
+      "hand_number": 6,
+      "winners": [
+        "agent_b"
+      ],
+      "chips_won": {
+        "agent_a": -590.0,
+        "agent_b": 620.0,
+        "agent_c": 0.0,
+        "agent_d": 0.0,
+        "agent_e": 0.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    },
+    {
+      "hand_number": 7,
+      "winners": [
+        "agent_b"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": 30.0,
+        "agent_c": 0.0,
+        "agent_d": 0.0,
+        "agent_e": 0.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    },
+    {
+      "hand_number": 8,
+      "winners": [
+        "agent_b"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": 30.0,
+        "agent_c": 0.0,
+        "agent_d": 0.0,
+        "agent_e": 0.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    },
+    {
+      "hand_number": 9,
+      "winners": [
+        "agent_c"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": -1480.0,
+        "agent_c": 2190.0,
+        "agent_d": 0.0,
+        "agent_e": -680.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    },
+    {
+      "hand_number": 10,
+      "winners": [
+        "agent_d"
+      ],
+      "chips_won": {
+        "agent_a": -525.0,
+        "agent_b": 0.0,
+        "agent_c": 0.0,
+        "agent_d": 555.0,
+        "agent_e": 0.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    }
+  ]
+}
