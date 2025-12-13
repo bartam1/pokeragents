@@ -53,15 +53,25 @@ def _handle_sigint(signum, frame):
 async def run_single_tournament(
     settings: Settings,
     config: TournamentConfig,
-    calibration_mode: bool = False,
 ) -> TournamentResult:
     """Run a single tournament and return results."""
     global _current_orchestrator
 
+    # Recalculate stats from ALL saved tournaments before each tournament
+    # This ensures each tournament benefits from previous tournaments' data
+    stats_path = f"{settings.knowledge_persistence_dir}/stats.json"
+    baseline_kb = recalculate_baseline_stats(
+        gamestates_dir=settings.gamestates_dir,
+        output_path=stats_path,
+    )
+    if baseline_kb.profiles:
+        total_hands = baseline_kb.get_total_hands_observed()
+        logger.info(f"📊 Stats loaded: {total_hands} total hands from saved tournaments")
+
     orchestrator = TournamentOrchestrator(settings)
     _current_orchestrator = orchestrator
 
-    orchestrator.setup_tournament(config=config, calibration_mode=calibration_mode)
+    orchestrator.setup_tournament(config=config)
     try:
         return await orchestrator.run_tournament()
     finally:
@@ -71,7 +81,6 @@ async def run_single_tournament(
 async def run_experiment(
     num_tournaments: int = 5,
     settings: Settings | None = None,
-    calibration_mode: bool = False,
 ) -> dict:
     """
     Run multiple tournaments to compare Agent D vs Agent E performance.
@@ -118,7 +127,7 @@ async def run_experiment(
         logger.info(f"{'=' * 60}\n")
 
         try:
-            result = await run_single_tournament(settings, config, calibration_mode)
+            result = await run_single_tournament(settings, config)
 
             results["tournaments_run"] += 1
             results["tournament_results"].append(result)
@@ -516,12 +525,6 @@ def main():
         action="store_true",
         help="Enable verbose logging",
     )
-    parser.add_argument(
-        "-c",
-        "--calibrate",
-        action="store_true",
-        help="Run in calibration mode to learn real agent behaviors",
-    )
 
     args = parser.parse_args()
 
@@ -540,37 +543,19 @@ def main():
         return
 
     # Run experiment
-    if args.calibrate:
-        print(f"\n🔧 Running CALIBRATION MODE with {args.tournaments} tournaments...\n")
-        print("   Agent D will start fresh and learn real opponent behaviors.\n")
-    else:
-        print(f"\n🎲 Starting Poker POC Experiment with {args.tournaments} tournaments...\n")
-
-        # Recalculate baseline statistics from saved game states
-        calibrated_path = f"{settings.knowledge_persistence_dir}/calibrated_stats.json"
-        baseline_kb = recalculate_baseline_stats(
-            gamestates_dir=settings.gamestates_dir,
-            output_path=calibrated_path,
-        )
-        if baseline_kb.profiles:
-            print(
-                f"📊 Recalculated baseline stats from {baseline_kb.get_total_hands_observed()} total hands\n"
-            )
+    print(f"\n🎲 Starting Poker POC Experiment with {args.tournaments} tournaments...\n")
+    print("   Stats will be recalculated from saved game history before each tournament.\n")
 
     try:
         results = asyncio.run(
             run_experiment(
                 num_tournaments=args.tournaments,
                 settings=settings,
-                calibration_mode=args.calibrate,
             )
         )
 
         # Print results
         print_results(results)
-
-        if args.calibrate:
-            print("\n🔧 Calibration complete! Run without --calibrate to use learned stats.")
 
         # Save results to file
         results_file = save_experiment_results(results)

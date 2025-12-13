@@ -21,15 +21,15 @@ logger = get_logger(__name__)
 
 def recalculate_baseline_stats(
     gamestates_dir: str = "data/gamestates",
-    output_path: str = "data/knowledge/calibrated_stats.json",
+    output_path: str = "data/knowledge/stats.json",
 ) -> KnowledgeBase:
     """
     Recalculate baseline statistics from all saved tournament game states.
 
     This function:
-    1. Loads all saved tournament JSON files (v1 or v2 format)
+    1. Loads all saved tournament JSON files (v1, v2, or v3 format)
     2. Replays all recorded actions through a fresh StatisticsTracker
-    3. Saves the resulting statistics as calibrated_stats.json
+    3. Saves the resulting statistics to stats.json
 
     Args:
         gamestates_dir: Directory containing tournament JSON files

@@ -30,7 +30,7 @@ from backend.domain.game.environment import PokerEnvironment
 from backend.domain.game.equity import calculate_multiway_equity
 from backend.domain.game.models import Action, ActionType, EVRecord, HandResult
 from backend.domain.game.recorder import GameStateRecorder
-from backend.domain.player.models import KnowledgeBase, create_shared_knowledge_base
+from backend.domain.player.models import KnowledgeBase
 from backend.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -99,15 +99,14 @@ class TournamentOrchestrator:
         self._env: PokerEnvironment | None = None
         self._config: TournamentConfig | None = None
         self._eliminations: list[tuple[str, int]] = []
-        self._calibration_mode: bool = False
         self._recorder = GameStateRecorder(settings.gamestates_dir)
         self._tournament_id: str = ""
+        self._ev_records: list[EVRecord] = []
 
     def setup_tournament(
         self,
         config: TournamentConfig | None = None,
         agent_configs: list[tuple[str, StrategyConfig]] | None = None,
-        calibration_mode: bool = False,
     ) -> None:
         """
         Set up a new tournament.
@@ -116,12 +115,11 @@ class TournamentOrchestrator:
             config: Tournament configuration
             agent_configs: List of (player_id, strategy) tuples.
                           If None, uses default 5-player setup.
-            calibration_mode: If True, Agent D starts empty to learn real behaviors
         """
         self._config = config or TournamentConfig()
         agent_configs = agent_configs or DEFAULT_AGENTS
         self._eliminations = []
-        self._calibration_mode = calibration_mode
+        self._ev_records = []
 
         # Generate a unique tournament ID and start recording
         self._tournament_id = str(uuid.uuid4())[:8]
@@ -137,38 +135,30 @@ class TournamentOrchestrator:
             big_blind=self._config.big_blind,
         )
 
-        # Create agents with appropriate knowledge bases
-        # Load shared calibrated stats ONCE (same for all informed agents)
-        shared_knowledge = None
-        if not calibration_mode:
-            calibrated_path = os.path.join(
-                self._settings.knowledge_persistence_dir, "calibrated_stats.json"
+        # Load shared stats (recalculated from all saved tournaments before this call)
+        stats_path = os.path.join(self._settings.knowledge_persistence_dir, "stats.json")
+        shared_knowledge = KnowledgeBase.load_from_file(stats_path)
+        if shared_knowledge.profiles:
+            logger.info(
+                f"📊 Loaded shared stats: "
+                f"{len(shared_knowledge.profiles)} players, "
+                f"{shared_knowledge.get_total_hands_observed()} total hands"
             )
-            shared_knowledge = KnowledgeBase.load_from_file(calibrated_path)
-            if shared_knowledge.profiles:
-                logger.info(
-                    f"📊 Loaded SHARED calibrated knowledge: "
-                    f"{len(shared_knowledge.profiles)} opponents, "
-                    f"{shared_knowledge.get_total_hands_observed()} total hands"
-                )
 
         for player_id, strategy in agent_configs:
             # Create knowledge base
-            if strategy.has_shared_knowledge and not calibration_mode:
-                # Both Agent D and Agent E get the SAME calibrated stats
-                if shared_knowledge and shared_knowledge.profiles:
-                    # Create a copy so they don't share the same object
-                    knowledge_base = KnowledgeBase.load_from_file(calibrated_path)
-                    logger.info(f"  {player_id}: Loaded shared calibrated knowledge")
+            if strategy.has_shared_knowledge:
+                # Agents with shared knowledge get a copy of the stats
+                if shared_knowledge.profiles:
+                    knowledge_base = KnowledgeBase.load_from_file(stats_path)
+                    logger.info(f"  {player_id}: Loaded shared stats")
                 else:
-                    # Fall back to pre-defined stats
-                    knowledge_base = create_shared_knowledge_base(exclude_player=player_id)
-                    logger.info(f"  {player_id}: Using DEFAULT pre-loaded knowledge")
+                    # No saved stats yet - start fresh (first run)
+                    knowledge_base = KnowledgeBase()
+                    logger.info(f"  {player_id}: No saved stats yet, starting fresh")
             else:
-                # Other agents OR calibration mode: start fresh
+                # Other agents start fresh (no shared knowledge)
                 knowledge_base = KnowledgeBase()
-                if calibration_mode and strategy.has_shared_knowledge:
-                    logger.info(f"🔧 {player_id} starting EMPTY for calibration")
 
             # Create the agent (use ensemble architecture if configured)
             if strategy.use_ensemble:
@@ -253,13 +243,13 @@ class TournamentOrchestrator:
                     self._eliminations.append((player_id, hand_count))
                     logger.info(f"Player {player_id} eliminated in hand {hand_count}")
 
-        # Save Agent D's accumulated knowledge
-        self._save_agent_knowledge()
-
-        # Save recorded game states for future statistics recalculation
+        # Save recorded game states
         saved_path = self._recorder.save_tournament()
         if saved_path:
             logger.info(f"📝 Saved game states to {saved_path}")
+
+        # Recalculate stats from ALL saved tournaments (including this one)
+        self._recalculate_stats()
 
         # Build final results
         return self._build_results(hand_count)
@@ -374,61 +364,20 @@ class TournamentOrchestrator:
 
         return True  # Hand completed, tournament continues
 
-    def _save_agent_knowledge(self) -> None:
-        """Save knowledge for agents with shared knowledge (Agent D and E)."""
-        # First, save individual agent knowledge files
-        for player_id, agent in self._agents.items():
-            if agent.strategy.has_shared_knowledge:
-                persist_path = os.path.join(
-                    self._settings.knowledge_persistence_dir, f"{player_id}_knowledge.json"
-                )
-                agent.knowledge_base.save_to_file(persist_path)
-                logger.info(
-                    f"Saved {player_id}'s knowledge to {persist_path} "
-                    f"({len(agent.knowledge_base.profiles)} profiles)"
-                )
+    def _recalculate_stats(self) -> None:
+        """Recalculate stats.json from all saved tournament histories.
 
-        # In calibration mode, accumulate stats ONCE (not per agent)
-        # Use agent_d's knowledge as the canonical source
-        if self._calibration_mode:
-            # Find the primary agent for calibration (agent_d)
-            calibration_agent = self._agents.get("agent_d")
-            if not calibration_agent:
-                # Fallback: use any agent with shared knowledge
-                for agent in self._agents.values():
-                    if agent.strategy.has_shared_knowledge:
-                        calibration_agent = agent
-                        break
+        This is called after each tournament to ensure stats are always up-to-date.
+        """
+        from backend.domain.player.recalculator import recalculate_baseline_stats
 
-            if calibration_agent:
-                calibrated_path = os.path.join(
-                    self._settings.knowledge_persistence_dir, "calibrated_stats.json"
-                )
-
-                # Load existing calibrated stats and accumulate
-                existing_calibrated = KnowledgeBase.load_from_file(calibrated_path)
-                if existing_calibrated.profiles:
-                    # Accumulate new observations into existing
-                    existing_calibrated.accumulate_with(calibration_agent.knowledge_base)
-                    existing_calibrated.save_to_file(calibrated_path)
-                    logger.info(f"🔧 ACCUMULATED calibration stats to {calibrated_path}")
-                    self._log_calibrated_stats(existing_calibrated)
-                else:
-                    # First calibration run - just save
-                    calibration_agent.knowledge_base.save_to_file(calibrated_path)
-                    logger.info(f"🔧 Saved initial calibrated stats to {calibrated_path}")
-                    self._log_calibrated_stats(calibration_agent.knowledge_base)
-
-    def _log_calibrated_stats(self, kb: KnowledgeBase) -> None:
-        """Log the calibrated statistics for review."""
-        logger.info("\n📊 CALIBRATED OPPONENT STATISTICS:")
-        for opp_id, profile in kb.profiles.items():
-            stats = profile.statistics
-            logger.info(f"   {opp_id}: {stats.hands_played} hands observed")
-            logger.info(f"      VPIP: {stats.vpip:.1f}%, PFR: {stats.pfr:.1f}%")
-            logger.info(
-                f"      C-bet: {stats.cbet_flop_pct:.1f}%, AF: {stats.aggression_factor:.2f}"
-            )
+        stats_path = os.path.join(self._settings.knowledge_persistence_dir, "stats.json")
+        kb = recalculate_baseline_stats(
+            gamestates_dir=self._settings.gamestates_dir,
+            output_path=stats_path,
+        )
+        if kb.profiles:
+            logger.info(f"📊 Updated stats.json with {kb.get_total_hands_observed()} total hands")
 
     def _calculate_showdown_ev(
         self,
