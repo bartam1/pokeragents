@@ -7,18 +7,20 @@ to JSON files for later statistics recalculation.
 Uses a minimal format that stores only data needed for statistics,
 reducing file size by ~85% compared to storing full game state.
 """
+
 import json
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from backend.domain.game.models import Action, ActionType, EVRecord, StructuredGameState, Street
+from backend.domain.game.models import Action, ActionType, EVRecord, Street, StructuredGameState
 
 
 @dataclass
 class MinimalAction:
     """Minimal action record containing only data needed for statistics."""
+
     hand_number: int
     street: str
     actor: str
@@ -74,13 +76,13 @@ class MinimalAction:
     ) -> "MinimalAction":
         """Create a MinimalAction from full game state."""
         preflop_raise_count = sum(
-            1 for a in state.action_history
-            if a.get("street") == "preflop"
-            and a.get("action") in ("raise", "bet", "all_in")
+            1
+            for a in state.action_history
+            if a.get("street") == "preflop" and a.get("action") in ("raise", "bet", "all_in")
         )
-        
+
         stacks = {p.name: p.stack for p in state.players}
-        
+
         return cls(
             hand_number=state.hand_number,
             street=state.street.value,
@@ -115,6 +117,7 @@ class MinimalAction:
 @dataclass
 class StubGameState:
     """Minimal game state stub for statistics recalculation."""
+
     hand_number: int
     street: Street
     pot: float
@@ -125,15 +128,13 @@ class StubGameState:
     @property
     def action_history(self) -> list[dict]:
         """Return synthetic action history for 3-bet detection."""
-        return [
-            {"street": "preflop", "action": "raise"}
-            for _ in range(self.preflop_raise_count)
-        ]
+        return [{"street": "preflop", "action": "raise"} for _ in range(self.preflop_raise_count)]
 
 
 @dataclass
 class HandRecord:
     """Record of a single hand's actions."""
+
     hand_number: int
     small_blind: float = 10.0
     big_blind: float = 20.0
@@ -163,25 +164,25 @@ class HandRecord:
             start = self.starting_stacks.get(player, 0)
             finish = self.finishing_stacks.get(player, start)
             chips_won[player] = round(finish - start, 2)
-        
+
         # Determine winners (players who gained chips)
         winners = [player for player, change in chips_won.items() if change > 0]
-        
+
         # Check if hand went to showdown (has EV records)
         went_to_showdown = len(self.ev_records) > 0
-        
+
         # Calculate EV-adjusted chips per player if showdown
         ev_adjusted_chips: dict[str, float] | None = None
         if went_to_showdown:
             ev_adjusted_chips = {}
-            ev_by_player = {ev.player: ev.ev_adjusted for ev in self.ev_records}
+            ev_by_player = {ev.player_id: ev.ev_adjusted for ev in self.ev_records}
             for player in self.starting_stacks:
                 if player in ev_by_player:
                     ev_adjusted_chips[player] = round(ev_by_player[player], 2)
                 else:
                     # Non-showdown players: use actual chips won
                     ev_adjusted_chips[player] = chips_won.get(player, 0)
-        
+
         return {
             "hand_number": self.hand_number,
             "winners": winners,
@@ -197,7 +198,9 @@ class HandRecord:
             hand_number=hand_number,
             small_blind=data.get("small_blind", 10.0),
             big_blind=data.get("big_blind", 20.0),
-            actions=[MinimalAction.from_dict(a, hand_number=hand_number) for a in data.get("actions", [])],
+            actions=[
+                MinimalAction.from_dict(a, hand_number=hand_number) for a in data.get("actions", [])
+            ],
             starting_stacks=data.get("starting_stacks", {}),
             finishing_stacks=data.get("finishing_stacks", {}),
             ev_records=[EVRecord.from_dict(ev) for ev in data.get("ev_records", [])],
@@ -207,6 +210,7 @@ class HandRecord:
 @dataclass
 class TournamentRecord:
     """Complete record of a tournament's actions for statistics and EV tracking."""
+
     tournament_id: str
     timestamp: str
     players: list[str] = field(default_factory=list)
@@ -243,7 +247,7 @@ class TournamentRecord:
     def from_dict(cls, data: dict[str, Any]) -> "TournamentRecord":
         """Load from dict, supporting v1, v2, and v3 formats."""
         format_version = data.get("format_version", 1)
-        
+
         if format_version >= 3:
             return cls._from_v3_dict(data)
         elif format_version >= 2:
@@ -255,7 +259,7 @@ class TournamentRecord:
     def _from_v3_dict(cls, data: dict[str, Any]) -> "TournamentRecord":
         """Load from v3 format (hands grouped)."""
         hands = [HandRecord.from_dict(h) for h in data.get("hands", [])]
-        
+
         # Handle old v3 format with ev_records at tournament level
         tournament_ev_records = data.get("ev_records", [])
         if tournament_ev_records:
@@ -263,7 +267,7 @@ class TournamentRecord:
                 hands,
                 [EVRecord.from_dict(ev) for ev in tournament_ev_records],
             )
-        
+
         return cls(
             tournament_id=data["tournament_id"],
             timestamp=data["timestamp"],
@@ -277,11 +281,11 @@ class TournamentRecord:
         actions = [MinimalAction.from_dict(a) for a in data.get("actions", [])]
         big_blind = data.get("big_blind", 20.0)
         hands = _group_actions_by_hand(actions, big_blind=big_blind)
-        
+
         # Distribute ev_records to the correct hands
         ev_records = [EVRecord.from_dict(ev) for ev in data.get("ev_records", [])]
         _distribute_ev_records_to_hands(hands, ev_records)
-        
+
         return cls(
             tournament_id=data["tournament_id"],
             timestamp=data["timestamp"],
@@ -294,39 +298,41 @@ class TournamentRecord:
         """Load from old full-state format (v1) and convert to v3."""
         tournament_id = data["tournament_id"]
         timestamp = data["timestamp"]
-        
+
         players: set[str] = set()
         big_blind = 20.0
         actions: list[MinimalAction] = []
-        
+
         for state_data in data.get("states", []):
             state = _parse_v1_state(state_data["state"])
             actor = state_data["actor"]
             action_data = state_data["action"]
-            
+
             if state.players:
                 players.update(p["name"] for p in state.players)
             big_blind = state.big_blind
-            
+
             preflop_raise_count = sum(
-                1 for a in state.action_history
-                if a.get("street") == "preflop"
-                and a.get("action") in ("raise", "bet", "all_in")
+                1
+                for a in state.action_history
+                if a.get("street") == "preflop" and a.get("action") in ("raise", "bet", "all_in")
             )
-            
-            actions.append(MinimalAction(
-                hand_number=state.hand_number,
-                street=state.street,
-                actor=actor,
-                action_type=action_data["type"],
-                amount=action_data.get("amount"),
-                pot=state.pot,
-                current_bet=state.current_bet,
-                preflop_raise_count=preflop_raise_count,
-            ))
-        
+
+            actions.append(
+                MinimalAction(
+                    hand_number=state.hand_number,
+                    street=state.street,
+                    actor=actor,
+                    action_type=action_data["type"],
+                    amount=action_data.get("amount"),
+                    pot=state.pot,
+                    current_bet=state.current_bet,
+                    preflop_raise_count=preflop_raise_count,
+                )
+            )
+
         hands = _group_actions_by_hand(actions, big_blind=big_blind)
-        
+
         return cls(
             tournament_id=tournament_id,
             timestamp=timestamp,
@@ -343,13 +349,13 @@ def _group_actions_by_hand(
     """Group a flat list of actions by hand number."""
     if small_blind is None:
         small_blind = big_blind / 2
-    
+
     hands_dict: dict[int, list[MinimalAction]] = {}
     for action in actions:
         if action.hand_number not in hands_dict:
             hands_dict[action.hand_number] = []
         hands_dict[action.hand_number].append(action)
-    
+
     return [
         HandRecord(
             hand_number=hand_num,
@@ -375,6 +381,7 @@ def _distribute_ev_records_to_hands(
 @dataclass
 class _V1State:
     """Helper for parsing v1 format state data."""
+
     hand_number: int
     street: str
     pot: float
@@ -425,7 +432,7 @@ class GameStateRecorder:
         gto_deviation: str | None = None,
     ) -> None:
         """Record an action with minimal data needed for statistics.
-        
+
         Args:
             state: Current game state
             actor: Player making the action
@@ -435,11 +442,11 @@ class GameStateRecorder:
         """
         if self._current_tournament is None:
             raise ValueError("No tournament started. Call start_tournament first.")
-        
+
         if not self._players_recorded:
             self._current_tournament.players = [p.name for p in state.players]
             self._players_recorded = True
-        
+
         # Check if we need to start a new hand
         if self._current_hand is None or self._current_hand.hand_number != state.hand_number:
             self._current_hand = HandRecord(
@@ -450,21 +457,21 @@ class GameStateRecorder:
             # Capture starting stacks from the first action's state
             self._current_hand.starting_stacks = {p.name: p.stack for p in state.players}
             self._current_tournament.hands.append(self._current_hand)
-        
+
         minimal_action = MinimalAction.from_full_state(state, actor, action)
-        
+
         if is_following_gto:
             minimal_action.decision_type = "gto"
             minimal_action.deviation_reason = None
         else:
             minimal_action.decision_type = "deviate"
             minimal_action.deviation_reason = gto_deviation
-        
+
         self._current_hand.actions.append(minimal_action)
 
     def record_hand_result(self, finishing_stacks: dict[str, float]) -> None:
         """Record the finishing stacks for the current hand.
-        
+
         Args:
             finishing_stacks: Player stacks at the end of the hand
         """
@@ -475,18 +482,18 @@ class GameStateRecorder:
         """Record EV data from showdown hands to the current hand."""
         if self._current_tournament is None:
             raise ValueError("No tournament started. Call start_tournament first.")
-        
+
         if self._current_hand is None:
             raise ValueError("No hand started. Record an action first.")
-        
+
         self._current_hand.ev_records.extend(ev_records)
 
     def save_tournament(self, incomplete: bool = False) -> str | None:
         """Save the current tournament record to a JSON file.
-        
+
         Args:
             incomplete: If True, prefix filename with "incomplete_" for interrupted tournaments.
-        
+
         Returns:
             Path to the saved file, or None if no tournament to save.
         """
@@ -517,7 +524,7 @@ class GameStateRecorder:
         """Fill in missing finishing_stacks from the last action's stacks for incomplete hands."""
         if self._current_tournament is None:
             return
-        
+
         for hand in self._current_tournament.hands:
             if not hand.finishing_stacks and hand.actions:
                 # Use the last action's stacks as approximate finishing stacks
@@ -532,7 +539,9 @@ class GameStateRecorder:
         return TournamentRecord.from_dict(data)
 
     @classmethod
-    def load_all_tournaments(cls, gamestates_dir: str = "data/gamestates") -> list[TournamentRecord]:
+    def load_all_tournaments(
+        cls, gamestates_dir: str = "data/gamestates"
+    ) -> list[TournamentRecord]:
         """Load all tournament records from the gamestates directory."""
         path = Path(gamestates_dir)
         if not path.exists():

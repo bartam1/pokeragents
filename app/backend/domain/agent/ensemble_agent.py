@@ -9,6 +9,7 @@ This agent uses three specialized sub-agents:
 The GTO and Exploit analyses run in PARALLEL for efficiency,
 then the Decision Maker synthesizes both into a final action.
 """
+
 import asyncio
 
 from backend.config import Settings
@@ -98,11 +99,15 @@ class EnsemblePokerAgent:
         hand_history = self._build_hand_history(game_state.action_history)
 
         # Debug logging - print all prompts for testing
-        logger.debug(f"Agent {self.player_id} STATE PROMPT:\n{'='*60}\n{state_prompt}\n{'='*60}")
         logger.debug(
-            f"Agent {self.player_id} OPPONENT STATS:\n{'='*60}\n{opponent_stats}\n{'='*60}"
+            f"Agent {self.player_id} STATE PROMPT:\n{'=' * 60}\n{state_prompt}\n{'=' * 60}"
         )
-        logger.debug(f"Agent {self.player_id} HAND HISTORY:\n{'='*60}\n{hand_history}\n{'='*60}")
+        logger.debug(
+            f"Agent {self.player_id} OPPONENT STATS:\n{'=' * 60}\n{opponent_stats}\n{'=' * 60}"
+        )
+        logger.debug(
+            f"Agent {self.player_id} HAND HISTORY:\n{'=' * 60}\n{hand_history}\n{'=' * 60}"
+        )
 
         logger.info(f"🎭 {self.player_id} (Ensemble) analyzing situation...")
 

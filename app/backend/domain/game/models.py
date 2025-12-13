@@ -1,6 +1,7 @@
 """
 Game models - Structured representations of poker game state.
 """
+
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any

@@ -1,6 +1,7 @@
 """
 Pytest configuration and shared fixtures for agent scenario tests.
 """
+
 import os
 
 import pytest

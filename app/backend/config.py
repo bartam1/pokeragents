@@ -10,6 +10,7 @@ Environment Variables:
 - REASONING_EFFORT: Optional (low, medium, high)
 - TEMPERATURE: Generation temperature (default: 0.7)
 """
+
 import os
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -49,7 +50,7 @@ class Settings(BaseSettings):
 
     # Knowledge persistence
     knowledge_persistence_dir: str = "data/knowledge"
-    
+
     # Game state persistence (for statistics recalculation)
     gamestates_dir: str = "data/gamestates"
 

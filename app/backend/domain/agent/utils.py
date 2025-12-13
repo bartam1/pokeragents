@@ -3,6 +3,7 @@ Utility functions for agent operations.
 
 Provides shared functionality used across different agent implementations.
 """
+
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any

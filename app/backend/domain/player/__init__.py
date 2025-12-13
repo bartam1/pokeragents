@@ -1,4 +1,5 @@
 """Player domain - Statistics tracking and knowledge base."""
+
 from backend.domain.player.models import (
     KnowledgeBase,
     PlayerProfile,

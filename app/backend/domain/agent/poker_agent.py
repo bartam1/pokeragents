@@ -10,6 +10,7 @@ The agent's behavior is shaped by:
 - Strategy configuration (personality/style)
 - Knowledge base (opponent stats - pre-loaded for Agent D, learned for Agent E)
 """
+
 from agents import Agent, ModelSettings, Runner
 
 from backend.config import Settings
@@ -186,7 +187,7 @@ class PokerAgent:
 
         # Debug logging - print full prompt for testing
         logger.debug(f"Agent {self.player_id} analyzing hand #{game_state.hand_number}")
-        logger.debug(f"Agent {self.player_id} PROMPT:\n{'='*60}\n{prompt}\n{'='*60}")
+        logger.debug(f"Agent {self.player_id} PROMPT:\n{'=' * 60}\n{prompt}\n{'=' * 60}")
 
         # Run the agent - result.final_output is ActionDecision (structured)
         result = await Runner.run(self._agent, prompt)

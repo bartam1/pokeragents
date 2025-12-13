@@ -8,17 +8,13 @@ This is the main coordinator that:
 4. Tracks results for the POC experiment
 5. Calculates EV chips for showdown hands to measure decision quality
 """
+
 import os
 import uuid
 from dataclasses import dataclass, field
 from typing import Union
 
 from backend.config import Settings
-from backend.domain.game.environment import PokerEnvironment
-from backend.domain.game.models import Action, ActionType
-from backend.domain.game.recorder import GameStateRecorder
-from backend.domain.player.models import KnowledgeBase, create_shared_knowledge_base
-from backend.domain.agent.poker_agent import PokerAgent
 from backend.domain.agent.ensemble_agent import EnsemblePokerAgent
 from backend.domain.agent.poker_agent import PokerAgent
 from backend.domain.agent.strategies.base import (
@@ -33,6 +29,7 @@ from backend.domain.agent.utils import deviation_tracker
 from backend.domain.game.environment import PokerEnvironment
 from backend.domain.game.equity import calculate_multiway_equity
 from backend.domain.game.models import Action, ActionType, EVRecord, HandResult
+from backend.domain.game.recorder import GameStateRecorder
 from backend.domain.player.models import KnowledgeBase, create_shared_knowledge_base
 from backend.logging_config import get_logger
 
@@ -125,7 +122,7 @@ class TournamentOrchestrator:
         agent_configs = agent_configs or DEFAULT_AGENTS
         self._eliminations = []
         self._calibration_mode = calibration_mode
-        
+
         # Generate a unique tournament ID and start recording
         self._tournament_id = str(uuid.uuid4())[:8]
         self._recorder.start_tournament(self._tournament_id)
@@ -258,7 +255,7 @@ class TournamentOrchestrator:
 
         # Save Agent D's accumulated knowledge
         self._save_agent_knowledge()
-        
+
         # Save recorded game states for future statistics recalculation
         saved_path = self._recorder.save_tournament()
         if saved_path:
@@ -307,10 +304,10 @@ class TournamentOrchestrator:
 
                 # Convert structured decision to executable Action
                 action = decision.to_action(game_state)
-                
+
                 # Determine if following GTO based on deviation text
                 is_following_gto = decision.gto_deviation.lower().startswith("following gto")
-                
+
                 # Record the state and action for statistics recalculation
                 self._recorder.record_action(
                     game_state,
@@ -349,8 +346,7 @@ class TournamentOrchestrator:
 
             # Record finishing stacks for the hand
             finishing_stacks = {
-                name: self._env.get_stack(i)
-                for i, name in enumerate(self._env.player_names)
+                name: self._env.get_stack(i) for i, name in enumerate(self._env.player_names)
             }
             self._recorder.record_hand_result(finishing_stacks)
 
@@ -532,13 +528,13 @@ class TournamentOrchestrator:
             # Log EV calculation for transparency
             variance = ev_record.variance
             logger.info(
-                f"  📊 EV: {player_id} had {equity*100:.1f}% equity | "
+                f"  📊 EV: {player_id} had {equity * 100:.1f}% equity | "
                 f"EV: {ev_chips:+.0f} | Actual: {actual_chips:+.0f} | Variance: {variance:+.0f}"
             )
 
     def save_incomplete(self) -> str | None:
         """Save current tournament state as incomplete when interrupted.
-        
+
         Returns:
             Path to the saved file, or None if no tournament to save.
         """
@@ -604,7 +600,7 @@ class TournamentOrchestrator:
             ev_by_player=ev_by_player,
         )
 
-        logger.info(f"Tournament complete after {hand_count} hands. " f"Placements: {placements}")
+        logger.info(f"Tournament complete after {hand_count} hands. Placements: {placements}")
         logger.info(
             f"Agent D (informed) placed: {agent_d_placement}, "
             f"Agent E (naive) placed: {agent_e_placement}"

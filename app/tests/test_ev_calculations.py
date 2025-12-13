@@ -56,7 +56,7 @@ class TestShowdownEquity:
         equity = calculate_showdown_equity(hero, villain, board)
 
         # AA vs KK is roughly 82% for AA
-        assert 0.78 < equity < 0.86, f"AA vs KK equity should be ~82%, got {equity*100:.1f}%"
+        assert 0.78 < equity < 0.86, f"AA vs KK equity should be ~82%, got {equity * 100:.1f}%"
 
     def test_pocket_pair_vs_overcards_preflop(self):
         """77 vs AK preflop - classic coin flip, 77 has ~53% equity."""
@@ -67,7 +67,7 @@ class TestShowdownEquity:
         equity = calculate_showdown_equity(hero, villain, board)
 
         # 77 vs AK is roughly 53% for 77
-        assert 0.48 < equity < 0.58, f"77 vs AK equity should be ~53%, got {equity*100:.1f}%"
+        assert 0.48 < equity < 0.58, f"77 vs AK equity should be ~53%, got {equity * 100:.1f}%"
 
     def test_set_vs_top_pair_on_flop(self):
         """Set vs top pair on flop - set should have ~90%+ equity."""
@@ -78,7 +78,7 @@ class TestShowdownEquity:
         equity = calculate_showdown_equity(hero, villain, board)
 
         # Set vs top pair is usually 85-95%
-        assert equity > 0.85, f"Set vs top pair should be 85%+, got {equity*100:.1f}%"
+        assert equity > 0.85, f"Set vs top pair should be 85%+, got {equity * 100:.1f}%"
 
     def test_flush_draw_with_overcards_vs_pair_on_flop(self):
         """Flush draw + overcards vs made pair on flop - combo draw has ~50-55% equity."""
@@ -89,7 +89,7 @@ class TestShowdownEquity:
         equity = calculate_showdown_equity(hero, villain, board)
 
         # QsJs has flush draw (9 outs) + overcard outs = combo draw ~50-55%
-        assert 0.45 < equity < 0.60, f"Combo draw equity should be ~50-55%, got {equity*100:.1f}%"
+        assert 0.45 < equity < 0.60, f"Combo draw equity should be ~50-55%, got {equity * 100:.1f}%"
 
     def test_rivered_flush_wins(self):
         """Flush on river beats two pair - deterministic 100% equity."""
@@ -100,7 +100,7 @@ class TestShowdownEquity:
         equity = calculate_showdown_equity(hero, villain, board)
 
         # Hero has flush, villain has two pair - hero wins
-        assert equity == 1.0, f"Flush should beat two pair, got {equity*100:.1f}%"
+        assert equity == 1.0, f"Flush should beat two pair, got {equity * 100:.1f}%"
 
     def test_better_two_pair_wins(self):
         """Higher two pair beats lower two pair on river."""
@@ -111,7 +111,7 @@ class TestShowdownEquity:
         equity = calculate_showdown_equity(hero, villain, board)
 
         # AA-KK beats QQ-JJ
-        assert equity == 1.0, f"Higher two pair should win, got {equity*100:.1f}%"
+        assert equity == 1.0, f"Higher two pair should win, got {equity * 100:.1f}%"
 
     def test_chopped_pot(self):
         """Same hand on board splits the pot - 50% equity."""
@@ -122,7 +122,7 @@ class TestShowdownEquity:
         equity = calculate_showdown_equity(hero, villain, board)
 
         # Both play the board (AAA-KK) - chop
-        assert equity == 0.5, f"Chopped pot should be 50%, got {equity*100:.1f}%"
+        assert equity == 0.5, f"Chopped pot should be 50%, got {equity * 100:.1f}%"
 
     def test_dominated_ace_preflop(self):
         """AK vs A7 - AK dominates with ~72% equity."""
@@ -133,7 +133,7 @@ class TestShowdownEquity:
         equity = calculate_showdown_equity(hero, villain, board)
 
         # AK vs A7 is roughly 72% for AK
-        assert 0.68 < equity < 0.78, f"AK vs A7 should be ~72%, got {equity*100:.1f}%"
+        assert 0.68 < equity < 0.78, f"AK vs A7 should be ~72%, got {equity * 100:.1f}%"
 
 
 class TestEVRecord:
@@ -303,7 +303,7 @@ class TestMultiwayEquity:
         equity = calculate_multiway_equity(hero, [opponent1, opponent2], board)
 
         # AA beats both KK and QQ
-        assert equity == 1.0, f"AA should win 100% vs KK and QQ, got {equity*100:.1f}%"
+        assert equity == 1.0, f"AA should win 100% vs KK and QQ, got {equity * 100:.1f}%"
 
     def test_three_way_middle_pair_loses(self):
         """KK vs AA vs QQ on blank river - KK loses."""
@@ -315,7 +315,7 @@ class TestMultiwayEquity:
         equity = calculate_multiway_equity(hero, [opponent1, opponent2], board)
 
         # KK loses to AA
-        assert equity == 0.0, f"KK should lose to AA, got {equity*100:.1f}%"
+        assert equity == 0.0, f"KK should lose to AA, got {equity * 100:.1f}%"
 
     def test_three_way_preflop_aces_dominate(self):
         """AA vs KK vs QQ preflop - AA should have ~73% equity."""
@@ -327,7 +327,7 @@ class TestMultiwayEquity:
         equity = calculate_multiway_equity(hero, [opponent1, opponent2], board)
 
         # AA vs KK vs QQ preflop - AA has roughly 65-75% equity (Monte Carlo variance)
-        assert 0.60 < equity < 0.80, f"AA vs KK vs QQ should be ~65-75%, got {equity*100:.1f}%"
+        assert 0.60 < equity < 0.80, f"AA vs KK vs QQ should be ~65-75%, got {equity * 100:.1f}%"
 
     def test_three_way_chop(self):
         """All three players tie - each gets 1/3."""
@@ -339,7 +339,7 @@ class TestMultiwayEquity:
         equity = calculate_multiway_equity(hero, [opponent1, opponent2], board)
 
         # All play the board - 3-way chop
-        assert abs(equity - 1/3) < 0.01, f"3-way chop should be 33.3%, got {equity*100:.1f}%"
+        assert abs(equity - 1 / 3) < 0.01, f"3-way chop should be 33.3%, got {equity * 100:.1f}%"
 
     def test_four_way_pot_winner(self):
         """4-way pot, one clear winner."""
@@ -349,12 +349,10 @@ class TestMultiwayEquity:
         opponent3 = make_cards(["Js", "Jh"])
         board = make_cards(["2c", "5d", "7h", "Tc", "3s"])
 
-        equity = calculate_multiway_equity(
-            hero, [opponent1, opponent2, opponent3], board
-        )
+        equity = calculate_multiway_equity(hero, [opponent1, opponent2, opponent3], board)
 
         # AA beats everyone
-        assert equity == 1.0, f"AA should win 4-way pot, got {equity*100:.1f}%"
+        assert equity == 1.0, f"AA should win 4-way pot, got {equity * 100:.1f}%"
 
 
 class TestEdgeCases:
@@ -391,7 +389,7 @@ class TestEdgeCases:
         equity = calculate_showdown_equity(hero, villain, board)
 
         # AK vs set of Q's - AK needs runner-runner or a lucky runout
-        assert equity < 0.15, f"AK vs set should be <15%, got {equity*100:.1f}%"
+        assert equity < 0.15, f"AK vs set should be <15%, got {equity * 100:.1f}%"
 
     def test_turn_all_in_four_cards(self):
         """All-in on turn with 4 board cards - flush draw vs trips."""
@@ -404,7 +402,9 @@ class TestEdgeCases:
         # Hero has 9 flush outs + maybe some straight outs ~20-25%
         # But can also hit A or K for two pair... actually more complex
         # Let's just verify it's reasonable (hero is behind but has outs)
-        assert 0.15 < equity < 0.35, f"Flush draw vs trips should be 15-35%, got {equity*100:.1f}%"
+        assert 0.15 < equity < 0.35, (
+            f"Flush draw vs trips should be 15-35%, got {equity * 100:.1f}%"
+        )
 
     def test_multiway_with_empty_board(self):
         """3-way preflop all-in with no board cards."""

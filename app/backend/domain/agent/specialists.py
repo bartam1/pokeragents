@@ -8,6 +8,7 @@ This module provides specialized agents that each focus on one aspect of poker a
 
 Uses structured output (output_type) with Pydantic models for reliable parsing.
 """
+
 from dataclasses import dataclass
 
 from agents import Agent, ModelSettings, Runner
@@ -399,13 +400,13 @@ class DecisionMaker:
 
 ## Exploit Analysis (Confidence: {exploit_analysis.confidence:.2f})
 - Opponent Type: {exploit_analysis.opponent_type}
-- Key Tendencies: {', '.join(exploit_analysis.key_tendencies) or 'None identified'}
-- Exploitable Leaks: {', '.join(exploit_analysis.exploitable_leaks) or 'None identified'}
+- Key Tendencies: {", ".join(exploit_analysis.key_tendencies) or "None identified"}
+- Exploitable Leaks: {", ".join(exploit_analysis.exploitable_leaks) or "None identified"}
 - Recommended Adjustment: {exploit_analysis.recommended_adjustment}
 - Reasoning: {exploit_analysis.reasoning}
 
 ## Valid Actions
-{', '.join(valid_actions)}
+{", ".join(valid_actions)}
 
 Consider the hand history when making your decision. Provide your final decision."""
 

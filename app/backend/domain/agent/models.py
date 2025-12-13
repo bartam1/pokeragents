@@ -5,6 +5,7 @@ This module provides a unified ActionDecision model that is used by ALL poker ag
 for structured LLM output. This eliminates the need for regex parsing and ensures
 consistent decision format across different agent architectures.
 """
+
 from typing import TYPE_CHECKING, Literal
 
 from pydantic import BaseModel, Field

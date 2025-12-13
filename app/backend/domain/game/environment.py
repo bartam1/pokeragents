@@ -7,6 +7,7 @@ StructuredGameState format.
 
 Reference: https://github.com/uoftcprg/pokerkit
 """
+
 from typing import Any
 
 from pokerkit import Automation, NoLimitTexasHoldem
@@ -260,8 +261,7 @@ class PokerEnvironment:
 
         if self._state.actor_index != player_index:
             raise ValueError(
-                f"It's not player {player_index}'s turn. "
-                f"Current actor: {self._state.actor_index}"
+                f"It's not player {player_index}'s turn. Current actor: {self._state.actor_index}"
             )
 
         state = self._state

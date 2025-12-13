@@ -4,6 +4,7 @@ Equity calculation utilities for EV tracking.
 Calculates exact equity when hands are known (for showdown analysis).
 Supports both heads-up and multi-way pots.
 """
+
 import random
 
 from pokerkit import Card as PKCard
@@ -89,9 +90,7 @@ def _calculate_multiway_deterministic(
         hero_hand = StandardHighHand.from_game(hero_pk, board_pk)
 
         # Evaluate all opponent hands
-        opponent_hands = [
-            StandardHighHand.from_game(opp, board_pk) for opp in opponents_pk
-        ]
+        opponent_hands = [StandardHighHand.from_game(opp, board_pk) for opp in opponents_pk]
 
         # Find the best opponent hand
         best_opponent = max(opponent_hands)
@@ -142,9 +141,7 @@ def _calculate_multiway_monte_carlo(
 
             # Evaluate all hands
             hero_hand = StandardHighHand.from_game(hero_pk, full_board)
-            opponent_hands = [
-                StandardHighHand.from_game(opp, full_board) for opp in opponents_pk
-            ]
+            opponent_hands = [StandardHighHand.from_game(opp, full_board) for opp in opponents_pk]
 
             # Find best opponent
             best_opponent = max(opponent_hands)

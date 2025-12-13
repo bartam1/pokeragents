@@ -7,26 +7,25 @@ outperform agents who must learn from scratch (Agent E).
 Usage:
     uv run python -m backend.main --tournaments 5
 """
+
 import argparse
 import asyncio
 import json
-import signal
 import os
+import signal
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
 from backend.config import Settings
 from backend.domain.agent.utils import deviation_tracker
+from backend.domain.player.recalculator import recalculate_baseline_stats
 from backend.domain.tournament.orchestrator import (
     TournamentConfig,
     TournamentOrchestrator,
     TournamentResult,
 )
 from backend.logging_config import get_logger, log_collector, setup_logging
-from backend.domain.agent.utils import deviation_tracker
-from backend.domain.player.recalculator import recalculate_baseline_stats
-from backend.logging_config import setup_logging, get_logger, log_collector
 
 logger = get_logger(__name__)
 
@@ -41,13 +40,13 @@ def _handle_sigint(signum, frame):
     if _shutdown_requested:
         print("\n⚠️ Force quit - exiting immediately")
         raise SystemExit(1)
-    
+
     _shutdown_requested = True
     print("\n⚠️ Shutdown requested - saving current tournament state...")
-    
+
     if _current_orchestrator is not None:
         _current_orchestrator.save_incomplete()
-    
+
     raise KeyboardInterrupt
 
 
@@ -58,10 +57,10 @@ async def run_single_tournament(
 ) -> TournamentResult:
     """Run a single tournament and return results."""
     global _current_orchestrator
-    
+
     orchestrator = TournamentOrchestrator(settings)
     _current_orchestrator = orchestrator
-    
+
     orchestrator.setup_tournament(config=config, calibration_mode=calibration_mode)
     try:
         return await orchestrator.run_tournament()
@@ -114,9 +113,9 @@ async def run_experiment(
     )
 
     for i in range(num_tournaments):
-        logger.info(f"\n{'='*60}")
+        logger.info(f"\n{'=' * 60}")
         logger.info(f"TOURNAMENT {i + 1}/{num_tournaments}")
-        logger.info(f"{'='*60}\n")
+        logger.info(f"{'=' * 60}\n")
 
         try:
             result = await run_single_tournament(settings, config, calibration_mode)
@@ -378,7 +377,7 @@ def print_results(results: dict) -> None:
 
     for agent_id in ["agent_d", "agent_e"]:
         agent_label = "Agent D (Simple)" if agent_id == "agent_d" else "Agent E (Ensemble)"
-        
+
         if agent_id in ev_by_player:
             ev_data = ev_by_player[agent_id]
             ev_chips = ev_data.get("ev_chips", 0)
@@ -403,51 +402,53 @@ def print_results(results: dict) -> None:
     # Formula: EV-Adjusted Total = sum(ev_adjusted from showdowns) + non-showdown profit
     # This uses EV when available (showdowns), actual when not (non-showdowns)
     starting_stack = 1500  # Default starting stack
-    
+
     # Get actual total profit/loss from final stacks
     tournament_results = results.get("tournament_results", [])
-    
+
     # Calculate per-agent totals across all tournaments
     agent_d_actual_total = sum(
-        r.final_stacks.get("agent_d", starting_stack) - starting_stack 
-        for r in tournament_results
+        r.final_stacks.get("agent_d", starting_stack) - starting_stack for r in tournament_results
     )
     agent_e_actual_total = sum(
-        r.final_stacks.get("agent_e", starting_stack) - starting_stack 
-        for r in tournament_results
+        r.final_stacks.get("agent_e", starting_stack) - starting_stack for r in tournament_results
     )
-    
+
     # Get showdown ev_adjusted and actual from ev_by_player
     agent_d_showdown_ev_adjusted = agent_d_data.get("ev_adjusted", 0)
     agent_d_showdown_actual = agent_d_data.get("actual_chips", 0)
     agent_e_showdown_ev_adjusted = agent_e_data.get("ev_adjusted", 0)
     agent_e_showdown_actual = agent_e_data.get("actual_chips", 0)
-    
+
     # Non-showdown profit = actual_total - showdown_actual
     agent_d_non_showdown = agent_d_actual_total - agent_d_showdown_actual
     agent_e_non_showdown = agent_e_actual_total - agent_e_showdown_actual
-    
+
     # EV-adjusted total = showdown_ev_adjusted + non_showdown_actual
     agent_d_ev_adjusted_total = agent_d_showdown_ev_adjusted + agent_d_non_showdown
     agent_e_ev_adjusted_total = agent_e_showdown_ev_adjusted + agent_e_non_showdown
-    
+
     print("EV-Adjusted Total (EV for showdowns + actual for non-showdowns):")
     print(f"  Agent D: {agent_d_ev_adjusted_total:+.0f} chips")
-    print(f"    └─ Showdown EV: {agent_d_showdown_ev_adjusted:+.0f} + Non-showdown: {agent_d_non_showdown:+.0f}")
+    print(
+        f"    └─ Showdown EV: {agent_d_showdown_ev_adjusted:+.0f} + Non-showdown: {agent_d_non_showdown:+.0f}"
+    )
     print(f"  Agent E: {agent_e_ev_adjusted_total:+.0f} chips")
-    print(f"    └─ Showdown EV: {agent_e_showdown_ev_adjusted:+.0f} + Non-showdown: {agent_e_non_showdown:+.0f}")
+    print(
+        f"    └─ Showdown EV: {agent_e_showdown_ev_adjusted:+.0f} + Non-showdown: {agent_e_non_showdown:+.0f}"
+    )
     print()
-    
+
     print("EV-Adjusted Comparison:")
     ev_adjusted_diff = agent_d_ev_adjusted_total - agent_e_ev_adjusted_total
-    
+
     if agent_d_showdowns == 0 and agent_e_showdowns == 0:
         print("  ⚠️ No showdowns occurred - using actual chips only")
         print("  (Results are purely from non-showdown hands)")
     elif agent_d_showdowns == 0 or agent_e_showdowns == 0:
         missing = "D" if agent_d_showdowns == 0 else "E"
         print(f"  ⚠️ Agent {missing} had no showdowns - partial EV adjustment")
-    
+
     if ev_adjusted_diff > 0:
         print(f"  ✅ Agent D outperformed Agent E by {ev_adjusted_diff:+.0f} EV-adjusted chips")
     elif ev_adjusted_diff < 0:
@@ -495,10 +496,10 @@ def print_results(results: dict) -> None:
 def main():
     """Main entry point."""
     global _shutdown_requested
-    
+
     # Register signal handler for graceful shutdown
     signal.signal(signal.SIGINT, _handle_sigint)
-    
+
     parser = argparse.ArgumentParser(
         description="Poker POC - AI Agents with Shared Knowledge Experiment"
     )
@@ -544,7 +545,7 @@ def main():
         print("   Agent D will start fresh and learn real opponent behaviors.\n")
     else:
         print(f"\n🎲 Starting Poker POC Experiment with {args.tournaments} tournaments...\n")
-        
+
         # Recalculate baseline statistics from saved game states
         calibrated_path = f"{settings.knowledge_persistence_dir}/calibrated_stats.json"
         baseline_kb = recalculate_baseline_stats(
@@ -552,25 +553,29 @@ def main():
             output_path=calibrated_path,
         )
         if baseline_kb.profiles:
-            print(f"📊 Recalculated baseline stats from {baseline_kb.get_total_hands_observed()} total hands\n")
+            print(
+                f"📊 Recalculated baseline stats from {baseline_kb.get_total_hands_observed()} total hands\n"
+            )
 
     try:
-        results = asyncio.run(run_experiment(
-            num_tournaments=args.tournaments,
-            settings=settings,
-            calibration_mode=args.calibrate,
-        ))
+        results = asyncio.run(
+            run_experiment(
+                num_tournaments=args.tournaments,
+                settings=settings,
+                calibration_mode=args.calibrate,
+            )
+        )
 
         # Print results
         print_results(results)
-        
+
         if args.calibrate:
             print("\n🔧 Calibration complete! Run without --calibrate to use learned stats.")
 
         # Save results to file
         results_file = save_experiment_results(results)
         print(f"\n📊 Results saved to: {results_file}")
-        
+
     except KeyboardInterrupt:
         print("\n⚠️ Experiment interrupted. Partial results may have been saved.")
         if _shutdown_requested:

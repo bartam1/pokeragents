@@ -4,6 +4,7 @@ Scenario Loader - Load JSON scenarios into game state objects.
 This module converts JSON scenario files into StructuredGameState and
 KnowledgeBase objects for testing poker agents.
 """
+
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
