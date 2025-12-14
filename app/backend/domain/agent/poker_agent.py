@@ -17,8 +17,13 @@ from backend.config import Settings
 from backend.domain.agent.models import ActionDecision
 from backend.domain.agent.strategies.base import StrategyConfig
 from backend.domain.agent.tools.basic_tools import POKER_TOOLS
-from backend.domain.agent.utils import deviation_tracker, extract_tools_used
+from backend.domain.agent.utils import (
+    build_tournament_history_prompt,
+    deviation_tracker,
+    extract_tools_used,
+)
 from backend.domain.game.models import Action, HandResult, StructuredGameState
+from backend.domain.game.recorder import HandRecord
 from backend.domain.player.models import KnowledgeBase
 from backend.domain.player.tracker import StatisticsTracker
 from backend.logging_config import get_logger, log_agent_decision
@@ -107,6 +112,9 @@ class PokerAgent:
         self.knowledge_base = knowledge_base
         self._settings = settings
         self._tracker = StatisticsTracker(knowledge_base)
+
+        # Tournament history for exploitation (informed agents only)
+        self._tournament_history: list[HandRecord] = []
 
         # OpenAI client uses environment variables set by Settings.configure_openai_client()
         # No need for conditional logic - OPENAI_BASE_URL and OPENAI_API_KEY are set automatically
@@ -384,6 +392,11 @@ class PokerAgent:
                 else:
                     lines.append(f"\n{player.name}: No data")
 
+            # Add tournament history for exploitation
+            if self._tournament_history:
+                lines.append("")
+                lines.append(build_tournament_history_prompt(self._tournament_history))
+
         return "\n".join(lines)
 
     def observe_action(
@@ -421,3 +434,16 @@ class PokerAgent:
     ) -> None:
         """Finalize per-hand stats (WTSD/WSD) after a hand is complete."""
         self._tracker.end_hand(player_names, hand_result)
+
+    def add_hand_to_history(self, hand_record: HandRecord) -> None:
+        """Add a completed hand to tournament history.
+
+        Only used by informed agents (D/E) for exploitation analysis.
+        Called by orchestrator after each hand completes.
+
+        Args:
+            hand_record: The completed hand record to add.
+        """
+        # Only track history for informed agents (has_shared_knowledge=True)
+        if self.strategy.has_shared_knowledge:
+            self._tournament_history.append(hand_record)

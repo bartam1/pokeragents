@@ -277,3 +277,52 @@ def get_detailed_tool_usage(result) -> list[dict]:
                 )
 
     return tool_details
+
+
+def build_tournament_history_prompt(tournament_history: list) -> str:
+    """
+    Build full tournament history prompt for exploitation analysis.
+
+    Opponent hole cards are hidden except for showdown hands where
+    they were legitimately revealed.
+
+    Args:
+        tournament_history: List of HandRecord objects from previous hands
+
+    Returns:
+        Formatted string containing all previous hands in the tournament.
+    """
+    if not tournament_history:
+        return "No previous hands in this tournament."
+
+    lines = ["## Tournament History (Previous Hands)"]
+
+    for hand in tournament_history:
+        lines.append(f"\n### Hand {hand.hand_number}")
+        lines.append(f"Blinds: {hand.small_blind}/{hand.big_blind}")
+        lines.append(f"Starting Stacks: {hand.starting_stacks}")
+
+        # Actions by street
+        current_street = None
+        for action in hand.actions:
+            if action.street != current_street:
+                current_street = action.street
+                lines.append(f"\n=== {current_street.upper()} ===")
+
+            if action.amount and action.amount > 0:
+                lines.append(f"  {action.actor}: {action.action_type} {action.amount:.0f}")
+            else:
+                lines.append(f"  {action.actor}: {action.action_type}")
+
+        # Result
+        lines.append(f"\nResult: {hand.finishing_stacks}")
+
+        # Showdown hands (legitimately revealed)
+        if hand.shown_hands:
+            if hand.community_cards:
+                lines.append(f"Board: {' '.join(hand.community_cards)}")
+            lines.append("Showdown:")
+            for player, cards in hand.shown_hands.items():
+                lines.append(f"  {player}: {' '.join(cards)}")
+
+    return "\n".join(lines)

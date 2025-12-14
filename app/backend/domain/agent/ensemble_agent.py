@@ -16,7 +16,7 @@ from backend.config import Settings
 from backend.domain.agent.models import ActionDecision
 from backend.domain.agent.specialists import DecisionMaker, ExploitAnalyst, GTOAnalyst
 from backend.domain.agent.strategies.base import StrategyConfig
-from backend.domain.agent.utils import deviation_tracker
+from backend.domain.agent.utils import build_tournament_history_prompt, deviation_tracker
 from backend.domain.game.models import Action, HandResult, StructuredGameState
 from backend.domain.game.recorder import HandRecord
 from backend.domain.player.models import KnowledgeBase
@@ -315,48 +315,8 @@ class EnsemblePokerAgent:
         return "\n".join(lines)
 
     def _build_tournament_history(self) -> str:
-        """Build full tournament history for exploitation analysis.
-
-        Opponent hole cards are hidden except for showdown hands where
-        they were legitimately revealed.
-
-        Returns:
-            Formatted string containing all previous hands in the tournament.
-        """
-        if not self._tournament_history:
-            return "No previous hands in this tournament."
-
-        lines = ["## Tournament History (Previous Hands)"]
-
-        for hand in self._tournament_history:
-            lines.append(f"\n### Hand {hand.hand_number}")
-            lines.append(f"Blinds: {hand.small_blind}/{hand.big_blind}")
-            lines.append(f"Starting Stacks: {hand.starting_stacks}")
-
-            # Actions by street
-            current_street = None
-            for action in hand.actions:
-                if action.street != current_street:
-                    current_street = action.street
-                    lines.append(f"\n=== {current_street.upper()} ===")
-
-                if action.amount and action.amount > 0:
-                    lines.append(f"  {action.actor}: {action.action_type} {action.amount:.0f}")
-                else:
-                    lines.append(f"  {action.actor}: {action.action_type}")
-
-            # Result
-            lines.append(f"\nResult: {hand.finishing_stacks}")
-
-            # Showdown hands (legitimately revealed)
-            if hand.shown_hands:
-                if hand.community_cards:
-                    lines.append(f"Board: {' '.join(hand.community_cards)}")
-                lines.append("Showdown:")
-                for player, cards in hand.shown_hands.items():
-                    lines.append(f"  {player}: {' '.join(cards)}")
-
-        return "\n".join(lines)
+        """Build full tournament history for exploitation analysis."""
+        return build_tournament_history_prompt(self._tournament_history)
 
     def add_hand_to_history(self, hand_record: HandRecord) -> None:
         """Add a completed hand to tournament history.

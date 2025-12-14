@@ -380,12 +380,12 @@ class TournamentOrchestrator:
                 self._ev_records.extend(ev_records)
                 self._recorder.record_ev(ev_records)
 
-            # Add completed hand to ensemble agents' tournament history
+            # Add completed hand to all agents' tournament history
+            # (PokerAgent only stores if has_shared_knowledge=True)
             current_hand = self._recorder._current_hand
             if current_hand is not None:
                 for agent in self._agents.values():
-                    if isinstance(agent, EnsemblePokerAgent):
-                        agent.add_hand_to_history(current_hand)
+                    agent.add_hand_to_history(current_hand)
 
             # Show stacks after hand
             stacks_str = " | ".join(
