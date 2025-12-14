@@ -494,6 +494,23 @@ class PokerEnvironment:
         """Get all current stacks."""
         return self._current_stacks.copy()
 
+    def get_community_cards_str(self) -> list[str]:
+        """Get community cards as a list of strings (e.g., ['Ah', 'Kd', '2c']).
+
+        Returns:
+            List of card strings, or empty list if no community cards.
+        """
+        if self._state is None:
+            return []
+
+        cards = []
+        if self._state.board_cards:
+            for board in self._state.board_cards:
+                for card in board:
+                    # Format as rank+suit (e.g., "Ah", "Kd")
+                    cards.append(f"{card.rank}{card.suit}")
+        return cards
+
     def get_active_player_count(self) -> int:
         """Get number of players still in the tournament (stack > 0)."""
         return sum(1 for s in self._current_stacks if s > 0)

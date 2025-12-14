@@ -474,7 +474,6 @@ class TestAllInBlindNoActionBug:
             ),
         ]
 
-
         with pytest.raises(ValueError, match="doesn't match current hand"):
             recorder.record_ev(ev_records)
 
@@ -514,8 +513,8 @@ class TestStartingStacksCapture:
 
     def test_recorder_uses_provided_starting_stacks(self):
         """Recorder should use provided starting_stacks even if action was already recorded."""
-        from backend.domain.game.recorder import GameStateRecorder
         from backend.domain.game.models import Action, ActionType, Street
+        from backend.domain.game.recorder import GameStateRecorder
 
         recorder = GameStateRecorder("/tmp/test")
         recorder.start_tournament("test_tourney")
@@ -560,8 +559,7 @@ class TestStartingStacksCapture:
 
         # The fix ensures we use the CORRECT starting_stacks (before blinds)
         assert hand.starting_stacks == correct_starting_stacks, (
-            f"Starting stacks should be {correct_starting_stacks}, "
-            f"got {hand.starting_stacks}"
+            f"Starting stacks should be {correct_starting_stacks}, got {hand.starting_stacks}"
         )
 
         # Verify chips are conserved in the summary

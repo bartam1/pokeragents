@@ -259,7 +259,9 @@ class TournamentOrchestrator:
 
     async def _play_hand(self, hand_number: int) -> bool:
         """Play a single hand. Returns False if tournament should end."""
-        logger.info(f"--- Hand #{hand_number} (blinds {self._env.small_blind}/{self._env.big_blind}) ---")
+        logger.info(
+            f"--- Hand #{hand_number} (blinds {self._env.small_blind}/{self._env.big_blind}) ---"
+        )
 
         # Track stacks before hand for profit/loss calculation
         stacks_before = {
@@ -343,12 +345,27 @@ class TournamentOrchestrator:
             finishing_stacks = {
                 name: self._env.get_stack(i) for i, name in enumerate(self._env.player_names)
             }
+
+            # Prepare showdown data if hand went to showdown
+            community_cards: list[str] | None = None
+            shown_hands_dict: dict[str, list[str]] | None = None
+            if result.showdown and result.shown_hands:
+                # Get community cards from the environment
+                community_cards = self._env.get_community_cards_str()
+                # Convert shown_hands (seat -> Card list) to (player_name -> str list)
+                shown_hands_dict = {
+                    self._env.player_names[seat]: [str(c) for c in cards]
+                    for seat, cards in result.shown_hands.items()
+                }
+
             self._recorder.record_hand_result(
                 finishing_stacks,
                 hand_number=hand_number,
                 starting_stacks=stacks_before,
                 small_blind=self._env.small_blind,
                 big_blind=self._env.big_blind,
+                community_cards=community_cards,
+                shown_hands=shown_hands_dict,
             )
 
             # Track profit/loss for GTO deviation analysis
@@ -362,6 +379,13 @@ class TournamentOrchestrator:
                 ev_records = self._calculate_showdown_ev(hand_number, result, stacks_before)
                 self._ev_records.extend(ev_records)
                 self._recorder.record_ev(ev_records)
+
+            # Add completed hand to ensemble agents' tournament history
+            current_hand = self._recorder._current_hand
+            if current_hand is not None:
+                for agent in self._agents.values():
+                    if isinstance(agent, EnsemblePokerAgent):
+                        agent.add_hand_to_history(current_hand)
 
             # Show stacks after hand
             stacks_str = " | ".join(

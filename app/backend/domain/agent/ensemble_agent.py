@@ -18,6 +18,7 @@ from backend.domain.agent.specialists import DecisionMaker, ExploitAnalyst, GTOA
 from backend.domain.agent.strategies.base import StrategyConfig
 from backend.domain.agent.utils import deviation_tracker
 from backend.domain.game.models import Action, HandResult, StructuredGameState
+from backend.domain.game.recorder import HandRecord
 from backend.domain.player.models import KnowledgeBase
 from backend.domain.player.tracker import StatisticsTracker
 from backend.logging_config import get_logger, log_agent_decision
@@ -64,6 +65,9 @@ class EnsemblePokerAgent:
         # Hand history tracking
         self._current_hand_history: list[dict] = []
 
+        # Tournament history for exploit analysis (all completed hands)
+        self._tournament_history: list[HandRecord] = []
+
         logger.info(
             f"🎭 Created EnsemblePokerAgent for {player_id} "
             f"(Multi-Agent Architecture: GTO + Exploit + Decision)"
@@ -97,6 +101,7 @@ class EnsemblePokerAgent:
         state_prompt = self._build_state_prompt(game_state)
         opponent_stats = self._build_opponent_stats(game_state)
         hand_history = self._build_hand_history(game_state.action_history)
+        tournament_history = self._build_tournament_history()
 
         # Debug logging - print all prompts for testing
         logger.debug(
@@ -108,12 +113,17 @@ class EnsemblePokerAgent:
         logger.debug(
             f"Agent {self.player_id} HAND HISTORY:\n{'=' * 60}\n{hand_history}\n{'=' * 60}"
         )
+        logger.debug(
+            f"Agent {self.player_id} TOURNAMENT HISTORY:\n{'=' * 60}\n{tournament_history}\n{'=' * 60}"
+        )
 
         logger.info(f"🎭 {self.player_id} (Ensemble) analyzing situation...")
 
         # Run GTO and Exploit analysis in PARALLEL
         gto_task = self._gto_analyst.analyze(state_prompt, hand_history)
-        exploit_task = self._exploit_analyst.analyze(state_prompt, opponent_stats, hand_history)
+        exploit_task = self._exploit_analyst.analyze(
+            state_prompt, opponent_stats, hand_history, tournament_history
+        )
 
         gto_analysis, exploit_analysis = await asyncio.gather(gto_task, exploit_task)
 
@@ -303,6 +313,60 @@ class EnsemblePokerAgent:
                 lines.append(f"  {player}: {action_type}")
 
         return "\n".join(lines)
+
+    def _build_tournament_history(self) -> str:
+        """Build full tournament history for exploitation analysis.
+
+        Opponent hole cards are hidden except for showdown hands where
+        they were legitimately revealed.
+
+        Returns:
+            Formatted string containing all previous hands in the tournament.
+        """
+        if not self._tournament_history:
+            return "No previous hands in this tournament."
+
+        lines = ["## Tournament History (Previous Hands)"]
+
+        for hand in self._tournament_history:
+            lines.append(f"\n### Hand {hand.hand_number}")
+            lines.append(f"Blinds: {hand.small_blind}/{hand.big_blind}")
+            lines.append(f"Starting Stacks: {hand.starting_stacks}")
+
+            # Actions by street
+            current_street = None
+            for action in hand.actions:
+                if action.street != current_street:
+                    current_street = action.street
+                    lines.append(f"\n=== {current_street.upper()} ===")
+
+                if action.amount and action.amount > 0:
+                    lines.append(f"  {action.actor}: {action.action_type} {action.amount:.0f}")
+                else:
+                    lines.append(f"  {action.actor}: {action.action_type}")
+
+            # Result
+            lines.append(f"\nResult: {hand.finishing_stacks}")
+
+            # Showdown hands (legitimately revealed)
+            if hand.shown_hands:
+                if hand.community_cards:
+                    lines.append(f"Board: {' '.join(hand.community_cards)}")
+                lines.append("Showdown:")
+                for player, cards in hand.shown_hands.items():
+                    lines.append(f"  {player}: {' '.join(cards)}")
+
+        return "\n".join(lines)
+
+    def add_hand_to_history(self, hand_record: HandRecord) -> None:
+        """Add a completed hand to tournament history.
+
+        Called by orchestrator after each hand completes.
+
+        Args:
+            hand_record: The completed hand record to add.
+        """
+        self._tournament_history.append(hand_record)
 
     # =========================================================================
     # Statistics Tracking (same interface as PokerAgent)

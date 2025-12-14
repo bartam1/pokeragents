@@ -215,30 +215,41 @@ class ExploitAnalyst:
         game_state_prompt: str,
         opponent_stats: str,
         hand_history: str,
+        tournament_history: str = "",
     ) -> ExploitAnalysis:
         """
-        Perform exploitation analysis based on opponent statistics.
+        Perform exploitation analysis based on opponent statistics and history.
 
         Args:
             game_state_prompt: Formatted game state description
             opponent_stats: Statistics for opponents in the hand
             hand_history: Actions taken so far in this hand
+            tournament_history: Full history of previous hands in the tournament
 
         Returns:
             ExploitAnalysis with exploitation recommendations
         """
+        # Build tournament history section only if we have history
+        tournament_section = ""
+        if tournament_history and tournament_history != "No previous hands in this tournament.":
+            tournament_section = f"""
+
+## Tournament History (All Previous Hands)
+{tournament_history}
+"""
+
         prompt = f"""Analyze this poker situation for exploitation opportunities:
 
 ## Current Game State
 {game_state_prompt}
 
-## Opponent Statistics
+## Opponent Statistics (Aggregated)
 {opponent_stats}
 
-## Hand History
+## Current Hand History
 {hand_history}
-
-Provide your exploitation analysis."""
+{tournament_section}
+Provide your exploitation analysis based on observed patterns."""
 
         result = await Runner.run(self._agent, prompt)
 

@@ -142,6 +142,9 @@ class HandRecord:
     starting_stacks: dict[str, float] = field(default_factory=dict)
     finishing_stacks: dict[str, float] = field(default_factory=dict)
     ev_records: list[EVRecord] = field(default_factory=list)
+    # Showdown data (only populated when hand goes to showdown)
+    community_cards: list[str] = field(default_factory=list)  # e.g., ["Ah", "Kd", "2c", "7s", "Jh"]
+    shown_hands: dict[str, list[str]] = field(default_factory=dict)  # player_name -> cards
 
     def to_dict(self) -> dict[str, Any]:
         result = {
@@ -154,6 +157,10 @@ class HandRecord:
         }
         if self.ev_records:
             result["ev_records"] = [ev.to_dict() for ev in self.ev_records]
+        if self.community_cards:
+            result["community_cards"] = self.community_cards
+        if self.shown_hands:
+            result["shown_hands"] = self.shown_hands
         return result
 
     def to_summary_dict(self) -> dict[str, Any]:
@@ -204,6 +211,8 @@ class HandRecord:
             starting_stacks=data.get("starting_stacks", {}),
             finishing_stacks=data.get("finishing_stacks", {}),
             ev_records=[EVRecord.from_dict(ev) for ev in data.get("ev_records", [])],
+            community_cards=data.get("community_cards", []),
+            shown_hands=data.get("shown_hands", {}),
         )
 
 
@@ -476,6 +485,8 @@ class GameStateRecorder:
         starting_stacks: dict[str, float] | None = None,
         small_blind: float = 10.0,
         big_blind: float = 20.0,
+        community_cards: list[str] | None = None,
+        shown_hands: dict[str, list[str]] | None = None,
     ) -> None:
         """Record the finishing stacks for the current hand.
 
@@ -488,6 +499,8 @@ class GameStateRecorder:
             starting_stacks: Optional starting stacks (before blinds) for the hand
             small_blind: Small blind amount (used if creating new hand)
             big_blind: Big blind amount (used if creating new hand)
+            community_cards: Community cards at showdown (e.g., ["Ah", "Kd", "2c", "7s", "Jh"])
+            shown_hands: Player hole cards shown at showdown (player_name -> [card1, card2])
         """
         if self._current_tournament is None:
             raise ValueError("No tournament started. Call start_tournament first.")
@@ -511,6 +524,11 @@ class GameStateRecorder:
             # This ensures we capture stacks BEFORE blinds are posted
             if starting_stacks:
                 self._current_hand.starting_stacks = starting_stacks
+            # Save showdown data
+            if community_cards:
+                self._current_hand.community_cards = community_cards
+            if shown_hands:
+                self._current_hand.shown_hands = shown_hands
 
     def record_ev(self, ev_records: list[EVRecord]) -> None:
         """Record EV data from showdown hands to the current hand.

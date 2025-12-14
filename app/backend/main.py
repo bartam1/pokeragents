@@ -113,13 +113,8 @@ async def run_experiment(
         "ev_records": [],  # All EV records
     }
 
-    config = TournamentConfig(
-        starting_stack=1500,
-        small_blind=10,
-        big_blind=20,
-        blind_increase_interval=15,
-        max_hands=300,
-    )
+    # Use default config values from TournamentConfig dataclass
+    config = TournamentConfig()
 
     for i in range(num_tournaments):
         logger.info(f"\n{'=' * 60}")
