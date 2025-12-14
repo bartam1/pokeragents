@@ -507,8 +507,9 @@ class GameStateRecorder:
 
         if self._current_hand is not None:
             self._current_hand.finishing_stacks = finishing_stacks
-            # Update starting stacks if provided and not already set
-            if starting_stacks and not self._current_hand.starting_stacks:
+            # Always use provided starting_stacks (before blinds) over game state stacks
+            # This ensures we capture stacks BEFORE blinds are posted
+            if starting_stacks:
                 self._current_hand.starting_stacks = starting_stacks
 
     def record_ev(self, ev_records: list[EVRecord]) -> None:
