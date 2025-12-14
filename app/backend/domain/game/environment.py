@@ -50,6 +50,10 @@ class PokerEnvironment:
     - Converting between PokerKit state and StructuredGameState
     - Executing agent actions
     - Tracking hand history
+
+    Supports dynamic player elimination: when a player's stack reaches 0,
+    they are removed from subsequent hands while maintaining consistent
+    seat indices for the orchestrator.
     """
 
     def __init__(
@@ -94,6 +98,11 @@ class PokerEnvironment:
         # Track stacks across hands (for tournament mode)
         self._current_stacks = [float(starting_stack)] * self.num_players
 
+        # Dynamic player tracking: maps between original seat indices and current PokerKit indices
+        # _active_original_seats: list of original seat indices that are still in play
+        # When a player busts, they're removed from this list
+        self._active_original_seats: list[int] = list(range(self.num_players))
+
     def set_blinds(self, small_blind: int, big_blind: int) -> None:
         """
         Update blind levels (for tournament blind increases).
@@ -123,6 +132,11 @@ class PokerEnvironment:
 
         Returns:
             The initial game state for agents to observe.
+
+        Note:
+            Eliminated players (stack <= 0) are automatically excluded from the hand.
+            The environment maintains a mapping between original seat indices and
+            current PokerKit indices to handle dynamic player elimination.
         """
         self._hand_number += 1
         self._action_history = []
@@ -130,29 +144,71 @@ class PokerEnvironment:
         # Use provided stacks or current stacks
         hand_stacks = stacks if stacks is not None else self._current_stacks
 
-        # Filter out eliminated players (stack <= 0)
-        active_players = sum(1 for s in hand_stacks if s > 0)
-        if active_players < 2:
+        # Update active seats: remove any players who have been eliminated (stack <= 0)
+        self._active_original_seats = [
+            i for i in range(self.num_players) if hand_stacks[i] > 0
+        ]
+
+        if len(self._active_original_seats) < 2:
             raise ValueError("Not enough active players to start a hand")
 
-        # Create new state with current stacks
+        # Get only the stacks of active players for PokerKit
+        active_stacks = tuple(hand_stacks[i] for i in self._active_original_seats)
+        active_count = len(self._active_original_seats)
+
+        # Recreate the game with the correct number of players if needed
+        if active_count != len(self._game.raw_blinds_or_straddles) or active_count < self.num_players:
+            # Adjust blinds for fewer players (ensure we don't have more blinds than players)
+            blinds = (self.small_blind, self.big_blind) if active_count >= 2 else (self.big_blind,)
+            self._game = NoLimitTexasHoldem(
+                automations=AI_AUTOMATIONS,
+                ante_trimming_status=True,
+                raw_antes=self.ante,
+                raw_blinds_or_straddles=blinds[:active_count],
+                min_bet=self.big_blind,
+            )
+
+        # Create new state with only active players
         self._state = self._game(
-            raw_starting_stacks=tuple(hand_stacks),
-            player_count=self.num_players,
+            raw_starting_stacks=active_stacks,
+            player_count=active_count,
         )
 
-        logger.debug(f"Started hand #{self._hand_number} with stacks {hand_stacks}")
+        active_names = [self.player_names[i] for i in self._active_original_seats]
+        logger.debug(
+            f"Started hand #{self._hand_number} with {active_count} players: "
+            f"{active_names} stacks {active_stacks}"
+        )
 
         # Return initial state for the first actor
         return self.get_structured_state(self.get_current_actor_index())
 
+    def _pokerkit_to_original_seat(self, pk_index: int) -> int:
+        """Convert a PokerKit seat index to the original seat index."""
+        return self._active_original_seats[pk_index]
+
+    def _original_to_pokerkit_seat(self, original_index: int) -> int | None:
+        """Convert an original seat index to the current PokerKit seat index.
+
+        Returns None if the player has been eliminated.
+        """
+        try:
+            return self._active_original_seats.index(original_index)
+        except ValueError:
+            return None  # Player has been eliminated
+
     def get_current_actor_index(self) -> int | None:
-        """Get the index of the player who needs to act, or None if no action needed."""
+        """Get the ORIGINAL index of the player who needs to act, or None if no action needed.
+
+        Returns the original seat index (consistent with player_names), not the PokerKit index.
+        """
         if self._state is None:
             return None
         if not self._state.status:
             return None
-        return self._state.actor_index
+        # Convert PokerKit index back to original index
+        pk_index = self._state.actor_index
+        return self._pokerkit_to_original_seat(pk_index)
 
     def get_current_actor_name(self) -> str | None:
         """Get the name of the player who needs to act."""
@@ -172,11 +228,16 @@ class PokerEnvironment:
         Convert current PokerKit state to our StructuredGameState format.
 
         Args:
-            hero_seat: The seat index of the player requesting the state
+            hero_seat: The ORIGINAL seat index of the player requesting the state
                       (determines which hole cards are visible)
 
         Returns:
             StructuredGameState with all relevant information for decision making.
+
+        Note:
+            The returned state includes ALL original players, with eliminated players
+            marked as inactive with stack=0. This maintains consistent seat indices
+            for the orchestrator.
         """
         if self._state is None:
             raise ValueError("No active hand. Call start_hand() first.")
@@ -186,25 +247,44 @@ class PokerEnvironment:
         # Determine current street
         street = self._get_current_street()
 
-        # Build player states
+        # Build player states for ALL original players
         players = []
-        for i in range(self.num_players):
-            # Get hole cards (only visible for hero)
-            hole_cards = None
-            if i == hero_seat and state.hole_cards[i]:
-                hole_cards = [Card(rank=str(c.rank), suit=str(c.suit)) for c in state.hole_cards[i]]
+        for orig_seat in range(self.num_players):
+            pk_seat = self._original_to_pokerkit_seat(orig_seat)
 
-            players.append(
-                PlayerState(
-                    seat=i,
-                    name=self.player_names[i],
-                    stack=float(state.stacks[i]),
-                    is_active=state.statuses[i],
-                    is_all_in=state.statuses[i] and state.stacks[i] == 0,
-                    current_bet=float(state.bets[i]),
-                    hole_cards=hole_cards,
+            if pk_seat is None:
+                # Player has been eliminated - show as inactive with 0 stack
+                players.append(
+                    PlayerState(
+                        seat=orig_seat,
+                        name=self.player_names[orig_seat],
+                        stack=0.0,
+                        is_active=False,
+                        is_all_in=False,
+                        current_bet=0.0,
+                        hole_cards=None,
+                    )
                 )
-            )
+            else:
+                # Player is still active
+                hole_cards = None
+                if orig_seat == hero_seat and state.hole_cards[pk_seat]:
+                    hole_cards = [
+                        Card(rank=str(c.rank), suit=str(c.suit))
+                        for c in state.hole_cards[pk_seat]
+                    ]
+
+                players.append(
+                    PlayerState(
+                        seat=orig_seat,
+                        name=self.player_names[orig_seat],
+                        stack=float(state.stacks[pk_seat]),
+                        is_active=state.statuses[pk_seat],
+                        is_all_in=state.statuses[pk_seat] and state.stacks[pk_seat] == 0,
+                        current_bet=float(state.bets[pk_seat]),
+                        hole_cards=hole_cards,
+                    )
+                )
 
         # Get community cards
         community_cards = []
@@ -247,7 +327,7 @@ class PokerEnvironment:
         Execute a player action in the environment.
 
         Args:
-            player_index: Index of the player taking the action
+            player_index: The ORIGINAL seat index of the player taking the action
             action: The action to execute
 
         Returns:
@@ -259,19 +339,30 @@ class PokerEnvironment:
         if self._state is None:
             raise ValueError("No active hand")
 
-        if self._state.actor_index != player_index:
+        # Convert original seat index to PokerKit index
+        pk_index = self._original_to_pokerkit_seat(player_index)
+        if pk_index is None:
+            raise ValueError(f"Player {player_index} has been eliminated")
+
+        if self._state.actor_index != pk_index:
+            current_actor_original = self._pokerkit_to_original_seat(self._state.actor_index)
             raise ValueError(
-                f"It's not player {player_index}'s turn. Current actor: {self._state.actor_index}"
+                f"It's not player {player_index}'s turn. "
+                f"Current actor: {current_actor_original}"
             )
 
         state = self._state
         result = {"player": player_index, "action": action.type.value}
 
-        # Capture pot and stacks BEFORE executing the action
+        # Capture pot and stacks BEFORE executing the action (using original indices)
         pot_before_action = float(state.total_pot_amount)
-        stacks_before = {
-            self.player_names[i]: float(state.stacks[i]) for i in range(self.num_players)
-        }
+        stacks_before = {}
+        for orig_seat in range(self.num_players):
+            pk_seat = self._original_to_pokerkit_seat(orig_seat)
+            if pk_seat is not None:
+                stacks_before[self.player_names[orig_seat]] = float(state.stacks[pk_seat])
+            else:
+                stacks_before[self.player_names[orig_seat]] = 0.0
 
         try:
             if action.type == ActionType.FOLD:
@@ -334,6 +425,10 @@ class PokerEnvironment:
 
         Returns:
             HandResult with winners, pot size, and shown hands.
+
+        Note:
+            Winner indices and shown_hands indices are converted back to
+            original seat indices for consistency with the orchestrator.
         """
         if self._state is None:
             raise ValueError("No active hand")
@@ -344,20 +439,27 @@ class PokerEnvironment:
         if state.status:
             raise ValueError("Hand is not complete yet")
 
-        # Update current stacks for next hand
-        self._current_stacks = [float(s) for s in state.stacks]
+        # Update current stacks for next hand (map PokerKit stacks back to original indices)
+        for pk_seat, orig_seat in enumerate(self._active_original_seats):
+            self._current_stacks[orig_seat] = float(state.stacks[pk_seat])
 
-        # Determine winners (players with positive payoffs)
-        winners = [i for i, p in enumerate(state.payoffs) if p > 0]
+        # Determine winners (convert PokerKit indices to original indices)
+        winners = [
+            self._pokerkit_to_original_seat(pk_idx)
+            for pk_idx, p in enumerate(state.payoffs)
+            if p > 0
+        ]
 
         # Get shown hands from HoleCardsShowingOrMucking operations
         # Note: We can't use state.hole_cards directly because PokerKit's
         # HandKilling automation clears them after showdown
+        # Convert PokerKit indices to original indices
         shown_hands = {}
         for op in state.operations:
             if type(op).__name__ == "HoleCardsShowingOrMucking":
                 if op.hole_cards:  # Cards were shown (not mucked)
-                    shown_hands[op.player_index] = [
+                    orig_seat = self._pokerkit_to_original_seat(op.player_index)
+                    shown_hands[orig_seat] = [
                         Card(rank=str(c.rank), suit=str(c.suit)) for c in op.hole_cards
                     ]
 
