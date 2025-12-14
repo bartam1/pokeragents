@@ -6,7 +6,6 @@ multiple tournament processes read/write shared files like stats.json.
 """
 
 import fcntl
-import os
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Generator
@@ -91,4 +90,3 @@ def stats_file_lock(
     """
     with file_lock(stats_path, exclusive=exclusive):
         yield
-

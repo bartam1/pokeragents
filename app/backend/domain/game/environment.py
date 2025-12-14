@@ -145,9 +145,7 @@ class PokerEnvironment:
         hand_stacks = stacks if stacks is not None else self._current_stacks
 
         # Update active seats: remove any players who have been eliminated (stack <= 0)
-        self._active_original_seats = [
-            i for i in range(self.num_players) if hand_stacks[i] > 0
-        ]
+        self._active_original_seats = [i for i in range(self.num_players) if hand_stacks[i] > 0]
 
         if len(self._active_original_seats) < 2:
             raise ValueError("Not enough active players to start a hand")
@@ -157,7 +155,10 @@ class PokerEnvironment:
         active_count = len(self._active_original_seats)
 
         # Recreate the game with the correct number of players if needed
-        if active_count != len(self._game.raw_blinds_or_straddles) or active_count < self.num_players:
+        if (
+            active_count != len(self._game.raw_blinds_or_straddles)
+            or active_count < self.num_players
+        ):
             # Adjust blinds for fewer players (ensure we don't have more blinds than players)
             blinds = (self.small_blind, self.big_blind) if active_count >= 2 else (self.big_blind,)
             self._game = NoLimitTexasHoldem(
@@ -270,8 +271,7 @@ class PokerEnvironment:
                 hole_cards = None
                 if orig_seat == hero_seat and state.hole_cards[pk_seat]:
                     hole_cards = [
-                        Card(rank=str(c.rank), suit=str(c.suit))
-                        for c in state.hole_cards[pk_seat]
+                        Card(rank=str(c.rank), suit=str(c.suit)) for c in state.hole_cards[pk_seat]
                     ]
 
                 players.append(
@@ -347,8 +347,7 @@ class PokerEnvironment:
         if self._state.actor_index != pk_index:
             current_actor_original = self._pokerkit_to_original_seat(self._state.actor_index)
             raise ValueError(
-                f"It's not player {player_index}'s turn. "
-                f"Current actor: {current_actor_original}"
+                f"It's not player {player_index}'s turn. Current actor: {current_actor_original}"
             )
 
         state = self._state

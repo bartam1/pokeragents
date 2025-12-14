@@ -69,8 +69,12 @@ class ActionDecision(BaseModel):
 
     gto_analysis: str = Field(description="GTO-based reasoning (1 sentence)")
     exploit_analysis: str = Field(description="Exploitation/style reasoning (1 sentence)")
-    is_following_gto: bool = Field(description="True if following GTO/default strategy, False if deviating")
-    gto_deviation: str = Field(description="Reasoning: 'Following GTO because...' or 'Deviating because...'")
+    is_following_gto: bool = Field(
+        description="True if following GTO/default strategy, False if deviating"
+    )
+    gto_deviation: str = Field(
+        description="Reasoning: 'Following GTO because...' or 'Deviating because...'"
+    )
 
     action_type: Literal["fold", "check", "call", "bet", "raise", "all_in"] = Field(
         description="The poker action to take"

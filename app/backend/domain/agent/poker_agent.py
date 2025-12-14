@@ -142,7 +142,9 @@ class PokerAgent:
             output_type=ActionDecision,  # Structured JSON output
         )
 
-        prompt_type = "INFORMED (GTO+exploit)" if strategy.has_shared_knowledge else "BASELINE (personality)"
+        prompt_type = (
+            "INFORMED (GTO+exploit)" if strategy.has_shared_knowledge else "BASELINE (personality)"
+        )
         logger.info(
             f"Created agent {player_id} with strategy '{strategy.name}', "
             f"prompt={prompt_type}, "

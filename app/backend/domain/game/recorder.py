@@ -469,22 +469,67 @@ class GameStateRecorder:
 
         self._current_hand.actions.append(minimal_action)
 
-    def record_hand_result(self, finishing_stacks: dict[str, float]) -> None:
+    def record_hand_result(
+        self,
+        finishing_stacks: dict[str, float],
+        hand_number: int | None = None,
+        starting_stacks: dict[str, float] | None = None,
+        small_blind: float = 10.0,
+        big_blind: float = 20.0,
+    ) -> None:
         """Record the finishing stacks for the current hand.
+
+        If no actions were recorded for this hand (e.g., all-in for blind),
+        this will create a new HandRecord using the provided hand_number.
 
         Args:
             finishing_stacks: Player stacks at the end of the hand
+            hand_number: Optional hand number to ensure correct hand is recorded
+            starting_stacks: Optional starting stacks (before blinds) for the hand
+            small_blind: Small blind amount (used if creating new hand)
+            big_blind: Big blind amount (used if creating new hand)
         """
+        if self._current_tournament is None:
+            raise ValueError("No tournament started. Call start_tournament first.")
+
+        # If hand_number is provided and doesn't match current hand, create new hand
+        if hand_number is not None:
+            if self._current_hand is None or self._current_hand.hand_number != hand_number:
+                # Create a new hand record for hands without actions (e.g., all-in for blind)
+                self._current_hand = HandRecord(
+                    hand_number=hand_number,
+                    small_blind=small_blind,
+                    big_blind=big_blind,
+                )
+                if starting_stacks:
+                    self._current_hand.starting_stacks = starting_stacks
+                self._current_tournament.hands.append(self._current_hand)
+
         if self._current_hand is not None:
             self._current_hand.finishing_stacks = finishing_stacks
+            # Update starting stacks if provided and not already set
+            if starting_stacks and not self._current_hand.starting_stacks:
+                self._current_hand.starting_stacks = starting_stacks
 
     def record_ev(self, ev_records: list[EVRecord]) -> None:
-        """Record EV data from showdown hands to the current hand."""
+        """Record EV data from showdown hands to the current hand.
+
+        Validates that EV records match the current hand number.
+        """
         if self._current_tournament is None:
             raise ValueError("No tournament started. Call start_tournament first.")
 
         if self._current_hand is None:
             raise ValueError("No hand started. Record an action first.")
+
+        # Validate EV records match current hand
+        for ev in ev_records:
+            if ev.hand_number != self._current_hand.hand_number:
+                raise ValueError(
+                    f"EV record hand_number ({ev.hand_number}) doesn't match "
+                    f"current hand ({self._current_hand.hand_number}). "
+                    f"Ensure record_hand_result was called with correct hand_number."
+                )
 
         self._current_hand.ev_records.extend(ev_records)
 

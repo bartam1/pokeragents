@@ -13,8 +13,6 @@ import os
 import tempfile
 from pathlib import Path
 
-import pytest
-
 from backend.domain.utils.file_lock import file_lock, stats_file_lock
 
 
@@ -128,4 +126,3 @@ class TestLockEdgeCases:
             # Should be able to acquire lock again (it was released)
             with file_lock(target):
                 pass  # No deadlock
-

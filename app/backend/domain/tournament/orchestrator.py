@@ -338,10 +338,18 @@ class TournamentOrchestrator:
                 agent.end_hand_tracking(result, self._env.player_names)
 
             # Record finishing stacks for the hand
+            # Pass hand_number and starting_stacks to handle hands without actions
+            # (e.g., when a player is all-in for the blind)
             finishing_stacks = {
                 name: self._env.get_stack(i) for i, name in enumerate(self._env.player_names)
             }
-            self._recorder.record_hand_result(finishing_stacks)
+            self._recorder.record_hand_result(
+                finishing_stacks,
+                hand_number=hand_number,
+                starting_stacks=stacks_before,
+                small_blind=self._env.small_blind,
+                big_blind=self._env.big_blind,
+            )
 
             # Track profit/loss for GTO deviation analysis
             for i, name in enumerate(self._env.player_names):

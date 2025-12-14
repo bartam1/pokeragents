@@ -532,4 +532,3 @@ class TestEdgeCases:
 
             if len(env._action_history) >= 2:
                 break  # Just test a couple actions
-
