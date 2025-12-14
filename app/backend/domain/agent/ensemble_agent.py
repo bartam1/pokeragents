@@ -147,11 +147,14 @@ class EnsemblePokerAgent:
             else ""
         )
 
-        # Determine if following GTO based on deviation text
-        is_following_gto = decision.gto_deviation.lower().startswith("following gto")
+        # Use the boolean field directly from the model
+        is_following_gto = decision.is_following_gto
 
         # Console logging (human readable)
-        logger.info(f"  📐 GTO Deviation: {decision.gto_deviation[:60]}...")
+        gto_status = "✅" if is_following_gto else "⚠️"
+        logger.info(
+            f"  📐 {gto_status} {decision.gto_deviation[:60]}{'...' if len(decision.gto_deviation) > 60 else ''}"
+        )
         logger.info(
             f"  🎲 Decision: {action.type.value} "
             f"{action.amount if action.amount else ''} "
@@ -240,39 +243,24 @@ class EnsemblePokerAgent:
 
     def _build_opponent_stats(self, state: StructuredGameState) -> str:
         """Build opponent statistics string for the exploit analyst."""
-        from backend.domain.player.models import MIN_RELIABLE_SAMPLE_SIZE
+        lines = ["Opponent Statistics (60+ hands to exploit):"]
 
-        lines = ["Opponent Statistics:"]
-        lines.append(
-            f"(Minimum {MIN_RELIABLE_SAMPLE_SIZE} hands required for reliable exploitation)"
-        )
-
-        # Use state.opponents to get active opponents with their actual names
-        # This correctly maps to knowledge base profiles regardless of seating order
-        for opp in state.opponents:
-            profile = self._knowledge_base.get_profile(opp.name)
+        # Show stats for ALL other players (not just active ones)
+        for player in state.players:
+            if player.seat == state.hero_seat:
+                continue  # Skip hero
+            profile = self._knowledge_base.get_profile(player.name)
 
             if profile and profile.statistics.hands_played > 0:
                 stats = profile.statistics
-
-                lines.append(f"\n{opp.name} (Stack: {opp.stack:.0f}):")
-
-                # Don't show misleading percentages with tiny samples
-                if stats.hands_played < 20:
-                    lines.append(f"  Hands: {stats.hands_played}")
-                    lines.append("  ⚠️ INSUFFICIENT DATA - Stats not meaningful")
-                    lines.append("  DO NOT exploit - Play GTO")
-                else:
-                    lines.append(f"  {stats.reliability_note}")
-                    lines.append(f"  VPIP: {stats.vpip:.1f}%")
-                    lines.append(f"  PFR: {stats.pfr:.1f}%")
-                    lines.append(f"  Limp: {stats.limp_frequency:.1f}%")
-                    lines.append(f"  Aggression: {stats.aggression_factor:.2f}")
-                    lines.append(f"  C-bet Flop: {stats.cbet_flop_pct:.1f}%")
-                    lines.append(f"  Fold to 3-bet: {stats.fold_to_three_bet:.1f}%")
-                    lines.append(f"  WTSD: {stats.wtsd:.1f}%")
+                lines.append(f"\n{player.name} ({stats.hands_played} hands):")
+                lines.append(f"  VPIP: {stats.vpip:.1f}%, PFR: {stats.pfr:.1f}%")
+                lines.append(f"  Aggression: {stats.aggression_factor:.2f}")
+                lines.append(f"  C-bet Flop: {stats.cbet_flop_pct:.1f}%")
+                lines.append(f"  Fold to 3-bet: {stats.fold_to_three_bet:.1f}%")
+                lines.append(f"  WTSD: {stats.wtsd:.1f}%")
             else:
-                lines.append(f"\n{opp.name} (Stack: {opp.stack:.0f}): No data - Play GTO")
+                lines.append(f"\n{player.name}: No data")
 
         return "\n".join(lines)
 

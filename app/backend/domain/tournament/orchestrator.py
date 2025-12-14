@@ -295,8 +295,8 @@ class TournamentOrchestrator:
                 # Convert structured decision to executable Action
                 action = decision.to_action(game_state)
 
-                # Determine if following GTO based on deviation text
-                is_following_gto = decision.gto_deviation.lower().startswith("following gto")
+                # Use the boolean field directly from the model
+                is_following_gto = decision.is_following_gto
 
                 # Record the state and action for statistics recalculation
                 self._recorder.record_action(
@@ -480,6 +480,8 @@ class TournamentOrchestrator:
                 f"  📊 EV: {player_id} had {equity * 100:.1f}% equity | "
                 f"EV: {ev_chips:+.0f} | Actual: {actual_chips:+.0f} | Variance: {variance:+.0f}"
             )
+
+        return ev_records
 
     def save_incomplete(self) -> str | None:
         """Save current tournament state as incomplete when interrupted.

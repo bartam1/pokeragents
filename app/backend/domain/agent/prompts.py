@@ -56,9 +56,10 @@ RESPONSE_FORMAT = """
 
 Respond with a structured JSON object containing:
 
-- **gto_analysis**: Your GTO-based thinking (1-2 sentences)
-- **exploit_analysis**: Opponent exploitation reasoning - MENTION HAND COUNT (1-2 sentences)
-- **gto_deviation**: "Following GTO because..." or "Deviating from GTO because..."
+- **gto_analysis**: Your GTO-based thinking (1 sentence)
+- **exploit_analysis**: Opponent exploitation reasoning (1 sentence)
+- **is_following_gto**: true if following GTO, false if deviating
+- **gto_deviation**: "Following GTO because..." or "Deviating because..."
 - **action_type**: One of: fold, check, call, bet, raise, all_in
 - **sizing**: For bet/raise, specify ONE of:
   - {{"bb_multiple": 3}} for 3x big blind
@@ -77,8 +78,9 @@ EXAMPLE_GTO_FOLLOWING = """
 Example (Following GTO):
 {{
   "gto_analysis": "With AKo in late position, standard play is to 3-bet for value.",
-  "exploit_analysis": "Opponent has only 35 hands - not enough data to exploit reliably.",
-  "gto_deviation": "Following GTO because hand count is too low for confident exploitation.",
+  "exploit_analysis": "Opponent has only 35 hands - not enough data to exploit.",
+  "is_following_gto": true,
+  "gto_deviation": "Following GTO because sample size is too small.",
   "action_type": "raise",
   "sizing": {{"bb_multiple": 3}},
   "confidence": 0.90
@@ -89,8 +91,9 @@ EXAMPLE_EXPLOITATION = """
 Example (Exploiting with confidence):
 {{
   "gto_analysis": "GTO suggests standard 3x sizing.",
-  "exploit_analysis": "Opponent has 180 hands showing 58% VPIP - confirmed calling station.",
-  "gto_deviation": "Deviating from GTO because 180 hands clearly show opponent calls too much.",
+  "exploit_analysis": "Opponent has 180 hands, 58% VPIP - confirmed calling station.",
+  "is_following_gto": false,
+  "gto_deviation": "Deviating to bet larger because villain calls too much.",
   "action_type": "raise",
   "sizing": {{"bb_multiple": 4}},
   "confidence": 0.85
