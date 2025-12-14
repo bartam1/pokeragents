@@ -31,6 +31,7 @@ from backend.domain.game.equity import calculate_multiway_equity
 from backend.domain.game.models import Action, ActionType, EVRecord, HandResult
 from backend.domain.game.recorder import GameStateRecorder
 from backend.domain.player.models import KnowledgeBase
+from backend.domain.utils.file_lock import stats_file_lock
 from backend.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -136,29 +137,31 @@ class TournamentOrchestrator:
         )
 
         # Load shared stats (recalculated from all saved tournaments before this call)
+        # Use shared lock to allow concurrent reads but block during writes
         stats_path = os.path.join(self._settings.knowledge_persistence_dir, "stats.json")
-        shared_knowledge = KnowledgeBase.load_from_file(stats_path)
-        if shared_knowledge.profiles:
-            logger.info(
-                f"📊 Loaded shared stats: "
-                f"{len(shared_knowledge.profiles)} players, "
-                f"{shared_knowledge.get_total_hands_observed()} total hands"
-            )
+        with stats_file_lock(stats_path, exclusive=False):
+            shared_knowledge = KnowledgeBase.load_from_file(stats_path)
+            if shared_knowledge.profiles:
+                logger.info(
+                    f"📊 Loaded shared stats: "
+                    f"{len(shared_knowledge.profiles)} players, "
+                    f"{shared_knowledge.get_total_hands_observed()} total hands"
+                )
 
-        for player_id, strategy in agent_configs:
-            # Create knowledge base
-            if strategy.has_shared_knowledge:
-                # Agents with shared knowledge get a copy of the stats
-                if shared_knowledge.profiles:
-                    knowledge_base = KnowledgeBase.load_from_file(stats_path)
-                    logger.info(f"  {player_id}: Loaded shared stats")
+            for player_id, strategy in agent_configs:
+                # Create knowledge base
+                if strategy.has_shared_knowledge:
+                    # Agents with shared knowledge get a copy of the stats
+                    if shared_knowledge.profiles:
+                        knowledge_base = KnowledgeBase.load_from_file(stats_path)
+                        logger.info(f"  {player_id}: Loaded shared stats")
+                    else:
+                        # No saved stats yet - start fresh (first run)
+                        knowledge_base = KnowledgeBase()
+                        logger.info(f"  {player_id}: No saved stats yet, starting fresh")
                 else:
-                    # No saved stats yet - start fresh (first run)
+                    # Other agents start fresh (no shared knowledge)
                     knowledge_base = KnowledgeBase()
-                    logger.info(f"  {player_id}: No saved stats yet, starting fresh")
-            else:
-                # Other agents start fresh (no shared knowledge)
-                knowledge_base = KnowledgeBase()
 
             # Create the agent (use ensemble architecture if configured)
             if strategy.use_ensemble:
@@ -368,16 +371,22 @@ class TournamentOrchestrator:
         """Recalculate stats.json from all saved tournament histories.
 
         This is called after each tournament to ensure stats are always up-to-date.
+        Uses exclusive file lock to prevent race conditions with parallel tournaments.
         """
         from backend.domain.player.recalculator import recalculate_baseline_stats
 
         stats_path = os.path.join(self._settings.knowledge_persistence_dir, "stats.json")
-        kb = recalculate_baseline_stats(
-            gamestates_dir=self._settings.gamestates_dir,
-            output_path=stats_path,
-        )
-        if kb.profiles:
-            logger.info(f"📊 Updated stats.json with {kb.get_total_hands_observed()} total hands")
+
+        # Use exclusive lock to prevent concurrent writes and block readers
+        with stats_file_lock(stats_path, exclusive=True):
+            kb = recalculate_baseline_stats(
+                gamestates_dir=self._settings.gamestates_dir,
+                output_path=stats_path,
+            )
+            if kb.profiles:
+                logger.info(
+                    f"📊 Updated stats.json with {kb.get_total_hands_observed()} total hands"
+                )
 
     def _calculate_showdown_ev(
         self,
