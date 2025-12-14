@@ -59,10 +59,10 @@ class TournamentConfig:
     """Tournament configuration."""
 
     starting_stack: int = 1500
-    small_blind: int = 10
-    big_blind: int = 20
-    blind_increase_interval: int = 20  # Hands between blind increases
-    blind_increase_multiplier: float = 1.5
+    small_blind: int = 15
+    big_blind: int = 30
+    blind_increase_interval: int = 8  # Hands between blind increases
+    blind_increase_multiplier: float = 2.0
 
     # Maximum hands to prevent infinite games
     max_hands: int = 500
@@ -163,24 +163,24 @@ class TournamentOrchestrator:
                     # Other agents start fresh (no shared knowledge)
                     knowledge_base = KnowledgeBase()
 
-            # Create the agent (use ensemble architecture if configured)
-            if strategy.use_ensemble:
-                self._agents[player_id] = EnsemblePokerAgent(
-                    player_id=player_id,
-                    strategy=strategy,
-                    knowledge_base=knowledge_base,
-                    settings=self._settings,
-                )
-                logger.info(
-                    f"🎭 {player_id} using ENSEMBLE architecture (GTO + Exploit + Decision)"
-                )
-            else:
-                self._agents[player_id] = PokerAgent(
-                    player_id=player_id,
-                    strategy=strategy,
-                    knowledge_base=knowledge_base,
-                    settings=self._settings,
-                )
+                # Create the agent (use ensemble architecture if configured)
+                if strategy.use_ensemble:
+                    self._agents[player_id] = EnsemblePokerAgent(
+                        player_id=player_id,
+                        strategy=strategy,
+                        knowledge_base=knowledge_base,
+                        settings=self._settings,
+                    )
+                    logger.info(
+                        f"🎭 {player_id} using ENSEMBLE architecture (GTO + Exploit + Decision)"
+                    )
+                else:
+                    self._agents[player_id] = PokerAgent(
+                        player_id=player_id,
+                        strategy=strategy,
+                        knowledge_base=knowledge_base,
+                        settings=self._settings,
+                    )
 
         logger.info(
             f"Tournament setup complete: {len(self._agents)} agents, "
@@ -259,7 +259,7 @@ class TournamentOrchestrator:
 
     async def _play_hand(self, hand_number: int) -> bool:
         """Play a single hand. Returns False if tournament should end."""
-        logger.info(f"--- Hand #{hand_number} ---")
+        logger.info(f"--- Hand #{hand_number} (blinds {self._env.small_blind}/{self._env.big_blind}) ---")
 
         # Track stacks before hand for profit/loss calculation
         stacks_before = {
