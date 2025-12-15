@@ -1,0 +1,2841 @@
+{
+  "tournament_id": "79903347",
+  "timestamp": "20251214_180744",
+  "format_version": 3,
+  "players": [
+    "agent_a",
+    "agent_b",
+    "agent_c",
+    "agent_d",
+    "agent_e"
+  ],
+  "hands": [
+    {
+      "hand_number": 1,
+      "small_blind": 15.0,
+      "big_blind": 30.0,
+      "starting_stacks": {
+        "agent_a": 1500.0,
+        "agent_b": 1500.0,
+        "agent_c": 1500.0,
+        "agent_d": 1500.0,
+        "agent_e": 1500.0
+      },
+      "finishing_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 1470.0,
+        "agent_c": 1500.0,
+        "agent_d": 1410.0,
+        "agent_e": 3120.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1485.0,
+            "agent_b": 1470.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "raise",
+          "amount": 90.0,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 1485.0,
+            "agent_b": 1470.0,
+            "agent_c": 1500.0,
+            "agent_d": 1500.0,
+            "agent_e": 1500.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "raise",
+          "amount": 150.0,
+          "pot": 135.0,
+          "current_bet": 90.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 1485.0,
+            "agent_b": 1470.0,
+            "agent_c": 1500.0,
+            "agent_d": 1410.0,
+            "agent_e": 1500.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because exploiting the opponents' tendencies provides a higher expected value in this situation."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_a",
+          "action_type": "raise",
+          "amount": 450.0,
+          "pot": 285.0,
+          "current_bet": 150.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 1485.0,
+            "agent_b": 1470.0,
+            "agent_c": 1500.0,
+            "agent_d": 1410.0,
+            "agent_e": 1350.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I like to apply pressure and have sufficient equity to 3-bet bluff."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 720.0,
+          "current_bet": 450.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 1050.0,
+            "agent_b": 1470.0,
+            "agent_c": 1500.0,
+            "agent_d": 1410.0,
+            "agent_e": 1350.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 720.0,
+          "current_bet": 450.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 1050.0,
+            "agent_b": 1470.0,
+            "agent_c": 1500.0,
+            "agent_d": 1410.0,
+            "agent_e": 1350.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because Agent A's tight and aggressive profile indicates a strong hand, reducing implied odds."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "call",
+          "amount": 450.0,
+          "pot": 720.0,
+          "current_bet": 450.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 1050.0,
+            "agent_b": 1470.0,
+            "agent_c": 1500.0,
+            "agent_d": 1410.0,
+            "agent_e": 1350.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_a",
+          "action_type": "bet",
+          "amount": 750.0,
+          "pot": 1020.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 1050.0,
+            "agent_b": 1470.0,
+            "agent_c": 1500.0,
+            "agent_d": 1410.0,
+            "agent_e": 1050.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I want to pressure my opponent with a semi-bluff."
+        },
+        {
+          "street": "flop",
+          "actor": "agent_e",
+          "action_type": "call",
+          "amount": 750.0,
+          "pot": 1770.0,
+          "current_bet": 750.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 300.0,
+            "agent_b": 1470.0,
+            "agent_c": 1500.0,
+            "agent_d": 1410.0,
+            "agent_e": 1050.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_a",
+          "action_type": "all_in",
+          "amount": 300.0,
+          "pot": 2520.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 300.0,
+            "agent_b": 1470.0,
+            "agent_c": 1500.0,
+            "agent_d": 1410.0,
+            "agent_e": 300.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I love to apply pressure and force folds in tough spots."
+        },
+        {
+          "street": "turn",
+          "actor": "agent_e",
+          "action_type": "call",
+          "amount": 300.0,
+          "pot": 2820.0,
+          "current_bet": 300.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1470.0,
+            "agent_c": 1500.0,
+            "agent_d": 1410.0,
+            "agent_e": 300.0
+          },
+          "decision": "gto"
+        }
+      ],
+      "ev_records": [
+        {
+          "hand_number": 1,
+          "player_id": "agent_a",
+          "equity": 0.0,
+          "pot_size": 1620.0,
+          "amount_invested": 1500.0,
+          "ev_chips": -1500.0,
+          "actual_chips": -1500.0,
+          "variance": 0.0,
+          "ev_adjusted": -1500.0
+        },
+        {
+          "hand_number": 1,
+          "player_id": "agent_e",
+          "equity": 1.0,
+          "pot_size": 1620.0,
+          "amount_invested": 0.0,
+          "ev_chips": 1620.0,
+          "actual_chips": 1620.0,
+          "variance": 0.0,
+          "ev_adjusted": 1620.0
+        }
+      ],
+      "community_cards": [
+        "2c",
+        "9d",
+        "2s",
+        "6c",
+        "8c"
+      ],
+      "shown_hands": {
+        "agent_a": [
+          "Jd",
+          "Ah"
+        ],
+        "agent_e": [
+          "Th",
+          "9h"
+        ]
+      }
+    },
+    {
+      "hand_number": 2,
+      "small_blind": 15.0,
+      "big_blind": 30.0,
+      "starting_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 1470.0,
+        "agent_c": 1500.0,
+        "agent_d": 1410.0,
+        "agent_e": 3120.0
+      },
+      "finishing_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 1500.0,
+        "agent_c": 1470.0,
+        "agent_d": 1410.0,
+        "agent_e": 3120.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1455.0,
+            "agent_c": 1470.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1455.0,
+            "agent_c": 1470.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 30.0,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1455.0,
+            "agent_c": 1470.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to slowplay strong hands like Aces preflop."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 60.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1440.0,
+            "agent_c": 1470.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 60.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1440.0,
+            "agent_c": 1470.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I like to slowplay big hands and let opponents make mistakes."
+        },
+        {
+          "street": "flop",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 60.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1440.0,
+            "agent_c": 1470.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I only bet with premium hands and fold easily."
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 60.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1440.0,
+            "agent_c": 1470.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I like to slowplay big hands and let opponents make mistakes."
+        },
+        {
+          "street": "turn",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 60.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1440.0,
+            "agent_c": 1470.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I only play premium hands and avoid aggression without strength."
+        },
+        {
+          "street": "river",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 60.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1440.0,
+            "agent_c": 1470.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to slowplay strong hands and induce bets from my opponents."
+        },
+        {
+          "street": "river",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 60.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1440.0,
+            "agent_c": 1470.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I avoid betting with marginal hands like middle pair."
+        }
+      ]
+    },
+    {
+      "hand_number": 3,
+      "small_blind": 15.0,
+      "big_blind": 30.0,
+      "starting_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 1500.0,
+        "agent_c": 1470.0,
+        "agent_d": 1410.0,
+        "agent_e": 3120.0
+      },
+      "finishing_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 1530.0,
+        "agent_c": 1440.0,
+        "agent_d": 1410.0,
+        "agent_e": 3120.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1485.0,
+            "agent_c": 1440.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1485.0,
+            "agent_c": 1440.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 30.0,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1485.0,
+            "agent_c": 1440.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 60.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1470.0,
+            "agent_c": 1440.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I only play premium hands and 44 is not strong enough for aggression."
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 60.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1470.0,
+            "agent_c": 1440.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 60.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1470.0,
+            "agent_c": 1440.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 60.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1470.0,
+            "agent_c": 1440.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 60.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1470.0,
+            "agent_c": 1440.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I fold easily without strong hands and avoid unnecessary risks."
+        },
+        {
+          "street": "river",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 60.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1470.0,
+            "agent_c": 1440.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 60.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1470.0,
+            "agent_c": 1440.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to avoid unnecessary risks with marginal hands."
+        }
+      ]
+    },
+    {
+      "hand_number": 4,
+      "small_blind": 15.0,
+      "big_blind": 30.0,
+      "starting_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 1530.0,
+        "agent_c": 1440.0,
+        "agent_d": 1410.0,
+        "agent_e": 3120.0
+      },
+      "finishing_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 2010.0,
+        "agent_c": 1410.0,
+        "agent_d": 1410.0,
+        "agent_e": 2670.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1515.0,
+            "agent_c": 1410.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "raise",
+          "amount": 90.0,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1515.0,
+            "agent_c": 1410.0,
+            "agent_d": 1410.0,
+            "agent_e": 3120.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because the opponents are extremely tight and passive, providing a high-confidence opportunity to exploit them by applying pressure."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 90.0,
+          "pot": 135.0,
+          "current_bet": 90.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1515.0,
+            "agent_c": 1410.0,
+            "agent_d": 1410.0,
+            "agent_e": 3030.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I like to see flops and let opponents make mistakes."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 210.0,
+          "current_bet": 90.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1440.0,
+            "agent_c": 1410.0,
+            "agent_d": 1410.0,
+            "agent_e": 3030.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 210.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1440.0,
+            "agent_c": 1410.0,
+            "agent_d": 1410.0,
+            "agent_e": 3030.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_e",
+          "action_type": "bet",
+          "amount": 60.0,
+          "pot": 210.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1440.0,
+            "agent_c": 1410.0,
+            "agent_d": 1410.0,
+            "agent_e": 3030.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because opponent's passive tendencies may allow a successful bluff."
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 60.0,
+          "pot": 270.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1440.0,
+            "agent_c": 1410.0,
+            "agent_d": 1410.0,
+            "agent_e": 2970.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to call and see showdowns, especially with a pair."
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 330.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1380.0,
+            "agent_c": 1410.0,
+            "agent_d": 1410.0,
+            "agent_e": 2970.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_e",
+          "action_type": "bet",
+          "amount": 150.0,
+          "pot": 330.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1380.0,
+            "agent_c": 1410.0,
+            "agent_d": 1410.0,
+            "agent_e": 2970.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because the opponent's passive nature provides an opportunity to bluff successfully."
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 150.0,
+          "pot": 480.0,
+          "current_bet": 150.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1380.0,
+            "agent_c": 1410.0,
+            "agent_d": 1410.0,
+            "agent_e": 2820.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I tend to call down with medium-strength hands and catch bluffs."
+        },
+        {
+          "street": "river",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 630.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1230.0,
+            "agent_c": 1410.0,
+            "agent_d": 1410.0,
+            "agent_e": 2820.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_e",
+          "action_type": "bet",
+          "amount": 150.0,
+          "pot": 630.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1230.0,
+            "agent_c": 1410.0,
+            "agent_d": 1410.0,
+            "agent_e": 2820.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because exploiting agent_b's tendency to fold can make a river bluff profitable."
+        },
+        {
+          "street": "river",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 150.0,
+          "pot": 780.0,
+          "current_bet": 150.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1230.0,
+            "agent_c": 1410.0,
+            "agent_d": 1410.0,
+            "agent_e": 2670.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to call down and see the showdown, especially with a pair and good pot odds."
+        }
+      ],
+      "ev_records": [
+        {
+          "hand_number": 4,
+          "player_id": "agent_e",
+          "equity": 0.0,
+          "pot_size": 480.0,
+          "amount_invested": 450.0,
+          "ev_chips": -450.0,
+          "actual_chips": -450.0,
+          "variance": 0.0,
+          "ev_adjusted": -450.0
+        },
+        {
+          "hand_number": 4,
+          "player_id": "agent_b",
+          "equity": 1.0,
+          "pot_size": 480.0,
+          "amount_invested": 0.0,
+          "ev_chips": 480.0,
+          "actual_chips": 480.0,
+          "variance": 0.0,
+          "ev_adjusted": 480.0
+        }
+      ],
+      "community_cards": [
+        "8s",
+        "5c",
+        "Ac",
+        "8h",
+        "7h"
+      ],
+      "shown_hands": {
+        "agent_e": [
+          "Th",
+          "2h"
+        ],
+        "agent_b": [
+          "5h",
+          "2s"
+        ]
+      }
+    },
+    {
+      "hand_number": 5,
+      "small_blind": 15.0,
+      "big_blind": 30.0,
+      "starting_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 2010.0,
+        "agent_c": 1410.0,
+        "agent_d": 1410.0,
+        "agent_e": 2670.0
+      },
+      "finishing_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 600.0,
+        "agent_c": 1380.0,
+        "agent_d": 1410.0,
+        "agent_e": 4110.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1995.0,
+            "agent_c": 1380.0,
+            "agent_d": 1410.0,
+            "agent_e": 2670.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "raise",
+          "amount": 150.0,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1995.0,
+            "agent_c": 1380.0,
+            "agent_d": 1410.0,
+            "agent_e": 2670.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 150.0,
+          "pot": 195.0,
+          "current_bet": 150.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1995.0,
+            "agent_c": 1380.0,
+            "agent_d": 1410.0,
+            "agent_e": 2520.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I have enough equity to justify a call and I prefer to see a flop."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 330.0,
+          "current_bet": 150.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1860.0,
+            "agent_c": 1380.0,
+            "agent_d": 1410.0,
+            "agent_e": 2520.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 330.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1860.0,
+            "agent_c": 1380.0,
+            "agent_d": 1410.0,
+            "agent_e": 2520.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to play passively and see more cards without committing more chips."
+        },
+        {
+          "street": "flop",
+          "actor": "agent_e",
+          "action_type": "bet",
+          "amount": 220.0,
+          "pot": 330.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1860.0,
+            "agent_c": 1380.0,
+            "agent_d": 1410.0,
+            "agent_e": 2520.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 220.0,
+          "pot": 550.0,
+          "current_bet": 220.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1860.0,
+            "agent_c": 1380.0,
+            "agent_d": 1410.0,
+            "agent_e": 2300.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 770.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1640.0,
+            "agent_c": 1380.0,
+            "agent_d": 1410.0,
+            "agent_e": 2300.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_e",
+          "action_type": "bet",
+          "amount": 540.0,
+          "pot": 770.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1640.0,
+            "agent_c": 1380.0,
+            "agent_d": 1410.0,
+            "agent_e": 2300.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because the opponent is likely to fold to a larger bet, allowing us to extract more value."
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 540.0,
+          "pot": 1310.0,
+          "current_bet": 540.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1640.0,
+            "agent_c": 1380.0,
+            "agent_d": 1410.0,
+            "agent_e": 1760.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to call down with medium-strength hands and potentially catch bluffs."
+        },
+        {
+          "street": "river",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 1850.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1100.0,
+            "agent_c": 1380.0,
+            "agent_d": 1410.0,
+            "agent_e": 1760.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to avoid betting without a strong hand."
+        },
+        {
+          "street": "river",
+          "actor": "agent_e",
+          "action_type": "bet",
+          "amount": 500.0,
+          "pot": 1850.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1100.0,
+            "agent_c": 1380.0,
+            "agent_d": 1410.0,
+            "agent_e": 1760.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 500.0,
+          "pot": 2350.0,
+          "current_bet": 500.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 1100.0,
+            "agent_c": 1380.0,
+            "agent_d": 1410.0,
+            "agent_e": 1260.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I have sufficient equity to call down and see the showdown."
+        }
+      ]
+    },
+    {
+      "hand_number": 6,
+      "small_blind": 15.0,
+      "big_blind": 30.0,
+      "starting_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 600.0,
+        "agent_c": 1380.0,
+        "agent_d": 1410.0,
+        "agent_e": 4110.0
+      },
+      "finishing_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 810.0,
+        "agent_c": 1170.0,
+        "agent_d": 1410.0,
+        "agent_e": 4110.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 585.0,
+            "agent_c": 1350.0,
+            "agent_d": 1410.0,
+            "agent_e": 4110.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 585.0,
+            "agent_c": 1350.0,
+            "agent_d": 1410.0,
+            "agent_e": 4110.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 30.0,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 585.0,
+            "agent_c": 1350.0,
+            "agent_d": 1410.0,
+            "agent_e": 4110.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "raise",
+          "amount": 90.0,
+          "pot": 60.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 570.0,
+            "agent_c": 1350.0,
+            "agent_d": 1410.0,
+            "agent_e": 4110.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 90.0,
+          "pot": 120.0,
+          "current_bet": 90.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 570.0,
+            "agent_c": 1290.0,
+            "agent_d": 1410.0,
+            "agent_e": 4110.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I have enough equity and prefer to call down with medium-strength hands."
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 180.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 510.0,
+            "agent_c": 1290.0,
+            "agent_d": 1410.0,
+            "agent_e": 4110.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to play passively and call down."
+        },
+        {
+          "street": "flop",
+          "actor": "agent_c",
+          "action_type": "bet",
+          "amount": 120.0,
+          "pot": 180.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 510.0,
+            "agent_c": 1290.0,
+            "agent_d": 1410.0,
+            "agent_e": 4110.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 120.0,
+          "pot": 300.0,
+          "current_bet": 120.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 510.0,
+            "agent_c": 1170.0,
+            "agent_d": 1410.0,
+            "agent_e": 4110.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer passive play and calling with strong hands to induce bluffs or weaker hands to continue."
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 420.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 390.0,
+            "agent_c": 1170.0,
+            "agent_d": 1410.0,
+            "agent_e": 4110.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to keep the pot small and control the action by checking."
+        },
+        {
+          "street": "turn",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 420.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 390.0,
+            "agent_c": 1170.0,
+            "agent_d": 1410.0,
+            "agent_e": 4110.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 420.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 390.0,
+            "agent_c": 1170.0,
+            "agent_d": 1410.0,
+            "agent_e": 4110.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 420.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 390.0,
+            "agent_c": 1170.0,
+            "agent_d": 1410.0,
+            "agent_e": 4110.0
+          },
+          "decision": "gto"
+        }
+      ]
+    },
+    {
+      "hand_number": 7,
+      "small_blind": 15.0,
+      "big_blind": 30.0,
+      "starting_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 810.0,
+        "agent_c": 1170.0,
+        "agent_d": 1410.0,
+        "agent_e": 4110.0
+      },
+      "finishing_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 180.0,
+        "agent_c": 1140.0,
+        "agent_d": 1410.0,
+        "agent_e": 4770.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 795.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 4110.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "raise",
+          "amount": 90.0,
+          "pot": 45.0,
+          "current_bet": 30.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 795.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 4110.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because agent_b's tendencies make them fold to aggression, providing a profitable bluffing opportunity."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 90.0,
+          "pot": 135.0,
+          "current_bet": 90.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 795.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 4020.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to call and see showdowns with marginal hands."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 210.0,
+          "current_bet": 90.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 720.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 4020.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I only play premium hands and fold to aggression without a top hand."
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 210.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 720.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 4020.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_e",
+          "action_type": "bet",
+          "amount": 60.0,
+          "pot": 210.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 720.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 4020.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because the opponent is loose-passive and likely to fold to aggression, making a small bet profitable."
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 60.0,
+          "pot": 270.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 720.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 3960.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I like to call down with medium-strength hands and see more cards."
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 330.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 660.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 3960.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_e",
+          "action_type": "bet",
+          "amount": 240.0,
+          "pot": 330.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 660.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 3960.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because the opponent's passive style and tendency to call down weak hands provides a profitable bluffing opportunity."
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 240.0,
+          "pot": 570.0,
+          "current_bet": 240.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 660.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 3720.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to call and see the showdown even with marginal equity."
+        },
+        {
+          "street": "river",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 810.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 420.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 3720.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_e",
+          "action_type": "bet",
+          "amount": 240.0,
+          "pot": 810.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 420.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 3720.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 240.0,
+          "pot": 1050.0,
+          "current_bet": 240.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 420.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 3480.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to call down with medium-strength hands, even if not optimal."
+        }
+      ]
+    },
+    {
+      "hand_number": 8,
+      "small_blind": 30.0,
+      "big_blind": 60.0,
+      "starting_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 180.0,
+        "agent_c": 1140.0,
+        "agent_d": 1410.0,
+        "agent_e": 4770.0
+      },
+      "finishing_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 120.0,
+        "agent_c": 1200.0,
+        "agent_d": 1410.0,
+        "agent_e": 4770.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 150.0,
+            "agent_c": 1080.0,
+            "agent_d": 1410.0,
+            "agent_e": 4770.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because the hand's equity is too low and opponents' tendencies do not favor a call."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 150.0,
+            "agent_c": 1080.0,
+            "agent_d": 1410.0,
+            "agent_e": 4770.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 60.0,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 150.0,
+            "agent_c": 1080.0,
+            "agent_d": 1410.0,
+            "agent_e": 4770.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I want to see the flop with a marginal hand and I have enough equity."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 120.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 120.0,
+            "agent_c": 1080.0,
+            "agent_d": 1410.0,
+            "agent_e": 4770.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 120.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 120.0,
+            "agent_c": 1080.0,
+            "agent_d": 1410.0,
+            "agent_e": 4770.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 120.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 120.0,
+            "agent_c": 1080.0,
+            "agent_d": 1410.0,
+            "agent_e": 4770.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I only play premium hands and avoid unnecessary aggression."
+        },
+        {
+          "street": "turn",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 120.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 120.0,
+            "agent_c": 1080.0,
+            "agent_d": 1410.0,
+            "agent_e": 4770.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to see a showdown without risking more chips."
+        },
+        {
+          "street": "turn",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 120.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 120.0,
+            "agent_c": 1080.0,
+            "agent_d": 1410.0,
+            "agent_e": 4770.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 120.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 120.0,
+            "agent_c": 1080.0,
+            "agent_d": 1410.0,
+            "agent_e": 4770.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "river",
+          "actor": "agent_c",
+          "action_type": "check",
+          "amount": null,
+          "pot": 120.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 120.0,
+            "agent_c": 1080.0,
+            "agent_d": 1410.0,
+            "agent_e": 4770.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I only bet with strong hands and fold easily."
+        }
+      ],
+      "ev_records": [
+        {
+          "hand_number": 8,
+          "player_id": "agent_b",
+          "equity": 0.0,
+          "pot_size": 60.0,
+          "amount_invested": 60.0,
+          "ev_chips": -60.0,
+          "actual_chips": -60.0,
+          "variance": 0.0,
+          "ev_adjusted": -60.0
+        },
+        {
+          "hand_number": 8,
+          "player_id": "agent_c",
+          "equity": 1.0,
+          "pot_size": 60.0,
+          "amount_invested": 0.0,
+          "ev_chips": 60.0,
+          "actual_chips": 60.0,
+          "variance": 0.0,
+          "ev_adjusted": 60.0
+        }
+      ],
+      "community_cards": [
+        "5h",
+        "8h",
+        "8s",
+        "Jd",
+        "Jh"
+      ],
+      "shown_hands": {
+        "agent_b": [
+          "Kh",
+          "3s"
+        ],
+        "agent_c": [
+          "2h",
+          "Ah"
+        ]
+      }
+    },
+    {
+      "hand_number": 9,
+      "small_blind": 30.0,
+      "big_blind": 60.0,
+      "starting_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 120.0,
+        "agent_c": 1200.0,
+        "agent_d": 1410.0,
+        "agent_e": 4770.0
+      },
+      "finishing_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 300.0,
+        "agent_c": 1140.0,
+        "agent_d": 1410.0,
+        "agent_e": 4650.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 90.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 4770.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "raise",
+          "amount": 180.0,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 90.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 4770.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because the exploit analysis indicates a high likelihood of success against tight-passive opponents."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 180.0,
+          "pot": 270.0,
+          "current_bet": 180.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 90.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 4590.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to call and see showdowns, and my equity is sufficient."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 360.0,
+          "current_bet": 180.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 1140.0,
+            "agent_d": 1410.0,
+            "agent_e": 4590.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I avoid playing marginal hands and prefer to conserve chips for stronger hands."
+        }
+      ],
+      "ev_records": [
+        {
+          "hand_number": 9,
+          "player_id": "agent_e",
+          "equity": 0.0,
+          "pot_size": 180.0,
+          "amount_invested": 120.0,
+          "ev_chips": -120.0,
+          "actual_chips": -120.0,
+          "variance": 0.0,
+          "ev_adjusted": -120.0
+        },
+        {
+          "hand_number": 9,
+          "player_id": "agent_b",
+          "equity": 1.0,
+          "pot_size": 180.0,
+          "amount_invested": 0.0,
+          "ev_chips": 180.0,
+          "actual_chips": 180.0,
+          "variance": 0.0,
+          "ev_adjusted": 180.0
+        }
+      ],
+      "community_cards": [
+        "4h",
+        "5s",
+        "8c",
+        "6d",
+        "Kd"
+      ],
+      "shown_hands": {
+        "agent_e": [
+          "Jc",
+          "8s"
+        ],
+        "agent_b": [
+          "7c",
+          "Qc"
+        ]
+      }
+    },
+    {
+      "hand_number": 10,
+      "small_blind": 30.0,
+      "big_blind": 60.0,
+      "starting_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 300.0,
+        "agent_c": 1140.0,
+        "agent_d": 1410.0,
+        "agent_e": 4650.0
+      },
+      "finishing_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 0.0,
+        "agent_c": 1080.0,
+        "agent_d": 1770.0,
+        "agent_e": 4650.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "raise",
+          "amount": 150.0,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 270.0,
+            "agent_c": 1080.0,
+            "agent_d": 1410.0,
+            "agent_e": 4650.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 240.0,
+          "current_bet": 150.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 270.0,
+            "agent_c": 1080.0,
+            "agent_d": 1260.0,
+            "agent_e": 4650.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 150.0,
+          "pot": 240.0,
+          "current_bet": 150.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 270.0,
+            "agent_c": 1080.0,
+            "agent_d": 1260.0,
+            "agent_e": 4650.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I prefer to call and see the flop with marginal hands, letting opponents make mistakes."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 360.0,
+          "current_bet": 150.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 150.0,
+            "agent_c": 1080.0,
+            "agent_d": 1260.0,
+            "agent_e": 4650.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "check",
+          "amount": null,
+          "pot": 360.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 150.0,
+            "agent_c": 1080.0,
+            "agent_d": 1260.0,
+            "agent_e": 4650.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_d",
+          "action_type": "bet",
+          "amount": 200.0,
+          "pot": 360.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 150.0,
+            "agent_c": 1080.0,
+            "agent_d": 1260.0,
+            "agent_e": 4650.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_b",
+          "action_type": "call",
+          "amount": 200.0,
+          "pot": 560.0,
+          "current_bet": 200.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 150.0,
+            "agent_c": 1080.0,
+            "agent_d": 1060.0,
+            "agent_e": 4650.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I have enough equity to make the call profitable."
+        }
+      ],
+      "ev_records": [
+        {
+          "hand_number": 10,
+          "player_id": "agent_d",
+          "equity": 1.0,
+          "pot_size": 360.0,
+          "amount_invested": 0.0,
+          "ev_chips": 360.0,
+          "actual_chips": 360.0,
+          "variance": 0.0,
+          "ev_adjusted": 360.0
+        },
+        {
+          "hand_number": 10,
+          "player_id": "agent_b",
+          "equity": 0.0,
+          "pot_size": 360.0,
+          "amount_invested": 300.0,
+          "ev_chips": -300.0,
+          "actual_chips": -300.0,
+          "variance": 0.0,
+          "ev_adjusted": -300.0
+        }
+      ],
+      "community_cards": [
+        "Ac",
+        "3d",
+        "Td",
+        "4s",
+        "As"
+      ],
+      "shown_hands": {
+        "agent_d": [
+          "Ad",
+          "Tc"
+        ],
+        "agent_b": [
+          "Qd",
+          "6h"
+        ]
+      }
+    },
+    {
+      "hand_number": 11,
+      "small_blind": 30.0,
+      "big_blind": 60.0,
+      "starting_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 0.0,
+        "agent_c": 1080.0,
+        "agent_d": 1770.0,
+        "agent_e": 4650.0
+      },
+      "finishing_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 0.0,
+        "agent_c": 1050.0,
+        "agent_d": 0.0,
+        "agent_e": 6450.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "raise",
+          "amount": 180.0,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 1050.0,
+            "agent_d": 1710.0,
+            "agent_e": 4650.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because the opponent's tight-passive nature allows us to exploit with a pre-flop raise."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "fold",
+          "amount": null,
+          "pot": 270.0,
+          "current_bet": 180.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 1050.0,
+            "agent_d": 1710.0,
+            "agent_e": 4470.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Following my style because I only play premium hands and K4 is not strong enough."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "raise",
+          "amount": 420.0,
+          "pot": 270.0,
+          "current_bet": 180.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 1050.0,
+            "agent_d": 1710.0,
+            "agent_e": 4470.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because Agent E's aggression and fold to 3-bet stats suggest a profitable 3-bet opportunity."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "raise",
+          "amount": 660.0,
+          "pot": 630.0,
+          "current_bet": 420.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 1050.0,
+            "agent_d": 1350.0,
+            "agent_e": 4470.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because the exploit analysis shows a high confidence opportunity to pressure a tight-passive opponent who rarely reaches showdown."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_d",
+          "action_type": "call",
+          "amount": 660.0,
+          "pot": 1110.0,
+          "current_bet": 660.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 1050.0,
+            "agent_d": 1350.0,
+            "agent_e": 3990.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_d",
+          "action_type": "check",
+          "amount": null,
+          "pot": 1350.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 1050.0,
+            "agent_d": 1110.0,
+            "agent_e": 3990.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_e",
+          "action_type": "bet",
+          "amount": 540.0,
+          "pot": 1350.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 1050.0,
+            "agent_d": 1110.0,
+            "agent_e": 3990.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "flop",
+          "actor": "agent_d",
+          "action_type": "call",
+          "amount": 540.0,
+          "pot": 1890.0,
+          "current_bet": 540.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 1050.0,
+            "agent_d": 1110.0,
+            "agent_e": 3450.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_d",
+          "action_type": "check",
+          "amount": null,
+          "pot": 2430.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 1050.0,
+            "agent_d": 570.0,
+            "agent_e": 3450.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "turn",
+          "actor": "agent_e",
+          "action_type": "bet",
+          "amount": 1215.0,
+          "pot": 2430.0,
+          "current_bet": 0.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 1050.0,
+            "agent_d": 570.0,
+            "agent_e": 3450.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because the opponent's tight-passive tendencies and low WTSD suggest they are likely to fold to a significant bet."
+        },
+        {
+          "street": "turn",
+          "actor": "agent_d",
+          "action_type": "call",
+          "amount": 1215.0,
+          "pot": 3645.0,
+          "current_bet": 1215.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 1050.0,
+            "agent_d": 570.0,
+            "agent_e": 2235.0
+          },
+          "decision": "gto"
+        }
+      ],
+      "ev_records": [
+        {
+          "hand_number": 11,
+          "player_id": "agent_e",
+          "equity": 1.0,
+          "pot_size": 1800.0,
+          "amount_invested": 0.0,
+          "ev_chips": 1800.0,
+          "actual_chips": 1800.0,
+          "variance": 0.0,
+          "ev_adjusted": 1800.0
+        },
+        {
+          "hand_number": 11,
+          "player_id": "agent_d",
+          "equity": 0.0,
+          "pot_size": 1800.0,
+          "amount_invested": 1770.0,
+          "ev_chips": -1770.0,
+          "actual_chips": -1770.0,
+          "variance": 0.0,
+          "ev_adjusted": -1770.0
+        }
+      ],
+      "community_cards": [
+        "9c",
+        "Jh",
+        "4d",
+        "4c",
+        "Tc"
+      ],
+      "shown_hands": {
+        "agent_e": [
+          "9d",
+          "Ac"
+        ],
+        "agent_d": [
+          "8h",
+          "Ah"
+        ]
+      }
+    },
+    {
+      "hand_number": 12,
+      "small_blind": 30.0,
+      "big_blind": 60.0,
+      "starting_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 0.0,
+        "agent_c": 1050.0,
+        "agent_d": 0.0,
+        "agent_e": 6450.0
+      },
+      "finishing_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 0.0,
+        "agent_c": 0.0,
+        "agent_d": 0.0,
+        "agent_e": 7500.0
+      },
+      "actions": [
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "raise",
+          "amount": 240.0,
+          "pot": 90.0,
+          "current_bet": 60.0,
+          "preflop_raise_count": 0,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 990.0,
+            "agent_d": 0.0,
+            "agent_e": 6420.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because the opponent's tendencies favor exploiting with a 3-bet."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "raise",
+          "amount": 420.0,
+          "pot": 300.0,
+          "current_bet": 240.0,
+          "preflop_raise_count": 1,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 990.0,
+            "agent_d": 0.0,
+            "agent_e": 6210.0
+          },
+          "decision": "gto"
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_e",
+          "action_type": "raise",
+          "amount": 1200.0,
+          "pot": 660.0,
+          "current_bet": 420.0,
+          "preflop_raise_count": 2,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 630.0,
+            "agent_d": 0.0,
+            "agent_e": 6210.0
+          },
+          "decision": "deviate",
+          "deviation_reason": "Deviating because the opponent's passive nature allows us to exploit them by applying pressure with a raise."
+        },
+        {
+          "street": "preflop",
+          "actor": "agent_c",
+          "action_type": "call",
+          "amount": 1200.0,
+          "pot": 1620.0,
+          "current_bet": 1200.0,
+          "preflop_raise_count": 3,
+          "stacks": {
+            "agent_a": 0.0,
+            "agent_b": 0.0,
+            "agent_c": 630.0,
+            "agent_d": 0.0,
+            "agent_e": 5250.0
+          },
+          "decision": "gto"
+        }
+      ],
+      "ev_records": [
+        {
+          "hand_number": 12,
+          "player_id": "agent_e",
+          "equity": 1.0,
+          "pot_size": 1050.0,
+          "amount_invested": 0.0,
+          "ev_chips": 1050.0,
+          "actual_chips": 1050.0,
+          "variance": 0.0,
+          "ev_adjusted": 1050.0
+        },
+        {
+          "hand_number": 12,
+          "player_id": "agent_c",
+          "equity": 0.0,
+          "pot_size": 1050.0,
+          "amount_invested": 1050.0,
+          "ev_chips": -1050.0,
+          "actual_chips": -1050.0,
+          "variance": 0.0,
+          "ev_adjusted": -1050.0
+        }
+      ],
+      "community_cards": [
+        "6s",
+        "Qc",
+        "2d",
+        "6c",
+        "Th"
+      ],
+      "shown_hands": {
+        "agent_e": [
+          "9h",
+          "9d"
+        ],
+        "agent_c": [
+          "Kd",
+          "Ac"
+        ]
+      }
+    }
+  ],
+  "hand_summaries": [
+    {
+      "hand_number": 1,
+      "winners": [
+        "agent_e"
+      ],
+      "chips_won": {
+        "agent_a": -1500.0,
+        "agent_b": -30.0,
+        "agent_c": 0.0,
+        "agent_d": -90.0,
+        "agent_e": 1620.0
+      },
+      "went_to_showdown": true,
+      "ev_adjusted_chips": {
+        "agent_a": -1500.0,
+        "agent_b": -30.0,
+        "agent_c": 0.0,
+        "agent_d": -90.0,
+        "agent_e": 1620.0
+      }
+    },
+    {
+      "hand_number": 2,
+      "winners": [
+        "agent_b"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": 30.0,
+        "agent_c": -30.0,
+        "agent_d": 0.0,
+        "agent_e": 0.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    },
+    {
+      "hand_number": 3,
+      "winners": [
+        "agent_b"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": 30.0,
+        "agent_c": -30.0,
+        "agent_d": 0.0,
+        "agent_e": 0.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    },
+    {
+      "hand_number": 4,
+      "winners": [
+        "agent_b"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": 480.0,
+        "agent_c": -30.0,
+        "agent_d": 0.0,
+        "agent_e": -450.0
+      },
+      "went_to_showdown": true,
+      "ev_adjusted_chips": {
+        "agent_a": 0.0,
+        "agent_b": 480.0,
+        "agent_c": -30.0,
+        "agent_d": 0.0,
+        "agent_e": -450.0
+      }
+    },
+    {
+      "hand_number": 5,
+      "winners": [
+        "agent_e"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": -1410.0,
+        "agent_c": -30.0,
+        "agent_d": 0.0,
+        "agent_e": 1440.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    },
+    {
+      "hand_number": 6,
+      "winners": [
+        "agent_b"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": 210.0,
+        "agent_c": -210.0,
+        "agent_d": 0.0,
+        "agent_e": 0.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    },
+    {
+      "hand_number": 7,
+      "winners": [
+        "agent_e"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": -630.0,
+        "agent_c": -30.0,
+        "agent_d": 0.0,
+        "agent_e": 660.0
+      },
+      "went_to_showdown": false,
+      "ev_adjusted_chips": null
+    },
+    {
+      "hand_number": 8,
+      "winners": [
+        "agent_c"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": -60.0,
+        "agent_c": 60.0,
+        "agent_d": 0.0,
+        "agent_e": 0.0
+      },
+      "went_to_showdown": true,
+      "ev_adjusted_chips": {
+        "agent_a": 0.0,
+        "agent_b": -60.0,
+        "agent_c": 60.0,
+        "agent_d": 0.0,
+        "agent_e": 0.0
+      }
+    },
+    {
+      "hand_number": 9,
+      "winners": [
+        "agent_b"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": 180.0,
+        "agent_c": -60.0,
+        "agent_d": 0.0,
+        "agent_e": -120.0
+      },
+      "went_to_showdown": true,
+      "ev_adjusted_chips": {
+        "agent_a": 0.0,
+        "agent_b": 180.0,
+        "agent_c": -60.0,
+        "agent_d": 0.0,
+        "agent_e": -120.0
+      }
+    },
+    {
+      "hand_number": 10,
+      "winners": [
+        "agent_d"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": -300.0,
+        "agent_c": -60.0,
+        "agent_d": 360.0,
+        "agent_e": 0.0
+      },
+      "went_to_showdown": true,
+      "ev_adjusted_chips": {
+        "agent_a": 0.0,
+        "agent_b": -300.0,
+        "agent_c": -60.0,
+        "agent_d": 360.0,
+        "agent_e": 0.0
+      }
+    },
+    {
+      "hand_number": 11,
+      "winners": [
+        "agent_e"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": 0.0,
+        "agent_c": -30.0,
+        "agent_d": -1770.0,
+        "agent_e": 1800.0
+      },
+      "went_to_showdown": true,
+      "ev_adjusted_chips": {
+        "agent_a": 0.0,
+        "agent_b": 0.0,
+        "agent_c": -30.0,
+        "agent_d": -1770.0,
+        "agent_e": 1800.0
+      }
+    },
+    {
+      "hand_number": 12,
+      "winners": [
+        "agent_e"
+      ],
+      "chips_won": {
+        "agent_a": 0.0,
+        "agent_b": 0.0,
+        "agent_c": -1050.0,
+        "agent_d": 0.0,
+        "agent_e": 1050.0
+      },
+      "went_to_showdown": true,
+      "ev_adjusted_chips": {
+        "agent_a": 0.0,
+        "agent_b": 0.0,
+        "agent_c": -1050.0,
+        "agent_d": 0.0,
+        "agent_e": 1050.0
+      }
+    }
+  ]
+}
