@@ -6,6 +6,7 @@ Each strategy defines:
 - Qualitative tendencies (for prompt injection)
 - Whether the agent has pre-loaded opponent knowledge
 """
+
 from dataclasses import dataclass, field
 
 
@@ -66,8 +67,7 @@ class StrategyConfig:
             )
         elif self.bluff_frequency < 0.2:
             instructions.append(
-                "BLUFFING: You rarely bluff - only bet with strong hands. "
-                "Your bets mean strength."
+                "BLUFFING: You rarely bluff - only bet with strong hands. Your bets mean strength."
             )
         else:
             instructions.append(
@@ -83,8 +83,7 @@ class StrategyConfig:
             )
         elif self.fold_threshold < 0.3:
             instructions.append(
-                "FOLDING: You are a calling station - you rarely fold. "
-                "You like to see showdowns."
+                "FOLDING: You are a calling station - you rarely fold. You like to see showdowns."
             )
         else:
             instructions.append(

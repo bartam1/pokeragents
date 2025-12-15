@@ -4,6 +4,7 @@ Agent A Scenario Tests - Test the aggressive bluffer agent.
 These tests run Agent A (aggressive bluffer, no shared knowledge)
 against JSON-defined scenarios to validate decision quality and reasoning.
 """
+
 import pytest
 
 from backend.config import Settings

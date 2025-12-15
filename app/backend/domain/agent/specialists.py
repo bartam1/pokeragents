@@ -8,6 +8,7 @@ This module provides specialized agents that each focus on one aspect of poker a
 
 Uses structured output (output_type) with Pydantic models for reliable parsing.
 """
+
 from dataclasses import dataclass
 
 from agents import Agent, ModelSettings, Runner
@@ -82,118 +83,36 @@ class ExploitAnalysis:
 # Specialist Prompts
 # =============================================================================
 
-GTO_ANALYST_PROMPT = """You are a GTO (Game Theory Optimal) poker analyst.
+GTO_ANALYST_PROMPT = """You are a GTO poker analyst. Analyze from pure math/theory perspective.
 
-Your ONLY job is to analyze the current poker situation from a pure mathematical and theoretical perspective.
-Do NOT consider opponent-specific exploits - another specialist handles that.
+Use calculate_equity and calculate_pot_odds tools first, then analyze position and SPR.
 
-## IMPORTANT: Always use tools first, then analyze!
-1. First, call calculate_equity to get your precise hand equity
-2. If facing a bet, call calculate_pot_odds to get required equity
-3. Then provide your analysis based on the tool results
-
-## Your Focus Areas:
-1. **Hand Strength**: Use calculate_equity tool first
-2. **Pot Odds**: Use calculate_pot_odds tool when facing a bet
-3. **Position**: How does position affect this decision?
-4. **Stack-to-Pot Ratio (SPR)**: How does the effective stack affect play?
-5. **GTO Frequencies**: What would a balanced strategy do in this spot?
-
-Respond with your analysis including hand_strength, position_assessment, recommended_action, bet_sizing, reasoning, and confidence.
+Respond with: hand_strength, position_assessment, recommended_action, bet_sizing, reasoning, confidence.
 """
 
-EXPLOIT_ANALYST_PROMPT = """You are a poker exploitation specialist.
+EXPLOIT_ANALYST_PROMPT = """You are a poker exploitation specialist. Identify deviations from GTO based on opponent stats.
 
-Your ONLY job is to identify how to DEVIATE from GTO based on opponent tendencies.
-Another specialist handles the GTO baseline - you focus ONLY on adjustments based on opponent reads.
+**60+ hands needed for reliable exploitation.** Scale confidence by sample size.
 
-## CRITICAL: Sample Size Determines Your Confidence
+Opponent types: LAG (VPIP>35%, high aggression), TAG (VPIP<25%, high aggression), 
+Loose-Passive (VPIP>35%, low aggression), Tight-Passive (VPIP<25%, low aggression), Unknown (<60 hands).
 
-⚠️ **YOUR CONFIDENCE SCORE MUST REFLECT DATA QUALITY**
-
-### Confidence Rules (MUST FOLLOW):
-- **< 30 hands**: confidence = 0.1-0.2, opponent_type = "Unknown", recommend "Play GTO"
-- **30-49 hands**: confidence = 0.2-0.4 max, opponent_type with "?" suffix
-- **50-99 hands**: confidence = 0.4-0.6, stats becoming reliable
-- **100-199 hands**: confidence = 0.6-0.8, stats are reliable
-- **200+ hands**: confidence = 0.7-0.9, high confidence exploitation
-
-### When to Recommend "Play GTO" (Set confidence < 0.5):
-- Sample size < 50 hands
-- Stats are contradictory or unclear
-- No clear exploitable leak identified
-- Opponent plays close to GTO themselves
-
-## Your Focus Areas:
-1. **Sample Size Check**: FIRST check hands played - this CAPS your confidence
-2. **Opponent Classification**: What type of player is this?
-3. **Key Statistics**: Analyze VPIP, PFR, aggression, c-bet frequencies
-4. **Exploitable Leaks**: What SPECIFIC mistakes does this opponent make?
-5. **Recommended Adjustments**: How should we deviate from GTO?
-
-## Opponent Types:
-- **LAG** (Loose-Aggressive): High VPIP (>35%), high aggression (>2.5) - bluffs a lot
-- **TAG** (Tight-Aggressive): Low VPIP (<25%), high aggression - strong ranges
-- **Loose-Passive**: High VPIP (>35%), low aggression (<1.5) - calling station
-- **Tight-Passive**: Low VPIP (<25%), low aggression - only plays premium hands
-- **Unknown**: Insufficient data (< 50 hands) - ALWAYS recommend "Play GTO"
-
-Respond with opponent_type, key_tendencies, exploitable_leaks, recommended_adjustment, reasoning, and confidence.
+Respond with: opponent_type, key_tendencies, exploitable_leaks, recommended_adjustment, reasoning, confidence.
 """
 
-DECISION_MAKER_PROMPT = """You are the final decision maker in a multi-agent poker AI system.
+DECISION_MAKER_PROMPT = """You are the final decision maker combining GTO and Exploit analyses.
 
-You receive analyses from two specialists:
-1. **GTO Analyst**: Pure mathematical/theoretical analysis
-2. **Exploit Analyst**: Opponent-specific adjustments
+**GTO IS YOUR DEFAULT** - Only deviate with high exploit confidence (0.7+) and clear opportunity.
 
-## CRITICAL: GTO IS THE DEFAULT
-
-⚠️ **FOLLOW GTO UNLESS YOU HAVE STRONG EVIDENCE TO DEVIATE**
-
-The GTO strategy is mathematically unexploitable. Only deviate when:
-- Exploit Analyst confidence is >= 0.7
-- There is a CLEAR, SPECIFIC exploitation opportunity
-- The exploit directly contradicts GTO (not just "confirms" it)
-
-## Hard Rules:
-- Exploit confidence < 0.5 → ALWAYS follow GTO
-- Exploit confidence 0.5-0.7 → Follow GTO unless exploit is extremely clear
-- Exploit confidence >= 0.7 → May deviate if exploitation is actionable
-
-## Your Job:
-1. **Default to GTO**: Start with the GTO recommendation
-2. **Check Exploit Confidence**: Only consider deviating if confidence >= 0.7
-3. **Validate the Exploit**: Is it specific and actionable?
-4. **Explain Your Choice**: State "Following GTO because..." or "Deviating from GTO because..."
-
-## Weighting Guidelines:
-- **Follow GTO** when: Exploit confidence < 0.7, opponent type is "Unknown", action aligns with GTO anyway
-- **Consider Exploit** when: Exploit confidence >= 0.7 AND exploit recommends a DIFFERENT action than GTO
-- **Consider ICM** when: Near bubble, big stack vs short stack situations
-
-## Response Format (JSON)
-Respond with a structured JSON object containing:
-
-- **gto_analysis**: How GTO influenced your decision (1 sentence)
-- **exploit_analysis**: How exploitation influenced your decision (1 sentence)
-- **gto_deviation**: "Following GTO because..." OR "Deviating from GTO because..."
-- **action_type**: One of: fold, check, call, bet, raise, all_in
-- **sizing**: For bet/raise, specify ONE of:
-  - {"bb_multiple": 3} for 3x big blind
-  - {"pot_fraction": 0.75} for 75% pot
-  - {"absolute": 150} for exact chip amount
-  - null for fold/check/call/all_in
-- **confidence**: Number from 0.0 to 1.0
-
-Example:
+## Response Format
 {
-  "gto_analysis": "GTO says to c-bet 2/3 pot with top pair good kicker.",
-  "exploit_analysis": "Opponent folds to c-bets 70% - we can bluff profitably.",
-  "gto_deviation": "Following GTO because opponent fold frequency aligns with GTO sizing.",
-  "action_type": "bet",
-  "sizing": {"pot_fraction": 0.66},
-  "confidence": 0.82
+  "gto_analysis": "GTO reasoning (1 sentence)",
+  "exploit_analysis": "Exploitation reasoning (1 sentence)",
+  "is_following_gto": true or false,
+  "gto_deviation": "Following GTO because..." or "Deviating because...",
+  "action_type": "fold|check|call|bet|raise|all_in",
+  "sizing": {"pot_fraction": 0.75} or {"bb_multiple": 3} or null,
+  "confidence": 0.0-1.0
 }
 """
 
@@ -296,30 +215,41 @@ class ExploitAnalyst:
         game_state_prompt: str,
         opponent_stats: str,
         hand_history: str,
+        tournament_history: str = "",
     ) -> ExploitAnalysis:
         """
-        Perform exploitation analysis based on opponent statistics.
+        Perform exploitation analysis based on opponent statistics and history.
 
         Args:
             game_state_prompt: Formatted game state description
             opponent_stats: Statistics for opponents in the hand
             hand_history: Actions taken so far in this hand
+            tournament_history: Full history of previous hands in the tournament
 
         Returns:
             ExploitAnalysis with exploitation recommendations
         """
+        # Build tournament history section only if we have history
+        tournament_section = ""
+        if tournament_history and tournament_history != "No previous hands in this tournament.":
+            tournament_section = f"""
+
+## Tournament History (All Previous Hands)
+{tournament_history}
+"""
+
         prompt = f"""Analyze this poker situation for exploitation opportunities:
 
 ## Current Game State
 {game_state_prompt}
 
-## Opponent Statistics
+## Opponent Statistics (Aggregated)
 {opponent_stats}
 
-## Hand History
+## Current Hand History
 {hand_history}
-
-Provide your exploitation analysis."""
+{tournament_section}
+Provide your exploitation analysis based on observed patterns."""
 
         result = await Runner.run(self._agent, prompt)
 
@@ -399,13 +329,13 @@ class DecisionMaker:
 
 ## Exploit Analysis (Confidence: {exploit_analysis.confidence:.2f})
 - Opponent Type: {exploit_analysis.opponent_type}
-- Key Tendencies: {', '.join(exploit_analysis.key_tendencies) or 'None identified'}
-- Exploitable Leaks: {', '.join(exploit_analysis.exploitable_leaks) or 'None identified'}
+- Key Tendencies: {", ".join(exploit_analysis.key_tendencies) or "None identified"}
+- Exploitable Leaks: {", ".join(exploit_analysis.exploitable_leaks) or "None identified"}
 - Recommended Adjustment: {exploit_analysis.recommended_adjustment}
 - Reasoning: {exploit_analysis.reasoning}
 
 ## Valid Actions
-{', '.join(valid_actions)}
+{", ".join(valid_actions)}
 
 Consider the hand history when making your decision. Provide your final decision."""
 

@@ -4,6 +4,7 @@ Agent E Scenario Tests - Test the ensemble architecture agent.
 These tests run Agent E (multi-agent ensemble: GTO + Exploit + Decision)
 against JSON-defined scenarios to validate decision quality and reasoning.
 """
+
 import pytest
 
 from backend.config import Settings
@@ -84,12 +85,12 @@ class TestAgentEComparison:
         """
         scenario = load_scenario(scenario_path)
 
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print(f"COMPARISON: {scenario.name}")
-        print(f"{'='*70}")
+        print(f"{'=' * 70}")
         print(f"Hero cards: {scenario.game_state.get_hole_cards_str()}")
         print(f"Board: {scenario.game_state.get_board_str() or '(preflop)'}")
-        print(f"{'='*70}")
+        print(f"{'=' * 70}")
 
         # Create both agents with same knowledge
         agent_d = PokerAgent(
@@ -117,16 +118,16 @@ class TestAgentEComparison:
         print("\n📊 AGENT D (Simple - 1 LLM call):")
         print_decision_compact("Agent D", decision_d, action_d)
 
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
 
         print("\n🎭 AGENT E (Ensemble - 3 LLM calls):")
         print_decision_compact("Agent E", decision_e, action_e)
 
         # Compare
         same_action = action_d.type.value == action_e.type.value
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print(f"{'✅' if same_action else '⚠️'} Same action type: {same_action}")
-        print(f"{'='*70}")
+        print(f"{'=' * 70}")
 
 
 class TestAgentESingleScenario:

@@ -4,6 +4,7 @@ Shared utilities for agent scenario tests.
 This module contains common functions for printing, validation,
 and scenario handling to avoid code duplication across test files.
 """
+
 from pathlib import Path
 
 from backend.domain.agent.models import ActionDecision
@@ -23,9 +24,9 @@ def get_all_scenarios() -> list[tuple[str, Path]]:
 
 def print_scenario_header(scenario: Scenario) -> None:
     """Print scenario information header."""
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print(f"SCENARIO: {scenario.name}")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
     print(f"Description: {scenario.description}")
     print(f"Street: {scenario.game_state.street.value}")
     print(f"Hero cards: {scenario.game_state.get_hole_cards_str()}")
@@ -33,7 +34,7 @@ def print_scenario_header(scenario: Scenario) -> None:
     print(f"Pot: {scenario.game_state.pot}")
     print(f"To call: {scenario.game_state.current_bet - scenario.game_state.hero.current_bet}")
     print(f"Legal actions: {[a.value for a in scenario.game_state.legal_actions]}")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
 
 def print_decision(
@@ -44,7 +45,7 @@ def print_decision(
 ) -> None:
     """Print agent decision with full reasoning."""
     print(f"\n{agent_emoji} {agent_name} DECISION:")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
     print(f"Action: {action.type.value} {action.amount if action.amount else ''}")
     print(f"Confidence: {decision.confidence:.2f}")
     print("\n📊 GTO Analysis:")
@@ -53,7 +54,7 @@ def print_decision(
     print(f"   {decision.exploit_analysis}")
     print("\n📐 GTO Deviation:")
     print(f"   {decision.gto_deviation}")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
 
 def print_decision_compact(
@@ -82,23 +83,23 @@ def validate_decision(
     action_str = action.type.value
 
     if scenario.expected.valid_actions:
-        assert (
-            action_str in scenario.expected.valid_actions
-        ), f"Action '{action_str}' not in valid actions: {scenario.expected.valid_actions}"
+        assert action_str in scenario.expected.valid_actions, (
+            f"Action '{action_str}' not in valid actions: {scenario.expected.valid_actions}"
+        )
         print(f"✅ Action '{action_str}' is valid (expected: {scenario.expected.valid_actions})")
 
     if scenario.expected.invalid_actions:
-        assert (
-            action_str not in scenario.expected.invalid_actions
-        ), f"Action '{action_str}' is in invalid actions: {scenario.expected.invalid_actions}"
+        assert action_str not in scenario.expected.invalid_actions, (
+            f"Action '{action_str}' is in invalid actions: {scenario.expected.invalid_actions}"
+        )
         print(
             f"✅ Action '{action_str}' is not invalid (forbidden: {scenario.expected.invalid_actions})"
         )
 
     if scenario.expected.min_confidence > 0:
-        assert (
-            decision.confidence >= scenario.expected.min_confidence
-        ), f"Confidence {decision.confidence:.2f} below minimum {scenario.expected.min_confidence}"
+        assert decision.confidence >= scenario.expected.min_confidence, (
+            f"Confidence {decision.confidence:.2f} below minimum {scenario.expected.min_confidence}"
+        )
         print(f"✅ Confidence {decision.confidence:.2f} >= {scenario.expected.min_confidence}")
 
     if scenario.expected.notes:
@@ -107,6 +108,6 @@ def validate_decision(
 
 def print_test_header(test_name: str, agent_name: str) -> None:
     """Print a header for single scenario tests."""
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print(f"🎯 {test_name} - {agent_name} Decision")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")

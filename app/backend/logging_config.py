@@ -1,6 +1,7 @@
 """
 Logging configuration for the Poker POC with structured logging support.
 """
+
 import json
 import logging
 import sys

@@ -1,4 +1,5 @@
 """Agent strategies and personality configurations."""
+
 from backend.domain.agent.strategies.base import (
     AGENT_A_BLUFFER,
     AGENT_B_PASSIVE,

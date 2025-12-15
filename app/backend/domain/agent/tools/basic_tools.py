@@ -3,6 +3,7 @@ Basic poker tools using OpenAI Agents SDK @function_tool decorator.
 
 Keep it simple - leverage PokerKit for evaluation, let LLM reason about strategy.
 """
+
 from typing import Callable
 
 from agents import function_tool
@@ -183,7 +184,7 @@ Recommended: Play GTO strategy, do not make reads-based adjustments."""
 
 {stats.to_prompt_string()}
 
-Tendencies: {', '.join(profile.tendencies) if profile.tendencies else 'None identified'}"""
+Tendencies: {", ".join(profile.tendencies) if profile.tendencies else "None identified"}"""
 
         return result
 

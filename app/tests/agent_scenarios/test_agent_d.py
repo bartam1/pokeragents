@@ -4,6 +4,7 @@ Agent D Scenario Tests - Test the simple architecture agent.
 These tests run Agent D (single LLM) against JSON-defined scenarios
 to validate decision quality and reasoning.
 """
+
 import pytest
 
 from backend.config import Settings

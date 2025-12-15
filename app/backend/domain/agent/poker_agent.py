@@ -10,14 +10,20 @@ The agent's behavior is shaped by:
 - Strategy configuration (personality/style)
 - Knowledge base (opponent stats - pre-loaded for Agent D, learned for Agent E)
 """
+
 from agents import Agent, ModelSettings, Runner
 
 from backend.config import Settings
 from backend.domain.agent.models import ActionDecision
 from backend.domain.agent.strategies.base import StrategyConfig
 from backend.domain.agent.tools.basic_tools import POKER_TOOLS
-from backend.domain.agent.utils import deviation_tracker, extract_tools_used
+from backend.domain.agent.utils import (
+    build_tournament_history_prompt,
+    deviation_tracker,
+    extract_tools_used,
+)
 from backend.domain.game.models import Action, HandResult, StructuredGameState
+from backend.domain.game.recorder import HandRecord
 from backend.domain.player.models import KnowledgeBase
 from backend.domain.player.tracker import StatisticsTracker
 from backend.logging_config import get_logger, log_agent_decision
@@ -25,86 +31,54 @@ from backend.logging_config import get_logger, log_agent_decision
 logger = get_logger(__name__)
 
 
-# System prompt for the poker agent
-POKER_AGENT_PROMPT = """You are an AI poker player in a No-Limit Texas Hold'em tournament.
+# =============================================================================
+# System Prompts
+# =============================================================================
+
+# Baseline prompt for Agents A/B/C - follow your personality
+BASELINE_AGENT_PROMPT = """You are an AI poker player in a No-Limit Texas Hold'em tournament.
 
 {strategy_instructions}
 
-## CRITICAL: GTO IS YOUR DEFAULT STRATEGY
+**STAY IN CHARACTER** - Play according to your style, not "optimally".
 
-⚠️ **FOLLOW GTO UNLESS YOU HAVE STRONG EVIDENCE TO DEVIATE**
+Use calculate_equity and calculate_pot_odds tools as needed.
 
-The GTO strategy is mathematically unexploitable. Only deviate when you have:
-- High confidence opponent reads (100+ hands of data)
-- A CLEAR, SPECIFIC exploitation opportunity
-- The exploit suggests a DIFFERENT action than GTO
-
-## Your Analysis Process
-Think through THREE perspectives before deciding:
-
-### 1. GTO ANALYSIS (Game Theory Optimal) - YOUR BASELINE
-- First, use calculate_equity tool to get your hand's equity
-- If facing a bet, use calculate_pot_odds tool to get required equity
-- Then analyze position and stack-to-pot ratio
-- This is your DEFAULT decision
-
-### 2. EXPLOIT ANALYSIS  
-- What do you know about your opponents' tendencies?
-- Are they too loose/tight? Too passive/aggressive?
-- What adjustments can you make to exploit their leaks?
-
-⚠️ **Sample Size Determines If You Can Exploit:**
-- **< 50 hands**: DO NOT EXPLOIT - Play GTO only
-- **50-99 hands**: Use stats with CAUTION - only exploit extreme tendencies
-- **100+ hands**: Stats are reliable - may exploit if clear opportunity
-
-### 3. DECISION - Hard Rules
-- **Default to GTO** - start with the GTO recommendation
-- **Only deviate when**: Opponent has 100+ hands AND shows clear exploitable leak
-- If in doubt, FOLLOW GTO
-- Factor in tournament considerations (ICM, stack preservation)
-
-## Available Actions
-- FOLD: Give up the hand
-- CHECK: Pass (when no bet to call)
-- CALL: Match the current bet
-- BET/RAISE [amount]: Put chips in (specify amount)
-- ALL_IN: Put all chips in
-
-## Response Format (JSON)
-Respond with a structured JSON object containing:
-
-- **gto_analysis**: Your GTO-based thinking (1-2 sentences)
-- **exploit_analysis**: Opponent exploitation reasoning (1-2 sentences)
-- **gto_deviation**: "Following GTO because..." or "Deviating from GTO because..."
-- **action_type**: One of: fold, check, call, bet, raise, all_in
-- **sizing**: For bet/raise, specify ONE of:
-  - {{"bb_multiple": 3}} for 3x big blind
-  - {{"pot_fraction": 0.75}} for 75% pot
-  - {{"absolute": 150}} for exact chip amount
-  - null for fold/check/call/all_in
-- **confidence**: Number from 0.0 to 1.0
-
-Example 1 (Following GTO - Default):
+## Response Format
 {{
-  "gto_analysis": "With AKo in late position, standard play is to 3-bet for value.",
-  "exploit_analysis": "Villain has only 35 hands - insufficient data for exploitation.",
-  "gto_deviation": "Following GTO because opponent sample size is too small for reliable reads.",
-  "action_type": "raise",
-  "sizing": {{"bb_multiple": 3}},
-  "confidence": 0.90
-}}
-
-Example 2 (Deviating - Only with strong evidence):
-{{
-  "gto_analysis": "With AKo, standard 3-bet sizing is 3x.",
-  "exploit_analysis": "Villain has 150 hands, 55% VPIP, never folds to 3-bets - extreme calling station.",
-  "gto_deviation": "Deviating from GTO because villain's extreme call frequency (150+ hands) justifies larger sizing.",
-  "action_type": "raise",
-  "sizing": {{"bb_multiple": 4}},
-  "confidence": 0.85
+  "gto_analysis": "What GTO would suggest (1 sentence)",
+  "exploit_analysis": "How your style applies (1 sentence)",
+  "is_following_gto": true,
+  "gto_deviation": "Following my style because...",
+  "action_type": "fold|check|call|bet|raise|all_in",
+  "sizing": {{"pot_fraction": 0.75}} or {{"bb_multiple": 3}} or null,
+  "confidence": 0.0-1.0
 }}
 """
+
+# Informed agent prompt for Agents D/E - GTO default, exploit when data supports
+INFORMED_AGENT_PROMPT = """You are an AI poker player in a No-Limit Texas Hold'em tournament.
+
+{strategy_instructions}
+
+**GTO IS YOUR DEFAULT** - Only deviate with 60+ hands of clear opponent data.
+
+Use calculate_equity and calculate_pot_odds tools. Opponent stats are provided below.
+
+## Response Format
+{{
+  "gto_analysis": "GTO reasoning (1 sentence)",
+  "exploit_analysis": "Exploitation reasoning (1 sentence)", 
+  "is_following_gto": true or false,
+  "gto_deviation": "Following GTO because..." or "Deviating because...",
+  "action_type": "fold|check|call|bet|raise|all_in",
+  "sizing": {{"pot_fraction": 0.75}} or {{"bb_multiple": 3}} or null,
+  "confidence": 0.0-1.0
+}}
+"""
+
+# Keep backward compatibility alias
+POKER_AGENT_PROMPT = INFORMED_AGENT_PROMPT
 
 
 class PokerAgent:
@@ -139,14 +113,25 @@ class PokerAgent:
         self._settings = settings
         self._tracker = StatisticsTracker(knowledge_base)
 
+        # Tournament history for exploitation (informed agents only)
+        self._tournament_history: list[HandRecord] = []
+
         # OpenAI client uses environment variables set by Settings.configure_openai_client()
         # No need for conditional logic - OPENAI_BASE_URL and OPENAI_API_KEY are set automatically
 
         # Build tools list - opponent stats are injected directly into prompt (no tools needed)
         tools = POKER_TOOLS.copy()
 
+        # Choose prompt based on whether agent has pre-loaded knowledge
+        # - Agents A/B/C: No knowledge, follow their personality (BASELINE_AGENT_PROMPT)
+        # - Agents D/E: Have knowledge, use GTO + exploitation (INFORMED_AGENT_PROMPT)
+        if strategy.has_shared_knowledge:
+            prompt_template = INFORMED_AGENT_PROMPT
+        else:
+            prompt_template = BASELINE_AGENT_PROMPT
+
         # Build system prompt with strategy
-        system_prompt = POKER_AGENT_PROMPT.format(
+        system_prompt = prompt_template.format(
             strategy_instructions=strategy.to_prompt_instructions()
         )
 
@@ -165,9 +150,12 @@ class PokerAgent:
             output_type=ActionDecision,  # Structured JSON output
         )
 
+        prompt_type = (
+            "INFORMED (GTO+exploit)" if strategy.has_shared_knowledge else "BASELINE (personality)"
+        )
         logger.info(
             f"Created agent {player_id} with strategy '{strategy.name}', "
-            f"has_knowledge={strategy.has_shared_knowledge}, "
+            f"prompt={prompt_type}, "
             f"known_opponents={len(knowledge_base.profiles)}"
         )
 
@@ -186,7 +174,7 @@ class PokerAgent:
 
         # Debug logging - print full prompt for testing
         logger.debug(f"Agent {self.player_id} analyzing hand #{game_state.hand_number}")
-        logger.debug(f"Agent {self.player_id} PROMPT:\n{'='*60}\n{prompt}\n{'='*60}")
+        logger.debug(f"Agent {self.player_id} PROMPT:\n{'=' * 60}\n{prompt}\n{'=' * 60}")
 
         # Run the agent - result.final_output is ActionDecision (structured)
         result = await Runner.run(self._agent, prompt)
@@ -204,8 +192,8 @@ class PokerAgent:
             else ""
         )
 
-        # Determine if following GTO based on deviation text
-        is_following_gto = decision.gto_deviation.lower().startswith("following gto")
+        # Use the boolean field directly from the model
+        is_following_gto = decision.is_following_gto
 
         # Console logging (human readable)
         logger.info(f"  [{self.player_id}] Cards: {hole_cards}")
@@ -215,8 +203,9 @@ class PokerAgent:
         logger.info(
             f"    Exploit: {decision.exploit_analysis[:100]}{'...' if len(decision.exploit_analysis) > 100 else ''}"
         )
+        gto_status = "✅" if is_following_gto else "⚠️"
         logger.info(
-            f"    📐 GTO Deviation: {decision.gto_deviation[:100]}{'...' if len(decision.gto_deviation) > 100 else ''}"
+            f"    📐 {gto_status} {decision.gto_deviation[:80]}{'...' if len(decision.gto_deviation) > 80 else ''}"
         )
         if tools_used:
             logger.info(f"    🔧 Tools: {', '.join(tools_used)}")
@@ -380,37 +369,33 @@ class PokerAgent:
         if state.min_raise > 0:
             lines.append(f"Min Raise: {state.min_raise:.0f} | Max Raise: {state.max_raise:.0f}")
 
-        # Opponent reads (same format as Agent E)
-        from backend.domain.player.models import MIN_RELIABLE_SAMPLE_SIZE
+        # Only show opponent stats for INFORMED agents (D/E)
+        # Baseline agents (A/B/C) should just play their personality, no stats needed
+        if self.strategy.has_shared_knowledge:
+            lines.append("")
+            lines.append("=== OPPONENT STATISTICS (60+ hands to exploit) ===")
 
-        lines.append("")
-        lines.append("=== OPPONENT STATISTICS ===")
-        lines.append(
-            f"(Minimum {MIN_RELIABLE_SAMPLE_SIZE} hands required for reliable exploitation)"
-        )
-
-        for opp in state.opponents:
-            profile = self.knowledge_base.get_profile(opp.name)
-            if profile and profile.statistics.hands_played > 0:
-                stats = profile.statistics
-                lines.append(f"\n{opp.name} (Stack: {opp.stack:.0f}):")
-
-                if stats.hands_played < 20:
-                    # Don't show misleading stats with tiny samples
-                    lines.append(f"  Hands: {stats.hands_played}")
-                    lines.append("  ⚠️ INSUFFICIENT DATA - Stats not meaningful")
-                    lines.append("  DO NOT exploit - Play GTO")
-                else:
-                    lines.append(f"  {stats.reliability_note}")
-                    lines.append(f"  VPIP: {stats.vpip:.1f}%")
-                    lines.append(f"  PFR: {stats.pfr:.1f}%")
-                    lines.append(f"  Limp: {stats.limp_frequency:.1f}%")
+            # Show stats for ALL other players (not just active ones)
+            # Stats are about general playstyle, useful even if they folded this hand
+            for player in state.players:
+                if player.seat == state.hero_seat:
+                    continue  # Skip hero
+                profile = self.knowledge_base.get_profile(player.name)
+                if profile and profile.statistics.hands_played > 0:
+                    stats = profile.statistics
+                    lines.append(f"\n{player.name} ({stats.hands_played} hands):")
+                    lines.append(f"  VPIP: {stats.vpip:.1f}%, PFR: {stats.pfr:.1f}%")
                     lines.append(f"  Aggression: {stats.aggression_factor:.2f}")
                     lines.append(f"  C-bet Flop: {stats.cbet_flop_pct:.1f}%")
                     lines.append(f"  Fold to 3-bet: {stats.fold_to_three_bet:.1f}%")
                     lines.append(f"  WTSD: {stats.wtsd:.1f}%")
-            else:
-                lines.append(f"\n{opp.name} (Stack: {opp.stack:.0f}): No data - Play GTO")
+                else:
+                    lines.append(f"\n{player.name}: No data")
+
+            # Add tournament history for exploitation
+            if self._tournament_history:
+                lines.append("")
+                lines.append(build_tournament_history_prompt(self._tournament_history))
 
         return "\n".join(lines)
 
@@ -449,3 +434,16 @@ class PokerAgent:
     ) -> None:
         """Finalize per-hand stats (WTSD/WSD) after a hand is complete."""
         self._tracker.end_hand(player_names, hand_result)
+
+    def add_hand_to_history(self, hand_record: HandRecord) -> None:
+        """Add a completed hand to tournament history.
+
+        Only used by informed agents (D/E) for exploitation analysis.
+        Called by orchestrator after each hand completes.
+
+        Args:
+            hand_record: The completed hand record to add.
+        """
+        # Only track history for informed agents (has_shared_knowledge=True)
+        if self.strategy.has_shared_knowledge:
+            self._tournament_history.append(hand_record)

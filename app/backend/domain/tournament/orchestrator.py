@@ -8,17 +8,13 @@ This is the main coordinator that:
 4. Tracks results for the POC experiment
 5. Calculates EV chips for showdown hands to measure decision quality
 """
+
 import os
 import uuid
 from dataclasses import dataclass, field
 from typing import Union
 
 from backend.config import Settings
-from backend.domain.game.environment import PokerEnvironment
-from backend.domain.game.models import Action, ActionType
-from backend.domain.game.recorder import GameStateRecorder
-from backend.domain.player.models import KnowledgeBase, create_shared_knowledge_base
-from backend.domain.agent.poker_agent import PokerAgent
 from backend.domain.agent.ensemble_agent import EnsemblePokerAgent
 from backend.domain.agent.poker_agent import PokerAgent
 from backend.domain.agent.strategies.base import (
@@ -33,7 +29,9 @@ from backend.domain.agent.utils import deviation_tracker
 from backend.domain.game.environment import PokerEnvironment
 from backend.domain.game.equity import calculate_multiway_equity
 from backend.domain.game.models import Action, ActionType, EVRecord, HandResult
-from backend.domain.player.models import KnowledgeBase, create_shared_knowledge_base
+from backend.domain.game.recorder import GameStateRecorder
+from backend.domain.player.models import KnowledgeBase
+from backend.domain.utils.file_lock import stats_file_lock
 from backend.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -61,10 +59,10 @@ class TournamentConfig:
     """Tournament configuration."""
 
     starting_stack: int = 1500
-    small_blind: int = 10
-    big_blind: int = 20
-    blind_increase_interval: int = 20  # Hands between blind increases
-    blind_increase_multiplier: float = 1.5
+    small_blind: int = 15
+    big_blind: int = 30
+    blind_increase_interval: int = 8  # Hands between blind increases
+    blind_increase_multiplier: float = 2.0
 
     # Maximum hands to prevent infinite games
     max_hands: int = 500
@@ -102,15 +100,14 @@ class TournamentOrchestrator:
         self._env: PokerEnvironment | None = None
         self._config: TournamentConfig | None = None
         self._eliminations: list[tuple[str, int]] = []
-        self._calibration_mode: bool = False
         self._recorder = GameStateRecorder(settings.gamestates_dir)
         self._tournament_id: str = ""
+        self._ev_records: list[EVRecord] = []
 
     def setup_tournament(
         self,
         config: TournamentConfig | None = None,
         agent_configs: list[tuple[str, StrategyConfig]] | None = None,
-        calibration_mode: bool = False,
     ) -> None:
         """
         Set up a new tournament.
@@ -119,13 +116,12 @@ class TournamentOrchestrator:
             config: Tournament configuration
             agent_configs: List of (player_id, strategy) tuples.
                           If None, uses default 5-player setup.
-            calibration_mode: If True, Agent D starts empty to learn real behaviors
         """
         self._config = config or TournamentConfig()
         agent_configs = agent_configs or DEFAULT_AGENTS
         self._eliminations = []
-        self._calibration_mode = calibration_mode
-        
+        self._ev_records = []
+
         # Generate a unique tournament ID and start recording
         self._tournament_id = str(uuid.uuid4())[:8]
         self._recorder.start_tournament(self._tournament_id)
@@ -140,57 +136,51 @@ class TournamentOrchestrator:
             big_blind=self._config.big_blind,
         )
 
-        # Create agents with appropriate knowledge bases
-        # Load shared calibrated stats ONCE (same for all informed agents)
-        shared_knowledge = None
-        if not calibration_mode:
-            calibrated_path = os.path.join(
-                self._settings.knowledge_persistence_dir, "calibrated_stats.json"
-            )
-            shared_knowledge = KnowledgeBase.load_from_file(calibrated_path)
+        # Load shared stats (recalculated from all saved tournaments before this call)
+        # Use shared lock to allow concurrent reads but block during writes
+        stats_path = os.path.join(self._settings.knowledge_persistence_dir, "stats.json")
+        with stats_file_lock(stats_path, exclusive=False):
+            shared_knowledge = KnowledgeBase.load_from_file(stats_path)
             if shared_knowledge.profiles:
                 logger.info(
-                    f"📊 Loaded SHARED calibrated knowledge: "
-                    f"{len(shared_knowledge.profiles)} opponents, "
+                    f"📊 Loaded shared stats: "
+                    f"{len(shared_knowledge.profiles)} players, "
                     f"{shared_knowledge.get_total_hands_observed()} total hands"
                 )
 
-        for player_id, strategy in agent_configs:
-            # Create knowledge base
-            if strategy.has_shared_knowledge and not calibration_mode:
-                # Both Agent D and Agent E get the SAME calibrated stats
-                if shared_knowledge and shared_knowledge.profiles:
-                    # Create a copy so they don't share the same object
-                    knowledge_base = KnowledgeBase.load_from_file(calibrated_path)
-                    logger.info(f"  {player_id}: Loaded shared calibrated knowledge")
+            for player_id, strategy in agent_configs:
+                # Create knowledge base
+                if strategy.has_shared_knowledge:
+                    # Agents with shared knowledge get a copy of the stats
+                    if shared_knowledge.profiles:
+                        knowledge_base = KnowledgeBase.load_from_file(stats_path)
+                        logger.info(f"  {player_id}: Loaded shared stats")
+                    else:
+                        # No saved stats yet - start fresh (first run)
+                        knowledge_base = KnowledgeBase()
+                        logger.info(f"  {player_id}: No saved stats yet, starting fresh")
                 else:
-                    # Fall back to pre-defined stats
-                    knowledge_base = create_shared_knowledge_base(exclude_player=player_id)
-                    logger.info(f"  {player_id}: Using DEFAULT pre-loaded knowledge")
-            else:
-                # Other agents OR calibration mode: start fresh
-                knowledge_base = KnowledgeBase()
-                if calibration_mode and strategy.has_shared_knowledge:
-                    logger.info(f"🔧 {player_id} starting EMPTY for calibration")
+                    # Other agents start fresh (no shared knowledge)
+                    knowledge_base = KnowledgeBase()
 
-            # Create the agent (use ensemble architecture if configured)
-            if strategy.use_ensemble:
-                self._agents[player_id] = EnsemblePokerAgent(
-                    player_id=player_id,
-                    strategy=strategy,
-                    knowledge_base=knowledge_base,
-                    settings=self._settings,
-                )
-                logger.info(
-                    f"🎭 {player_id} using ENSEMBLE architecture (GTO + Exploit + Decision)"
-                )
-            else:
-                self._agents[player_id] = PokerAgent(
-                    player_id=player_id,
-                    strategy=strategy,
-                    knowledge_base=knowledge_base,
-                    settings=self._settings,
-                )
+                # Create the agent (use ensemble architecture if configured)
+                if strategy.use_ensemble:
+                    self._agents[player_id] = EnsemblePokerAgent(
+                        player_id=player_id,
+                        strategy=strategy,
+                        knowledge_base=knowledge_base,
+                        settings=self._settings,
+                    )
+                    logger.info(
+                        f"🎭 {player_id} using ENSEMBLE architecture (GTO + Exploit + Decision)"
+                    )
+                else:
+                    self._agents[player_id] = PokerAgent(
+                        player_id=player_id,
+                        strategy=strategy,
+                        knowledge_base=knowledge_base,
+                        settings=self._settings,
+                    )
 
         logger.info(
             f"Tournament setup complete: {len(self._agents)} agents, "
@@ -256,20 +246,22 @@ class TournamentOrchestrator:
                     self._eliminations.append((player_id, hand_count))
                     logger.info(f"Player {player_id} eliminated in hand {hand_count}")
 
-        # Save Agent D's accumulated knowledge
-        self._save_agent_knowledge()
-        
-        # Save recorded game states for future statistics recalculation
+        # Save recorded game states
         saved_path = self._recorder.save_tournament()
         if saved_path:
             logger.info(f"📝 Saved game states to {saved_path}")
+
+        # Recalculate stats from ALL saved tournaments (including this one)
+        self._recalculate_stats()
 
         # Build final results
         return self._build_results(hand_count)
 
     async def _play_hand(self, hand_number: int) -> bool:
         """Play a single hand. Returns False if tournament should end."""
-        logger.info(f"--- Hand #{hand_number} ---")
+        logger.info(
+            f"--- Hand #{hand_number} (blinds {self._env.small_blind}/{self._env.big_blind}) ---"
+        )
 
         # Track stacks before hand for profit/loss calculation
         stacks_before = {
@@ -307,10 +299,10 @@ class TournamentOrchestrator:
 
                 # Convert structured decision to executable Action
                 action = decision.to_action(game_state)
-                
-                # Determine if following GTO based on deviation text
-                is_following_gto = decision.gto_deviation.lower().startswith("following gto")
-                
+
+                # Use the boolean field directly from the model
+                is_following_gto = decision.is_following_gto
+
                 # Record the state and action for statistics recalculation
                 self._recorder.record_action(
                     game_state,
@@ -348,11 +340,33 @@ class TournamentOrchestrator:
                 agent.end_hand_tracking(result, self._env.player_names)
 
             # Record finishing stacks for the hand
+            # Pass hand_number and starting_stacks to handle hands without actions
+            # (e.g., when a player is all-in for the blind)
             finishing_stacks = {
-                name: self._env.get_stack(i)
-                for i, name in enumerate(self._env.player_names)
+                name: self._env.get_stack(i) for i, name in enumerate(self._env.player_names)
             }
-            self._recorder.record_hand_result(finishing_stacks)
+
+            # Prepare showdown data if hand went to showdown
+            community_cards: list[str] | None = None
+            shown_hands_dict: dict[str, list[str]] | None = None
+            if result.showdown and result.shown_hands:
+                # Get community cards from the environment
+                community_cards = self._env.get_community_cards_str()
+                # Convert shown_hands (seat -> Card list) to (player_name -> str list)
+                shown_hands_dict = {
+                    self._env.player_names[seat]: [str(c) for c in cards]
+                    for seat, cards in result.shown_hands.items()
+                }
+
+            self._recorder.record_hand_result(
+                finishing_stacks,
+                hand_number=hand_number,
+                starting_stacks=stacks_before,
+                small_blind=self._env.small_blind,
+                big_blind=self._env.big_blind,
+                community_cards=community_cards,
+                shown_hands=shown_hands_dict,
+            )
 
             # Track profit/loss for GTO deviation analysis
             for i, name in enumerate(self._env.player_names):
@@ -366,6 +380,13 @@ class TournamentOrchestrator:
                 self._ev_records.extend(ev_records)
                 self._recorder.record_ev(ev_records)
 
+            # Add completed hand to all agents' tournament history
+            # (PokerAgent only stores if has_shared_knowledge=True)
+            current_hand = self._recorder._current_hand
+            if current_hand is not None:
+                for agent in self._agents.values():
+                    agent.add_hand_to_history(current_hand)
+
             # Show stacks after hand
             stacks_str = " | ".join(
                 f"{name}: {self._env.get_stack(i):.0f}"
@@ -378,61 +399,26 @@ class TournamentOrchestrator:
 
         return True  # Hand completed, tournament continues
 
-    def _save_agent_knowledge(self) -> None:
-        """Save knowledge for agents with shared knowledge (Agent D and E)."""
-        # First, save individual agent knowledge files
-        for player_id, agent in self._agents.items():
-            if agent.strategy.has_shared_knowledge:
-                persist_path = os.path.join(
-                    self._settings.knowledge_persistence_dir, f"{player_id}_knowledge.json"
-                )
-                agent.knowledge_base.save_to_file(persist_path)
-                logger.info(
-                    f"Saved {player_id}'s knowledge to {persist_path} "
-                    f"({len(agent.knowledge_base.profiles)} profiles)"
-                )
+    def _recalculate_stats(self) -> None:
+        """Recalculate stats.json from all saved tournament histories.
 
-        # In calibration mode, accumulate stats ONCE (not per agent)
-        # Use agent_d's knowledge as the canonical source
-        if self._calibration_mode:
-            # Find the primary agent for calibration (agent_d)
-            calibration_agent = self._agents.get("agent_d")
-            if not calibration_agent:
-                # Fallback: use any agent with shared knowledge
-                for agent in self._agents.values():
-                    if agent.strategy.has_shared_knowledge:
-                        calibration_agent = agent
-                        break
+        This is called after each tournament to ensure stats are always up-to-date.
+        Uses exclusive file lock to prevent race conditions with parallel tournaments.
+        """
+        from backend.domain.player.recalculator import recalculate_baseline_stats
 
-            if calibration_agent:
-                calibrated_path = os.path.join(
-                    self._settings.knowledge_persistence_dir, "calibrated_stats.json"
-                )
+        stats_path = os.path.join(self._settings.knowledge_persistence_dir, "stats.json")
 
-                # Load existing calibrated stats and accumulate
-                existing_calibrated = KnowledgeBase.load_from_file(calibrated_path)
-                if existing_calibrated.profiles:
-                    # Accumulate new observations into existing
-                    existing_calibrated.accumulate_with(calibration_agent.knowledge_base)
-                    existing_calibrated.save_to_file(calibrated_path)
-                    logger.info(f"🔧 ACCUMULATED calibration stats to {calibrated_path}")
-                    self._log_calibrated_stats(existing_calibrated)
-                else:
-                    # First calibration run - just save
-                    calibration_agent.knowledge_base.save_to_file(calibrated_path)
-                    logger.info(f"🔧 Saved initial calibrated stats to {calibrated_path}")
-                    self._log_calibrated_stats(calibration_agent.knowledge_base)
-
-    def _log_calibrated_stats(self, kb: KnowledgeBase) -> None:
-        """Log the calibrated statistics for review."""
-        logger.info("\n📊 CALIBRATED OPPONENT STATISTICS:")
-        for opp_id, profile in kb.profiles.items():
-            stats = profile.statistics
-            logger.info(f"   {opp_id}: {stats.hands_played} hands observed")
-            logger.info(f"      VPIP: {stats.vpip:.1f}%, PFR: {stats.pfr:.1f}%")
-            logger.info(
-                f"      C-bet: {stats.cbet_flop_pct:.1f}%, AF: {stats.aggression_factor:.2f}"
+        # Use exclusive lock to prevent concurrent writes and block readers
+        with stats_file_lock(stats_path, exclusive=True):
+            kb = recalculate_baseline_stats(
+                gamestates_dir=self._settings.gamestates_dir,
+                output_path=stats_path,
             )
+            if kb.profiles:
+                logger.info(
+                    f"📊 Updated stats.json with {kb.get_total_hands_observed()} total hands"
+                )
 
     def _calculate_showdown_ev(
         self,
@@ -532,13 +518,15 @@ class TournamentOrchestrator:
             # Log EV calculation for transparency
             variance = ev_record.variance
             logger.info(
-                f"  📊 EV: {player_id} had {equity*100:.1f}% equity | "
+                f"  📊 EV: {player_id} had {equity * 100:.1f}% equity | "
                 f"EV: {ev_chips:+.0f} | Actual: {actual_chips:+.0f} | Variance: {variance:+.0f}"
             )
 
+        return ev_records
+
     def save_incomplete(self) -> str | None:
         """Save current tournament state as incomplete when interrupted.
-        
+
         Returns:
             Path to the saved file, or None if no tournament to save.
         """
@@ -604,7 +592,7 @@ class TournamentOrchestrator:
             ev_by_player=ev_by_player,
         )
 
-        logger.info(f"Tournament complete after {hand_count} hands. " f"Placements: {placements}")
+        logger.info(f"Tournament complete after {hand_count} hands. Placements: {placements}")
         logger.info(
             f"Agent D (informed) placed: {agent_d_placement}, "
             f"Agent E (naive) placed: {agent_e_placement}"

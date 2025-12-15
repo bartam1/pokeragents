@@ -1,4 +1,5 @@
 """Game domain - PokerKit integration and game state models."""
+
 from backend.domain.game.environment import PokerEnvironment
 from backend.domain.game.models import (
     Action,

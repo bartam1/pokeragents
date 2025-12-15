@@ -4,6 +4,7 @@ Player statistics and profile models.
 These models track poker statistics for each player, enabling
 the Exploit Scout agent to identify tendencies and leaks.
 """
+
 import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path

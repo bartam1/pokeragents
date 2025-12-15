@@ -9,14 +9,16 @@ This agent uses three specialized sub-agents:
 The GTO and Exploit analyses run in PARALLEL for efficiency,
 then the Decision Maker synthesizes both into a final action.
 """
+
 import asyncio
 
 from backend.config import Settings
 from backend.domain.agent.models import ActionDecision
 from backend.domain.agent.specialists import DecisionMaker, ExploitAnalyst, GTOAnalyst
 from backend.domain.agent.strategies.base import StrategyConfig
-from backend.domain.agent.utils import deviation_tracker
+from backend.domain.agent.utils import build_tournament_history_prompt, deviation_tracker
 from backend.domain.game.models import Action, HandResult, StructuredGameState
+from backend.domain.game.recorder import HandRecord
 from backend.domain.player.models import KnowledgeBase
 from backend.domain.player.tracker import StatisticsTracker
 from backend.logging_config import get_logger, log_agent_decision
@@ -63,6 +65,9 @@ class EnsemblePokerAgent:
         # Hand history tracking
         self._current_hand_history: list[dict] = []
 
+        # Tournament history for exploit analysis (all completed hands)
+        self._tournament_history: list[HandRecord] = []
+
         logger.info(
             f"🎭 Created EnsemblePokerAgent for {player_id} "
             f"(Multi-Agent Architecture: GTO + Exploit + Decision)"
@@ -96,19 +101,29 @@ class EnsemblePokerAgent:
         state_prompt = self._build_state_prompt(game_state)
         opponent_stats = self._build_opponent_stats(game_state)
         hand_history = self._build_hand_history(game_state.action_history)
+        tournament_history = self._build_tournament_history()
 
         # Debug logging - print all prompts for testing
-        logger.debug(f"Agent {self.player_id} STATE PROMPT:\n{'='*60}\n{state_prompt}\n{'='*60}")
         logger.debug(
-            f"Agent {self.player_id} OPPONENT STATS:\n{'='*60}\n{opponent_stats}\n{'='*60}"
+            f"Agent {self.player_id} STATE PROMPT:\n{'=' * 60}\n{state_prompt}\n{'=' * 60}"
         )
-        logger.debug(f"Agent {self.player_id} HAND HISTORY:\n{'='*60}\n{hand_history}\n{'='*60}")
+        logger.debug(
+            f"Agent {self.player_id} OPPONENT STATS:\n{'=' * 60}\n{opponent_stats}\n{'=' * 60}"
+        )
+        logger.debug(
+            f"Agent {self.player_id} HAND HISTORY:\n{'=' * 60}\n{hand_history}\n{'=' * 60}"
+        )
+        logger.debug(
+            f"Agent {self.player_id} TOURNAMENT HISTORY:\n{'=' * 60}\n{tournament_history}\n{'=' * 60}"
+        )
 
         logger.info(f"🎭 {self.player_id} (Ensemble) analyzing situation...")
 
         # Run GTO and Exploit analysis in PARALLEL
         gto_task = self._gto_analyst.analyze(state_prompt, hand_history)
-        exploit_task = self._exploit_analyst.analyze(state_prompt, opponent_stats, hand_history)
+        exploit_task = self._exploit_analyst.analyze(
+            state_prompt, opponent_stats, hand_history, tournament_history
+        )
 
         gto_analysis, exploit_analysis = await asyncio.gather(gto_task, exploit_task)
 
@@ -142,11 +157,14 @@ class EnsemblePokerAgent:
             else ""
         )
 
-        # Determine if following GTO based on deviation text
-        is_following_gto = decision.gto_deviation.lower().startswith("following gto")
+        # Use the boolean field directly from the model
+        is_following_gto = decision.is_following_gto
 
         # Console logging (human readable)
-        logger.info(f"  📐 GTO Deviation: {decision.gto_deviation[:60]}...")
+        gto_status = "✅" if is_following_gto else "⚠️"
+        logger.info(
+            f"  📐 {gto_status} {decision.gto_deviation[:60]}{'...' if len(decision.gto_deviation) > 60 else ''}"
+        )
         logger.info(
             f"  🎲 Decision: {action.type.value} "
             f"{action.amount if action.amount else ''} "
@@ -235,39 +253,24 @@ class EnsemblePokerAgent:
 
     def _build_opponent_stats(self, state: StructuredGameState) -> str:
         """Build opponent statistics string for the exploit analyst."""
-        from backend.domain.player.models import MIN_RELIABLE_SAMPLE_SIZE
+        lines = ["Opponent Statistics (60+ hands to exploit):"]
 
-        lines = ["Opponent Statistics:"]
-        lines.append(
-            f"(Minimum {MIN_RELIABLE_SAMPLE_SIZE} hands required for reliable exploitation)"
-        )
-
-        # Use state.opponents to get active opponents with their actual names
-        # This correctly maps to knowledge base profiles regardless of seating order
-        for opp in state.opponents:
-            profile = self._knowledge_base.get_profile(opp.name)
+        # Show stats for ALL other players (not just active ones)
+        for player in state.players:
+            if player.seat == state.hero_seat:
+                continue  # Skip hero
+            profile = self._knowledge_base.get_profile(player.name)
 
             if profile and profile.statistics.hands_played > 0:
                 stats = profile.statistics
-
-                lines.append(f"\n{opp.name} (Stack: {opp.stack:.0f}):")
-
-                # Don't show misleading percentages with tiny samples
-                if stats.hands_played < 20:
-                    lines.append(f"  Hands: {stats.hands_played}")
-                    lines.append("  ⚠️ INSUFFICIENT DATA - Stats not meaningful")
-                    lines.append("  DO NOT exploit - Play GTO")
-                else:
-                    lines.append(f"  {stats.reliability_note}")
-                    lines.append(f"  VPIP: {stats.vpip:.1f}%")
-                    lines.append(f"  PFR: {stats.pfr:.1f}%")
-                    lines.append(f"  Limp: {stats.limp_frequency:.1f}%")
-                    lines.append(f"  Aggression: {stats.aggression_factor:.2f}")
-                    lines.append(f"  C-bet Flop: {stats.cbet_flop_pct:.1f}%")
-                    lines.append(f"  Fold to 3-bet: {stats.fold_to_three_bet:.1f}%")
-                    lines.append(f"  WTSD: {stats.wtsd:.1f}%")
+                lines.append(f"\n{player.name} ({stats.hands_played} hands):")
+                lines.append(f"  VPIP: {stats.vpip:.1f}%, PFR: {stats.pfr:.1f}%")
+                lines.append(f"  Aggression: {stats.aggression_factor:.2f}")
+                lines.append(f"  C-bet Flop: {stats.cbet_flop_pct:.1f}%")
+                lines.append(f"  Fold to 3-bet: {stats.fold_to_three_bet:.1f}%")
+                lines.append(f"  WTSD: {stats.wtsd:.1f}%")
             else:
-                lines.append(f"\n{opp.name} (Stack: {opp.stack:.0f}): No data - Play GTO")
+                lines.append(f"\n{player.name}: No data")
 
         return "\n".join(lines)
 
@@ -310,6 +313,20 @@ class EnsemblePokerAgent:
                 lines.append(f"  {player}: {action_type}")
 
         return "\n".join(lines)
+
+    def _build_tournament_history(self) -> str:
+        """Build full tournament history for exploitation analysis."""
+        return build_tournament_history_prompt(self._tournament_history)
+
+    def add_hand_to_history(self, hand_record: HandRecord) -> None:
+        """Add a completed hand to tournament history.
+
+        Called by orchestrator after each hand completes.
+
+        Args:
+            hand_record: The completed hand record to add.
+        """
+        self._tournament_history.append(hand_record)
 
     # =========================================================================
     # Statistics Tracking (same interface as PokerAgent)
