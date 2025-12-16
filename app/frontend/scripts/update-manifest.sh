@@ -23,3 +23,4 @@ echo ']}' >> "$MANIFEST_FILE"
 
 echo "Updated manifest at $MANIFEST_FILE"
 
+
