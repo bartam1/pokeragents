@@ -1,5 +1,5 @@
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine,
 } from 'recharts';
 
 const COLORS = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#95e1d3', '#a29bfe', '#fab1a0', '#74b9ff'];
@@ -11,25 +11,32 @@ export default function ChipGraph({ data, selectedPlayers, useEV }) {
 
   const chartData = [];
   const allPlayers = new Set();
+  let globalHandIndex = 0;
 
-  data.forEach((file) => {
-    const runningTotals = {};
+  // Data is already sorted by timestamp (ascending) in App.jsx
+  // Running totals persist across all tournaments (no initialization from starting stacks)
+  const runningTotals = {};
+
+  data.forEach((file, fileIndex) => {
+    // Initialize players to 0 if not seen before
     file.players.forEach((p) => {
-      runningTotals[p] = file.initialStacks[p] ?? 1500;
+      if (runningTotals[p] === undefined) {
+        runningTotals[p] = 0;
+      }
       allPlayers.add(p);
     });
 
-    file.handSummaries.forEach((hand) => {
-      const handNum = hand.hand_number;
+    // Sort hand summaries by hand_number (ascending)
+    const sortedHands = [...file.handSummaries].sort((a, b) => a.hand_number - b.hand_number);
+
+    sortedHands.forEach((hand) => {
+      globalHandIndex++;
       const chipsWon = hand.chips_won || {};
       const evAdjusted = hand.ev_adjusted_chips || {};
-
-      // Track which players used EV in this hand
       const playersUsingEV = [];
 
       // Update running totals per player
       file.players.forEach((player) => {
-        // Use ev_adjusted_chips if: checkbox is checked AND player has ev_adjusted value
         const hasEVForPlayer = useEV && evAdjusted[player] !== undefined && evAdjusted[player] !== null;
         const delta = hasEVForPlayer ? evAdjusted[player] : (chipsWon[player] || 0);
         
@@ -41,10 +48,12 @@ export default function ChipGraph({ data, selectedPlayers, useEV }) {
       });
 
       const point = {
-        name: `H${handNum}`,
-        handNumber: handNum,
+        name: globalHandIndex,
+        label: `T${fileIndex + 1}:H${hand.hand_number}`,
+        handNumber: hand.hand_number,
         file: file.filename,
         tournamentId: file.tournamentId,
+        timestamp: file.timestamp,
         playersUsingEV,
       };
 
@@ -61,12 +70,28 @@ export default function ChipGraph({ data, selectedPlayers, useEV }) {
     ? selectedPlayers.filter((p) => allPlayers.has(p)) 
     : playerList;
 
+  // Calculate Y-axis domain to include negative values
+  let minValue = 0;
+  let maxValue = 0;
+  chartData.forEach((point) => {
+    players.forEach((p) => {
+      if (point[p] !== undefined) {
+        minValue = Math.min(minValue, point[p]);
+        maxValue = Math.max(maxValue, point[p]);
+      }
+    });
+  });
+  // Add padding
+  const padding = Math.max(100, (maxValue - minValue) * 0.1);
+  const yMin = Math.floor((minValue - padding) / 100) * 100;
+  const yMax = Math.ceil((maxValue + padding) / 100) * 100;
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload?.length) return null;
     const pt = chartData.find((p) => p.name === label);
     return (
       <div className="custom-tooltip">
-        <div className="tooltip-label">{label}</div>
+        <div className="tooltip-label">{pt?.label || `H${label}`}</div>
         {pt && <div className="tooltip-file">{pt.file}</div>}
         {payload.map((e, i) => {
           const isEV = pt?.playersUsingEV?.includes(e.name);
@@ -85,8 +110,19 @@ export default function ChipGraph({ data, selectedPlayers, useEV }) {
       <ResponsiveContainer width="100%" height={350}>
         <LineChart data={chartData} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#30363d" />
-          <XAxis dataKey="name" stroke="#8b949e" tick={{ fill: '#8b949e', fontSize: 11 }} />
-          <YAxis stroke="#8b949e" tick={{ fill: '#8b949e', fontSize: 11 }} tickFormatter={(v) => v.toLocaleString()} />
+          <XAxis 
+            dataKey="name" 
+            stroke="#8b949e" 
+            tick={{ fill: '#8b949e', fontSize: 11 }} 
+          />
+          <YAxis 
+            stroke="#8b949e" 
+            tick={{ fill: '#8b949e', fontSize: 11 }} 
+            tickFormatter={(v) => v.toLocaleString()}
+            domain={[yMin, yMax]}
+          />
+          {/* Zero reference line */}
+          <ReferenceLine y={0} stroke="#666" strokeDasharray="3 3" />
           <Tooltip content={<CustomTooltip />} />
           <Legend wrapperStyle={{ fontSize: 12 }} />
           {players.map((p) => (
