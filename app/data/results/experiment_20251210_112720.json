@@ -1,0 +1,1258 @@
+{
+  "timestamp": "20251210_112720",
+  "tournaments_run": 1,
+  "agent_d": {
+    "wins": 0,
+    "win_rate": 0.0,
+    "avg_placement": 4.0,
+    "placements": [
+      4
+    ]
+  },
+  "agent_e": {
+    "wins": 0,
+    "win_rate": 0.0,
+    "avg_placement": 3.0,
+    "placements": [
+      3
+    ]
+  },
+  "all_placements": {
+    "agent_b_1": 1,
+    "agent_c_2": 1,
+    "agent_e_3": 1,
+    "agent_d_4": 1,
+    "agent_a_5": 1
+  },
+  "tournament_details": [
+    {
+      "tournament_num": 1,
+      "placements": [
+        "agent_b",
+        "agent_c",
+        "agent_e",
+        "agent_d",
+        "agent_a"
+      ],
+      "agent_d_placement": 4,
+      "agent_e_placement": 3,
+      "hands_played": 2,
+      "final_stacks": {
+        "agent_a": 0.0,
+        "agent_b": 4500.0,
+        "agent_c": 1500.0,
+        "agent_d": 0.0,
+        "agent_e": 1500.0
+      }
+    }
+  ],
+  "hypothesis_confirmed": false,
+  "gto_deviation_stats": {
+    "summary": {
+      "total_gto_decisions": 16,
+      "total_deviation_decisions": 0,
+      "overall_deviation_rate": 0.0,
+      "total_gto_profit": 0.0,
+      "total_deviation_profit": 0
+    },
+    "by_agent": {
+      "agent_c": {
+        "total_decisions": 1,
+        "gto_decisions": 1,
+        "deviation_decisions": 0,
+        "deviation_rate": 0.0,
+        "gto_profit": 0.0,
+        "deviation_profit": 0,
+        "gto_avg_profit": 0.0,
+        "deviation_avg_profit": 0
+      },
+      "agent_d": {
+        "total_decisions": 4,
+        "gto_decisions": 4,
+        "deviation_decisions": 0,
+        "deviation_rate": 0.0,
+        "gto_profit": -1500.0,
+        "deviation_profit": 0,
+        "gto_avg_profit": -1500.0,
+        "deviation_avg_profit": 0
+      },
+      "agent_e": {
+        "total_decisions": 1,
+        "gto_decisions": 1,
+        "deviation_decisions": 0,
+        "deviation_rate": 0.0,
+        "gto_profit": 0.0,
+        "deviation_profit": 0,
+        "gto_avg_profit": 0.0,
+        "deviation_avg_profit": 0
+      },
+      "agent_a": {
+        "total_decisions": 5,
+        "gto_decisions": 5,
+        "deviation_decisions": 0,
+        "deviation_rate": 0.0,
+        "gto_profit": -1500.0,
+        "deviation_profit": 0,
+        "gto_avg_profit": -1500.0,
+        "deviation_avg_profit": 0
+      },
+      "agent_b": {
+        "total_decisions": 5,
+        "gto_decisions": 5,
+        "deviation_decisions": 0,
+        "deviation_rate": 0.0,
+        "gto_profit": 3000.0,
+        "deviation_profit": 0,
+        "gto_avg_profit": 3000.0,
+        "deviation_avg_profit": 0
+      }
+    }
+  },
+  "game_logs": [
+    {
+      "timestamp": "2025-12-10T11:25:49.145960",
+      "level": "INFO",
+      "logger": "__main__",
+      "message": "\n============================================================"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146035",
+      "level": "INFO",
+      "logger": "__main__",
+      "message": "TOURNAMENT 1/1"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146067",
+      "level": "INFO",
+      "logger": "__main__",
+      "message": "============================================================\n"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146185",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "Created agent agent_a with strategy 'Agent A (The Bluffer)', has_knowledge=False, known_opponents=0"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146241",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "Created agent agent_b with strategy 'Agent B (The Calling Station)', has_knowledge=False, known_opponents=0"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146285",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "Created agent agent_c with strategy 'Agent C (The Rock)', has_knowledge=False, known_opponents=0"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146308",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "\ud83d\udd27 agent_d starting EMPTY for calibration"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146345",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "Created agent agent_d with strategy 'Agent D (The Informed Veteran)', has_knowledge=True, known_opponents=0"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146366",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "\ud83d\udd27 agent_e starting EMPTY for calibration"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146398",
+      "level": "INFO",
+      "logger": "backend.domain.agent.specialists",
+      "message": "GTOAnalyst initialized with tools and structured output"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146437",
+      "level": "INFO",
+      "logger": "backend.domain.agent.ensemble_agent",
+      "message": "\ud83c\udfad Created EnsemblePokerAgent for agent_e (Multi-Agent Architecture: GTO + Exploit + Decision)"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146459",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "\ud83c\udfad agent_e using ENSEMBLE architecture (GTO + Exploit + Decision)"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146480",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "Tournament setup complete: 5 agents, starting stacks 1500"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146499",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "  \ud83d\udcca agent_a: No prior knowledge"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146517",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "  \ud83d\udcca agent_b: No prior knowledge"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146534",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "  \ud83d\udcca agent_c: No prior knowledge"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146550",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "  \ud83d\udcca agent_d: No prior knowledge"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146568",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "  \ud83d\udcca agent_e: No prior knowledge"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146585",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "Starting tournament..."
+    },
+    {
+      "timestamp": "2025-12-10T11:25:49.146606",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "--- Hand #1 ---"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:52.568954",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_c] Cards: 7sKc"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:52.569072",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With K7 offsuit, this hand is not strong enough to play from the early position in a full ring game...."
+    },
+    {
+      "timestamp": "2025-12-10T11:25:52.569102",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: No data on opponents to justify any deviation from GTO strategy."
+    },
+    {
+      "timestamp": "2025-12-10T11:25:52.569124",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because opponent sample size is too small for reliable reads."
+    },
+    {
+      "timestamp": "2025-12-10T11:25:52.569162",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> fold (conf: 0.95)",
+      "agent_id": "agent_c",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "7sKc",
+      "pot": 30.0,
+      "stack": 1500.0,
+      "street": "preflop",
+      "action": "fold",
+      "gto_analysis": "With K7 offsuit, this hand is not strong enough to play from the early position in a full ring game. Folding is the optimal play.",
+      "exploit_analysis": "No data on opponents to justify any deviation from GTO strategy.",
+      "gto_deviation": "Following GTO because opponent sample size is too small for reliable reads.",
+      "is_following_gto": true,
+      "confidence": 0.95
+    },
+    {
+      "timestamp": "2025-12-10T11:25:59.755104",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_d] Cards: AdAc"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:59.755310",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With AdAc in late position and no data for opponent exploitation, the optimal play is to raise for v..."
+    },
+    {
+      "timestamp": "2025-12-10T11:25:59.755341",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: No opponent data available; play GTO as default strategy."
+    },
+    {
+      "timestamp": "2025-12-10T11:25:59.755371",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because opponent sample size is too small for reliable reads."
+    },
+    {
+      "timestamp": "2025-12-10T11:25:59.755398",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udd27 Tools: get_position_info, calculate_equity"
+    },
+    {
+      "timestamp": "2025-12-10T11:25:59.755454",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> raise 60.0 (conf: 0.95)",
+      "agent_id": "agent_d",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "AdAc",
+      "pot": 30.0,
+      "stack": 1500.0,
+      "street": "preflop",
+      "action": "raise",
+      "amount": 60.0,
+      "gto_analysis": "With AdAc in late position and no data for opponent exploitation, the optimal play is to raise for value.",
+      "exploit_analysis": "No opponent data available; play GTO as default strategy.",
+      "gto_deviation": "Following GTO because opponent sample size is too small for reliable reads.",
+      "is_following_gto": true,
+      "confidence": 0.95,
+      "tools_used": [
+        "get_position_info",
+        "calculate_equity"
+      ]
+    },
+    {
+      "timestamp": "2025-12-10T11:25:59.755804",
+      "level": "INFO",
+      "logger": "backend.domain.agent.ensemble_agent",
+      "message": "\ud83c\udfad agent_e (Ensemble) analyzing situation..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:07.987029",
+      "level": "INFO",
+      "logger": "backend.domain.agent.utils",
+      "message": "[GTOAnalyst] \ud83d\udd27 Tools used: calculate_equity, calculate_pot_odds, get_position_info"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:07.987432",
+      "level": "INFO",
+      "logger": "backend.domain.agent.ensemble_agent",
+      "message": "  \ud83c\udfaf GTO: Fold (conf: 0.95) - The hand 5c6h is very weak preflop with only 18.9%..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:07.987526",
+      "level": "INFO",
+      "logger": "backend.domain.agent.ensemble_agent",
+      "message": "  \ud83d\udd0d Exploit: Unknown (conf: 0.20) - Play GTO..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:11.263945",
+      "level": "INFO",
+      "logger": "backend.domain.agent.ensemble_agent",
+      "message": "  \ud83d\udcd0 GTO Deviation: Following GTO because exploit confidence is low and there's ..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:11.264143",
+      "level": "INFO",
+      "logger": "backend.domain.agent.ensemble_agent",
+      "message": "  \ud83c\udfb2 Decision: fold  (conf: 0.95)"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:11.264184",
+      "level": "INFO",
+      "logger": "backend.domain.agent.ensemble_agent",
+      "message": "=> fold (conf: 0.95)",
+      "agent_id": "agent_e",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "5c6h",
+      "pot": 90.0,
+      "stack": 1500.0,
+      "street": "preflop",
+      "action": "fold",
+      "gto_analysis": "GTO recommends folding because 5c6h has low equity and does not meet the required pot odds.",
+      "exploit_analysis": "Insufficient data on opponents; no exploitable tendencies identified.",
+      "gto_deviation": "Following GTO because exploit confidence is low and there's no clear exploitation opportunity.",
+      "is_following_gto": true,
+      "confidence": 0.95
+    },
+    {
+      "timestamp": "2025-12-10T11:26:17.064562",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_a] Cards: 7cAh"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:17.064807",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With A7o in the small blind facing a raise, the hand's equity of 61.1% exceeds the pot odds of 35.7%..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:17.064836",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: No opponent data is available, so no exploitation is possible. Default to GTO strategy."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:17.064862",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because there is no reliable data to exploit opponent tendencies."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:17.064902",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udd27 Tools: calculate_equity, calculate_pot_odds"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:17.064946",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> raise 180.0 (conf: 0.90)",
+      "agent_id": "agent_a",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "7cAh",
+      "pot": 90.0,
+      "stack": 1490.0,
+      "street": "preflop",
+      "action": "raise",
+      "amount": 180.0,
+      "gto_analysis": "With A7o in the small blind facing a raise, the hand's equity of 61.1% exceeds the pot odds of 35.7%, justifying a call or a raise.",
+      "exploit_analysis": "No opponent data is available, so no exploitation is possible. Default to GTO strategy.",
+      "gto_deviation": "Following GTO because there is no reliable data to exploit opponent tendencies.",
+      "is_following_gto": true,
+      "confidence": 0.9,
+      "tools_used": [
+        "calculate_equity",
+        "calculate_pot_odds"
+      ]
+    },
+    {
+      "timestamp": "2025-12-10T11:26:22.083433",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_b] Cards: TcTh"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:22.083617",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With pocket Tens, my hand equity of 61.1% is significantly higher than the required 38.1% pot odds t..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:22.083643",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: There's no opponent data available to exploit, so I must rely on GTO strategy."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:22.083666",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because there's no reliable data on opponents for exploitation."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:22.083693",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udd27 Tools: calculate_equity, calculate_pot_odds"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:22.083741",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> call 180.0 (conf: 0.95)",
+      "agent_id": "agent_b",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "TcTh",
+      "pot": 260.0,
+      "stack": 1480.0,
+      "street": "preflop",
+      "action": "call",
+      "amount": 180.0,
+      "gto_analysis": "With pocket Tens, my hand equity of 61.1% is significantly higher than the required 38.1% pot odds to call. GTO suggests calling with this high equity hand.",
+      "exploit_analysis": "There's no opponent data available to exploit, so I must rely on GTO strategy.",
+      "gto_deviation": "Following GTO because there's no reliable data on opponents for exploitation.",
+      "is_following_gto": true,
+      "confidence": 0.95,
+      "tools_used": [
+        "calculate_equity",
+        "calculate_pot_odds"
+      ]
+    },
+    {
+      "timestamp": "2025-12-10T11:26:26.894471",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_d] Cards: AdAc"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:26.894663",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With pocket Aces and an equity of 73.3% against two opponents, a 4-bet is optimal to extract value. ..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:26.894696",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: No data on opponents' tendencies, so exploitation is not possible. Default to GTO strategy."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:26.894722",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because opponent sample size is too small for reliable reads."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:26.894756",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udd27 Tools: calculate_equity, calculate_pot_odds"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:26.894802",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> raise 360.0 (conf: 0.95)",
+      "agent_id": "agent_d",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "AdAc",
+      "pot": 420.0,
+      "stack": 1440.0,
+      "street": "preflop",
+      "action": "raise",
+      "amount": 360.0,
+      "gto_analysis": "With pocket Aces and an equity of 73.3% against two opponents, a 4-bet is optimal to extract value. The pot odds of 22.2% make this a clear decision to raise.",
+      "exploit_analysis": "No data on opponents' tendencies, so exploitation is not possible. Default to GTO strategy.",
+      "gto_deviation": "Following GTO because opponent sample size is too small for reliable reads.",
+      "is_following_gto": true,
+      "confidence": 0.95,
+      "tools_used": [
+        "calculate_equity",
+        "calculate_pot_odds"
+      ]
+    },
+    {
+      "timestamp": "2025-12-10T11:26:30.877861",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_a] Cards: 7cAh"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:30.877950",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With Ah7c, my equity is 36.6%, which is greater than the required 20% to call. A call is profitable ..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:30.877978",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: No reliable data on opponents, so no exploitative adjustments can be made."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:30.878005",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because opponent sample size is too small for reliable reads."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:30.878028",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udd27 Tools: calculate_equity, calculate_pot_odds"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:30.878058",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> call 360.0 (conf: 0.90)",
+      "agent_id": "agent_a",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "7cAh",
+      "pot": 720.0,
+      "stack": 1320.0,
+      "street": "preflop",
+      "action": "call",
+      "amount": 360.0,
+      "gto_analysis": "With Ah7c, my equity is 36.6%, which is greater than the required 20% to call. A call is profitable based on pot odds.",
+      "exploit_analysis": "No reliable data on opponents, so no exploitative adjustments can be made.",
+      "gto_deviation": "Following GTO because opponent sample size is too small for reliable reads.",
+      "is_following_gto": true,
+      "confidence": 0.9,
+      "tools_used": [
+        "calculate_equity",
+        "calculate_pot_odds"
+      ]
+    },
+    {
+      "timestamp": "2025-12-10T11:26:35.628588",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_b] Cards: TcTh"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:35.628795",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With pocket Tens, our equity of 56.4% is well above the required 16.7% pot odds, making this a profi..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:35.629218",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: No opponent data available, so no exploitation opportunities can be identified."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:35.629296",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because there is no opponent data to justify a deviation."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:35.629361",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udd27 Tools: calculate_equity, calculate_pot_odds"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:35.629441",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> call 360.0 (conf: 0.95)",
+      "agent_id": "agent_b",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "TcTh",
+      "pot": 900.0,
+      "stack": 1320.0,
+      "street": "preflop",
+      "action": "call",
+      "amount": 360.0,
+      "gto_analysis": "With pocket Tens, our equity of 56.4% is well above the required 16.7% pot odds, making this a profitable call.",
+      "exploit_analysis": "No opponent data available, so no exploitation opportunities can be identified.",
+      "gto_deviation": "Following GTO because there is no opponent data to justify a deviation.",
+      "is_following_gto": true,
+      "confidence": 0.95,
+      "tools_used": [
+        "calculate_equity",
+        "calculate_pot_odds"
+      ]
+    },
+    {
+      "timestamp": "2025-12-10T11:26:43.572944",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_a] Cards: 7cAh"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:43.573133",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With a flop of 5sTdJc and holding 7cAh, our equity is 27.3%. In position, we can apply pressure desp..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:43.573162",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: No specific opponent data (less than 50 hands), so exploitation isn't possible. Defaulting to GTO pl..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:43.573186",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because there is insufficient data to exploit opponents."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:43.573221",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udd27 Tools: calculate_equity"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:43.573267",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> bet 800.0 (conf: 0.85)",
+      "agent_id": "agent_a",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "7cAh",
+      "board": "5s Td Jc",
+      "pot": 1080.0,
+      "stack": 1140.0,
+      "street": "flop",
+      "action": "bet",
+      "amount": 800.0,
+      "gto_analysis": "With a flop of 5sTdJc and holding 7cAh, our equity is 27.3%. In position, we can apply pressure despite the low equity.",
+      "exploit_analysis": "No specific opponent data (less than 50 hands), so exploitation isn't possible. Defaulting to GTO play.",
+      "gto_deviation": "Following GTO because there is insufficient data to exploit opponents.",
+      "is_following_gto": true,
+      "confidence": 0.85,
+      "tools_used": [
+        "calculate_equity"
+      ]
+    },
+    {
+      "timestamp": "2025-12-10T11:26:48.294039",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_b] Cards: TcTh"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:48.294256",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With a set of tens on the flop and a pot odds requirement of 29.9%, our 88.2% equity makes calling t..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:48.294537",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: No statistical data on opponents, so no evidence to deviate from GTO."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:48.294743",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because the high equity with a set justifies a call."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:48.294787",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udd27 Tools: calculate_pot_odds, calculate_equity"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:48.294823",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> call 800.0 (conf: 0.95)",
+      "agent_id": "agent_b",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "TcTh",
+      "board": "5s Td Jc",
+      "pot": 1880.0,
+      "stack": 1140.0,
+      "street": "flop",
+      "action": "call",
+      "amount": 800.0,
+      "gto_analysis": "With a set of tens on the flop and a pot odds requirement of 29.9%, our 88.2% equity makes calling the bet highly profitable.",
+      "exploit_analysis": "No statistical data on opponents, so no evidence to deviate from GTO.",
+      "gto_deviation": "Following GTO because the high equity with a set justifies a call.",
+      "is_following_gto": true,
+      "confidence": 0.95,
+      "tools_used": [
+        "calculate_pot_odds",
+        "calculate_equity"
+      ]
+    },
+    {
+      "timestamp": "2025-12-10T11:26:52.828120",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_d] Cards: AdAc"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:52.828346",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With over 72% equity and pot odds requiring only 23% equity, calling or raising is optimal. All-in i..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:52.828374",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: No data on opponents, so play strictly according to GTO. The position and pot odds favor an aggressi..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:52.828398",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because there is no opponent data to justify deviation."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:52.828423",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udd27 Tools: calculate_pot_odds, calculate_equity"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:52.828472",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> call 800.0 (conf: 0.95)",
+      "agent_id": "agent_d",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "AdAc",
+      "board": "5s Td Jc",
+      "pot": 2680.0,
+      "stack": 1140.0,
+      "street": "flop",
+      "action": "call",
+      "amount": 800.0,
+      "gto_analysis": "With over 72% equity and pot odds requiring only 23% equity, calling or raising is optimal. All-in is a strong play here.",
+      "exploit_analysis": "No data on opponents, so play strictly according to GTO. The position and pot odds favor an aggressive move.",
+      "gto_deviation": "Following GTO because there is no opponent data to justify deviation.",
+      "is_following_gto": true,
+      "confidence": 0.95,
+      "tools_used": [
+        "calculate_pot_odds",
+        "calculate_equity"
+      ]
+    },
+    {
+      "timestamp": "2025-12-10T11:26:57.816277",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_a] Cards: 7cAh"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:57.816524",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With an equity of 16.7% on the turn and no bet to call, checking is the standard play to avoid furth..."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:57.816554",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: No opponent data available for exploitation, so default to GTO strategy."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:57.816577",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because there is no reliable opponent data to justify a deviation."
+    },
+    {
+      "timestamp": "2025-12-10T11:26:57.816604",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udd27 Tools: calculate_equity"
+    },
+    {
+      "timestamp": "2025-12-10T11:26:57.816653",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> check (conf: 0.95)",
+      "agent_id": "agent_a",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "7cAh",
+      "board": "5s Td Jc 4c",
+      "pot": 3480.0,
+      "stack": 340.0,
+      "street": "turn",
+      "action": "check",
+      "gto_analysis": "With an equity of 16.7% on the turn and no bet to call, checking is the standard play to avoid further investment with a weak hand.",
+      "exploit_analysis": "No opponent data available for exploitation, so default to GTO strategy.",
+      "gto_deviation": "Following GTO because there is no reliable opponent data to justify a deviation.",
+      "is_following_gto": true,
+      "confidence": 0.95,
+      "tools_used": [
+        "calculate_equity"
+      ]
+    },
+    {
+      "timestamp": "2025-12-10T11:27:02.529581",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_b] Cards: TcTh"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:02.529684",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With top set on the board, my equity is very high at 89.8%. Checking here allows opponents to bet in..."
+    },
+    {
+      "timestamp": "2025-12-10T11:27:02.529710",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: No specific opponent data available, so no exploitation opportunities exist. Playing GTO is optimal."
+    },
+    {
+      "timestamp": "2025-12-10T11:27:02.529732",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because there is no reliable data to support deviation."
+    },
+    {
+      "timestamp": "2025-12-10T11:27:02.529754",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udd27 Tools: calculate_equity"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:02.529786",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> check (conf: 0.95)",
+      "agent_id": "agent_b",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "TcTh",
+      "board": "5s Td Jc 4c",
+      "pot": 3480.0,
+      "stack": 340.0,
+      "street": "turn",
+      "action": "check",
+      "gto_analysis": "With top set on the board, my equity is very high at 89.8%. Checking here allows opponents to bet into me, maximizing potential value.",
+      "exploit_analysis": "No specific opponent data available, so no exploitation opportunities exist. Playing GTO is optimal.",
+      "gto_deviation": "Following GTO because there is no reliable data to support deviation.",
+      "is_following_gto": true,
+      "confidence": 0.95,
+      "tools_used": [
+        "calculate_equity"
+      ]
+    },
+    {
+      "timestamp": "2025-12-10T11:27:08.368495",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_d] Cards: AdAc"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:08.368693",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With pocket Aces and high equity of 72.9%, betting for value is optimal in this spot. The turn hasn'..."
+    },
+    {
+      "timestamp": "2025-12-10T11:27:08.368723",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: No reliable data on opponents, so no specific exploitation possible. Both opponents' checks indicate..."
+    },
+    {
+      "timestamp": "2025-12-10T11:27:08.368747",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because there is insufficient opponent data for exploitation."
+    },
+    {
+      "timestamp": "2025-12-10T11:27:08.368775",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udd27 Tools: calculate_equity, get_position_info"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:08.368816",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> bet 340.0 (conf: 0.95)",
+      "agent_id": "agent_d",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "AdAc",
+      "board": "5s Td Jc 4c",
+      "pot": 3480.0,
+      "stack": 340.0,
+      "street": "turn",
+      "action": "bet",
+      "amount": 340.0,
+      "gto_analysis": "With pocket Aces and high equity of 72.9%, betting for value is optimal in this spot. The turn hasn't changed the board significantly.",
+      "exploit_analysis": "No reliable data on opponents, so no specific exploitation possible. Both opponents' checks indicate weakness.",
+      "gto_deviation": "Following GTO because there is insufficient opponent data for exploitation.",
+      "is_following_gto": true,
+      "confidence": 0.95,
+      "tools_used": [
+        "calculate_equity",
+        "get_position_info"
+      ]
+    },
+    {
+      "timestamp": "2025-12-10T11:27:15.298797",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_a] Cards: 7cAh"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:15.299032",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With 43.8% equity and only needing 8.2% pot odds, calling is mathematically correct. Our hand can im..."
+    },
+    {
+      "timestamp": "2025-12-10T11:27:15.299064",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: No data on opponents, so no specific exploitative adjustments are possible. We must rely on GTO stra..."
+    },
+    {
+      "timestamp": "2025-12-10T11:27:15.299096",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because opponent sample size is too small for reliable reads."
+    },
+    {
+      "timestamp": "2025-12-10T11:27:15.299126",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udd27 Tools: calculate_pot_odds, calculate_equity"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:15.299173",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> call 340.0 (conf: 0.95)",
+      "agent_id": "agent_a",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "7cAh",
+      "board": "5s Td Jc 4c",
+      "pot": 3820.0,
+      "stack": 340.0,
+      "street": "turn",
+      "action": "call",
+      "amount": 340.0,
+      "gto_analysis": "With 43.8% equity and only needing 8.2% pot odds, calling is mathematically correct. Our hand can improve to a straight or pair of aces.",
+      "exploit_analysis": "No data on opponents, so no specific exploitative adjustments are possible. We must rely on GTO strategy.",
+      "gto_deviation": "Following GTO because opponent sample size is too small for reliable reads.",
+      "is_following_gto": true,
+      "confidence": 0.95,
+      "tools_used": [
+        "calculate_pot_odds",
+        "calculate_equity"
+      ]
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.554596",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "  [agent_b] Cards: TcTh"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.554808",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    GTO: With top set on a draw-heavy board, we have significant equity (91.4%) and the pot odds are favorabl..."
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.554842",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    Exploit: No specific reads on opponents due to lack of data. Standard play is to call with such a strong hand..."
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.554869",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udcd0 GTO Deviation: Following GTO because opponent sample size is too small for reliable reads and our hand is very stro..."
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.554898",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "    \ud83d\udd27 Tools: calculate_equity, calculate_pot_odds"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.554941",
+      "level": "INFO",
+      "logger": "backend.domain.agent.poker_agent",
+      "message": "=> call 340.0 (conf: 0.95)",
+      "agent_id": "agent_b",
+      "hand_num": 1,
+      "event_type": "decision",
+      "cards": "TcTh",
+      "board": "5s Td Jc 4c",
+      "pot": 4160.0,
+      "stack": 340.0,
+      "street": "turn",
+      "action": "call",
+      "amount": 340.0,
+      "gto_analysis": "With top set on a draw-heavy board, we have significant equity (91.4%) and the pot odds are favorable, requiring only 7.6% equity to call.",
+      "exploit_analysis": "No specific reads on opponents due to lack of data. Standard play is to call with such a strong hand.",
+      "gto_deviation": "Following GTO because opponent sample size is too small for reliable reads and our hand is very strong.",
+      "is_following_gto": true,
+      "confidence": 0.95,
+      "tools_used": [
+        "calculate_equity",
+        "calculate_pot_odds"
+      ]
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.557477",
+      "level": "INFO",
+      "logger": "backend.domain.game.environment",
+      "message": "  Winner(s): ['agent_b'] | Pot: 3000.0"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.557656",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "  Stacks: agent_b: 4500 | agent_c: 1500 | agent_e: 1500"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.557699",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "Player agent_a eliminated in hand 1"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.557725",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "Player agent_d eliminated in hand 1"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.557761",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "--- Hand #2 ---"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.557838",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "Tournament ending: Non-positive starting stacks was supplied."
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.559561",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "Saved agent_d's knowledge to data/knowledge/agent_d_knowledge.json (5 profiles)"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.560126",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "Saved agent_e's knowledge to data/knowledge/agent_e_knowledge.json (5 profiles)"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.560905",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "\ud83d\udd27 Saved initial calibrated stats to data/knowledge/calibrated_stats.json"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.560950",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "\n\ud83d\udcca CALIBRATED OPPONENT STATISTICS:"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561099",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "   agent_c: 1 hands observed"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561145",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "      VPIP: 0.0%, PFR: 0.0%"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561169",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "      C-bet: 0.0%, AF: 0.00"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561190",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "   agent_e: 1 hands observed"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561223",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "      VPIP: 0.0%, PFR: 0.0%"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561249",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "      C-bet: 0.0%, AF: 0.00"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561267",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "   agent_a: 1 hands observed"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561285",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "      VPIP: 100.0%, PFR: 100.0%"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561321",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "      C-bet: 100.0%, AF: 1.00"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561339",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "   agent_b: 1 hands observed"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561355",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "      VPIP: 100.0%, PFR: 0.0%"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561372",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "      C-bet: 0.0%, AF: 0.00"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561389",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "   agent_d: 1 hands observed"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561405",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "      VPIP: 0.0%, PFR: 0.0%"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561440",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "      C-bet: 0.0%, AF: 0.00"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561479",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "Tournament complete after 2 hands. Placements: ['agent_b', 'agent_c', 'agent_e', 'agent_d', 'agent_a']"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561500",
+      "level": "INFO",
+      "logger": "backend.domain.tournament.orchestrator",
+      "message": "Agent D (informed) placed: 4, Agent E (naive) placed: 3"
+    },
+    {
+      "timestamp": "2025-12-10T11:27:20.561572",
+      "level": "INFO",
+      "logger": "__main__",
+      "message": "Tournament 1 complete. D placed: 4, E placed: 3"
+    }
+  ]
+}
